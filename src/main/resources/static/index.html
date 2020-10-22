@@ -29,8 +29,8 @@
                 camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 1, 1000);
                 cameraControls = new THREE.OrbitControls(camera);
                 camera.position.z = 15;
-                camera.position.y = 5;
-                camera.position.x = 15;
+                camera.position.y = 100;
+                camera.position.x = 0;
                 cameraControls.update();
                 scene = new THREE.Scene();
 
@@ -72,6 +72,7 @@
              * functie geregistreerd waarmee binnenkomende berichten worden afgehandeld.
              */
             socket = new WebSocket("ws://" + window.location.hostname + ":" + window.location.port + "/connectToSimulation");
+            console.log(socket);
             socket.onmessage = function (event) {
                 //Hier wordt het commando dat vanuit de server wordt gegeven uit elkaar gehaald
                 var command = parseCommand(event.data);
