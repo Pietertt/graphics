@@ -1,6 +1,8 @@
 package com.example.demo.models;
 
+import java.util.Random;
 import java.util.UUID;
+import java.lang.Math;
 
 /*
  * Deze class stelt een robot voor. Hij impelementeerd de class Object3D, omdat het ook een
@@ -10,15 +12,17 @@ import java.util.UUID;
 class Robot implements Object3D, Updatable {
     private UUID uuid;
 
-    private double x = 0;
+    private double x;
     private double y = 0;
-    private double z = 0;
+    private double z;
 
     private double rotationX = 0;
     private double rotationY = 0;
     private double rotationZ = 0;
 
-    public Robot() {
+    public Robot(int x, int z) {
+        this.x = x;
+        this.z = z;
         this.uuid = UUID.randomUUID();
     }
 
@@ -37,11 +41,23 @@ class Robot implements Object3D, Updatable {
      */
     @Override
     public boolean update() {
-        if(x < 15) {
-            this.x += 0.5;
-        } else {
-            this.z += 0.5;
+        Random random = new Random();
+        
+        double randomX = (random.nextDouble() * 2) - 1;
+        double randomZ = (random.nextDouble() * 2) - 1;
+
+        double x = this.x;
+        double z = this.z;
+
+        if((x + randomX <= 30.0) && (x + randomX >= 0.0)){
+            this.x += randomX;
         }
+
+        if((z + randomZ <= 30.0) && (z + randomZ >= 0.0)){
+            this.z += randomZ;
+        }
+
+        //System.out.printf("%s - %s\n", this.x, this.z);
         
         return true;
     }

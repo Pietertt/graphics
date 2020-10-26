@@ -33,7 +33,8 @@ public class World implements Model {
      */
     public World() {
         this.worldObjects = new ArrayList<>();
-        this.worldObjects.add(new Robot());
+        this.worldObjects.add(new Robot(5, 0));
+        this.worldObjects.add(new Truck(15, -20));
     }
 
     /*
