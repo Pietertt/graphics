@@ -4,7 +4,9 @@ import java.util.Random;
 import java.util.UUID;
 import java.lang.Math;
 
-class Truck implements Object3D, Updatable {
+import com.example.demo.observers.EventManager;
+
+class Truck extends Object3D implements Updatable {
     private UUID uuid;
 
     private double x;
@@ -23,6 +25,8 @@ class Truck implements Object3D, Updatable {
         this.x = x;
         this.z = z;
         this.uuid = UUID.randomUUID();
+
+        this.events = new EventManager("delete");
     }
 
     @Override
@@ -38,7 +42,7 @@ class Truck implements Object3D, Updatable {
             if(this.z - this.speed > -20){
                 this.z -= this.speed;
             } else {
-                this.forward = true;
+                this.events.notify("delete", this);
             }
         }  
 
