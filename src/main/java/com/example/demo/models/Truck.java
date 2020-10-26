@@ -17,6 +17,8 @@ class Truck implements Object3D, Updatable {
     private double rotationY = 0;
     private double rotationZ = 0;
 
+    private double speed = 0.1;
+
     public Truck(int x, int z) {
         this.x = x;
         this.z = z;
@@ -26,30 +28,20 @@ class Truck implements Object3D, Updatable {
     @Override
     public boolean update() {
 
-        double z = this.z;
-        
-        double speed = 0.1;
-
         if(this.forward){
-            if(this.z + speed < 0.0){
-                this.z += speed;
+            if(this.z + this.speed < 0.0){
+                this.z += this.speed;
             } else {
                 this.forward = false;
             }
         } else {
-            if(this.z - speed > -20){
-                this.z -= speed;
+            if(this.z - this.speed > -20){
+                this.z -= this.speed;
             } else {
                 this.forward = true;
             }
         }  
 
-        System.out.println(this.z);
-
-        // if((z + randomZ <= 30.0) && (z + randomZ >= 0.0)){
-        //     this.z += randomZ;
-        // }
-        
         return true;
     }
 
