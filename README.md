@@ -21,3 +21,34 @@ En dit voor Windows
 mvnw spring-boot:run
 ```
 
+## Git commands
+
+Een nieuwe branch maken
+
+```bash
+git branch <naam van je branch>
+```
+
+Naar de branch toe gaan
+
+```bash
+git checkout <naam van je branch>
+```
+
+Bestanden toevoegen
+
+```bash
+git add <bestandsnaam> (-a voor het toevoegen van alle bestanden)
+```
+
+Je veranderingen committen
+
+```bash
+git commit -f "<beschrijving>"
+```
+
+Je veranderingen pushen 
+
+```bash
+git push origin <je branchnaam>
+```
