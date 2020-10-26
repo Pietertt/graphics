@@ -46,7 +46,7 @@
 
           var geometry = new THREE.PlaneGeometry(30, 30, 30);
           var material = new THREE.MeshBasicMaterial({
-            color: 0xffffff,
+            color: 0x808080,
             side: THREE.DoubleSide,
           });
           var plane = new THREE.Mesh(geometry, material);
@@ -57,7 +57,7 @@
 
           var geometry = new THREE.PlaneGeometry(600, 600, 600);
           var material = new THREE.MeshBasicMaterial({
-            map: new THREE.TextureLoader().load("textures/ground.png"),
+            map: new THREE.TextureLoader().load("textures/ground1.png"),
             side: THREE.DoubleSide,
           });
           var plane = new THREE.Mesh(geometry, material);
