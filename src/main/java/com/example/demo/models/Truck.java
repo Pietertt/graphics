@@ -30,21 +30,21 @@ class Truck implements Object3D, Updatable {
         
         double speed = 0.1;
 
-        if(forward){
-            if((z + speed <= 0.0) && (z + speed >= -20)){
+        if(this.forward){
+            if(this.z + speed < 0.0){
                 this.z += speed;
             } else {
-                forward = false;
+                this.forward = false;
             }
         } else {
-            if((z - speed >= 0.0) && (z - speed <= -20)){
+            if(this.z - speed > -20){
                 this.z -= speed;
             } else {
-                forward = true;
+                this.forward = true;
             }
-        }
+        }  
 
-
+        System.out.println(this.z);
 
         // if((z + randomZ <= 30.0) && (z + randomZ >= 0.0)){
         //     this.z += randomZ;
