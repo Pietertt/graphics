@@ -4,6 +4,7 @@ import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /*
  * Deze class is een versie van het model van de simulatie. In dit geval is het
@@ -20,6 +21,7 @@ public class World implements Model {
      * een lijst van Object3D onderdelen. Deze kunnen in principe alles zijn. (Robots, vrachrtwagens, etc)
      */
     private List<Object3D> worldObjects;
+    private ArrayList<Truck> queue = new ArrayList<Truck>();
 
     /*
      * Dit onderdeel is nodig om veranderingen in het model te kunnen doorgeven aan de controller.
@@ -34,7 +36,7 @@ public class World implements Model {
     public World() {
         this.worldObjects = new ArrayList<>();
         this.worldObjects.add(new Robot(5, 0));
-        this.worldObjects.add(new Truck(15, -20));
+        //this.queue.add(new Truck(15, -20));
     }
 
     /*
@@ -48,6 +50,13 @@ public class World implements Model {
      */
     @Override
     public void update() {
+        Random random = new Random();
+        int r = random.nextInt(5000);
+
+        if(r == 2){
+            this.worldObjects.add(new Truck(15, -20));
+        }
+
         for (Object3D object : this.worldObjects) {
             if(object instanceof Updatable) {
                 if (((Updatable)object).update()) {
