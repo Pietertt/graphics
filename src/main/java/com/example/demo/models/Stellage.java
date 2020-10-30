@@ -2,7 +2,7 @@ package com.example.demo.models;
 
 import java.util.UUID;
 
-public class Stellage implements Object3D{
+public class Stellage extends Object3D{
 
     private UUID uuid;
 
