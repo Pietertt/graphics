@@ -56,6 +56,11 @@ public class DefaultWebSocketView implements View {
      * naar de client.
      */
     private String jsonifyObject3D(Object3D object) {
+        String inventory = "";
+        for(int i = 0; i < object.getInventory().size(); i++){
+            inventory += object.getInventory().get(i);
+        }
+
         return  "{" 
                 + surroundString("uuid") + ":" + surroundString(object.getUUID()) + ","
                 + surroundString("type") + ":" + surroundString(object.getType()) + ","
@@ -64,7 +69,8 @@ public class DefaultWebSocketView implements View {
                 + surroundString("z") + ":" + object.getZ() + ","
                 + surroundString("rotationX") + ":" + object.getRotationX() + ","
                 + surroundString("rotationY") + ":" + object.getRotationY() + ","
-                + surroundString("rotationZ") + ":" + object.getRotationZ()
+                + surroundString("rotationZ") + ":" + object.getRotationZ() + ","
+                + surroundString("inventory") + ":" + surroundString(inventory)
               + "}";
     }
 

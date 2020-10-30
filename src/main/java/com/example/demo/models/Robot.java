@@ -1,5 +1,6 @@
 package com.example.demo.models;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
@@ -143,4 +144,10 @@ class Robot extends Object3D implements Updatable {
     public double getRotationZ() {
         return this.rotationZ;
     }
+
+    @Override
+    public ArrayList<Integer> getInventory(){
+        ArrayList<Integer> empty = new ArrayList<Integer>();
+        return empty;
+    } 
 }

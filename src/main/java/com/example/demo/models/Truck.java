@@ -1,5 +1,6 @@
 package com.example.demo.models;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 import java.lang.Math;
@@ -20,12 +21,13 @@ class Truck extends Object3D implements Updatable {
     private double rotationZ = 0;
 
     private double speed = 0.2;
+    private ArrayList<Integer> inventory;
 
     public Truck(int x, int z) {
         this.x = x;
         this.z = z;
         this.uuid = UUID.randomUUID();
-
+        this.inventory = new ArrayList<Integer>();
         this.events = new EventManager("delete");
     }
 
@@ -36,10 +38,13 @@ class Truck extends Object3D implements Updatable {
             if(this.z + this.speed < 0.0){
                 this.z += this.speed;
             } else {
+                for(int i = 0; i < new Random().nextInt(3) + 1; i++){
+                    this.inventory.add(new Random().nextInt(10));
+                }
                 this.forward = false;
             }
         } else {
-            if(this.z - this.speed > -20){
+            if(this.z - this.speed > -50){
                 this.z -= this.speed;
             } else {
                 this.events.notify("delete", this);
@@ -92,4 +97,9 @@ class Truck extends Object3D implements Updatable {
     public double getRotationZ() {
         return this.rotationZ;
     }
+
+    @Override
+    public ArrayList<Integer> getInventory(){
+        return this.inventory;
+    } 
 }
