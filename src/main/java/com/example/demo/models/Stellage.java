@@ -2,7 +2,7 @@ package com.example.demo.models;
 
 import java.util.UUID;
 
-public class Stellage implements Object3D{
+public class Stellage extends Object3D implements Updatable {
 
     private UUID uuid;
 
@@ -18,6 +18,11 @@ public class Stellage implements Object3D{
         this.x = x;
         this.z = z;
         this.uuid = UUID.randomUUID();
+    }
+
+    @Override
+    public boolean update() {
+        return true;
     }
 
     @Override
