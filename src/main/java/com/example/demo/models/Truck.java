@@ -19,7 +19,7 @@ class Truck extends Object3D implements Updatable {
     private double rotationY = 0;
     private double rotationZ = 0;
 
-    private double speed = 0.1;
+    private double speed = 0.2;
 
     public Truck(int x, int z) {
         this.x = x;

@@ -25,6 +25,7 @@ public class World implements Model {
      * een lijst van Object3D onderdelen. Deze kunnen in principe alles zijn. (Robots, vrachrtwagens, etc)
      */
     public ArrayList<Object3D> worldObjects;
+    public ArrayList<Object3D> queue;
 
     /*
      * Dit onderdeel is nodig om veranderingen in het model te kunnen doorgeven aan de controller.
@@ -38,6 +39,7 @@ public class World implements Model {
      */
     public World() {
         this.worldObjects = new ArrayList<Object3D>();
+        this.queue = new ArrayList<Object3D>();
 
         Object3D robot = new Robot(5, 0);
 
@@ -57,15 +59,21 @@ public class World implements Model {
     @Override
     public void update() {
         Random random = new Random();
-        int r = random.nextInt(1000);
 
-        if(r == 2){
-            Object3D truck = new Truck(15, -20);
-            this.worldObjects.add(truck);
+        if(random.nextInt(200) == 2){
+            if(this.worldObjectsContainsTruck()){
+                Object3D truck = new Truck(15, -50);
 
-            DeletionListener listener = new DeletionListener();
+                this.queue.add(truck);
+                DeletionListener listener = new DeletionListener();
+                truck.events.subscribe("delete", listener);
+            } else {
+                Object3D truck = new Truck(15, -50);
 
-            truck.events.subscribe("delete", listener);
+                this.worldObjects.add(truck);
+                DeletionListener listener = new DeletionListener();
+                truck.events.subscribe("delete", listener);
+            }
         }
 
         for (Object3D object : this.worldObjects) {
@@ -84,7 +92,11 @@ public class World implements Model {
             Object3D value = iterator.next();
             if (!value.status) {
                 iterator.remove();
-                System.out.println(this.worldObjects.size());
+                Object3D popped = this.queue.get(0);
+                this.queue.remove(0);
+                this.worldObjects.add(popped);
+                break;
+                // System.out.println(this.worldObjects.size());
             }
         }
         
@@ -112,5 +124,15 @@ public class World implements Model {
         }
 
         return returnList;
+    }
+
+    public boolean worldObjectsContainsTruck(){
+        for(Object3D object : this.worldObjects){
+            if(object instanceof Truck){
+                return true;
+            }
+        }
+
+        return false;
     }
 }
