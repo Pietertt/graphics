@@ -3,26 +3,32 @@ package com.example.demo.models;
 import java.util.Random;
 import java.util.UUID;
 
+import com.example.demo.observers.EventManager;
+
 /*
  * Deze class stelt een robot voor. Hij impelementeerd de class Object3D, omdat het ook een
  * 3D object is. Ook implementeerd deze class de interface Updatable. Dit is omdat
  * een robot geupdate kan worden binnen de 3D wereld om zich zo voort te bewegen.
  */
-class Robot implements Object3D, Updatable {
+class Robot extends Object3D implements Updatable {
     private UUID uuid;
 
     private double x;
     private double y = 0;
     private double z;
+    private boolean stellage = false;
 
     private double rotationX = 0;
     private double rotationY = 0;
     private double rotationZ = 0;
 
+    
     public Robot(int x, int z) {
         this.x = x;
         this.z = z;
         this.uuid = UUID.randomUUID();
+
+        this.events = new EventManager("delete");
     }
 
     /*

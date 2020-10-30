@@ -5,6 +5,10 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Iterator;
+
+import com.example.demo.observers.EventListener;
+import com.example.demo.observers.DeletionListener;
 
 /*
  * Deze class is een versie van het model van de simulatie. In dit geval is het
@@ -20,8 +24,7 @@ public class World implements Model {
      * Deze objecten moeten uiteindelijk ook in de lijst passen (overerving). Daarom is dit
      * een lijst van Object3D onderdelen. Deze kunnen in principe alles zijn. (Robots, vrachrtwagens, etc)
      */
-    private List<Object3D> worldObjects;
-    private ArrayList<Truck> queue = new ArrayList<Truck>();
+    public ArrayList<Object3D> worldObjects;
 
     /*
      * Dit onderdeel is nodig om veranderingen in het model te kunnen doorgeven aan de controller.
@@ -34,8 +37,11 @@ public class World implements Model {
      * Deze methode moet uitgebreid worden zodat alle objecten van de 3D wereld hier worden gemaakt.
      */
     public World() {
-        this.worldObjects = new ArrayList<>();
-        this.worldObjects.add(new Robot(5, 0));
+        this.worldObjects = new ArrayList<Object3D>();
+
+        Object3D robot = new Robot(5, 0);
+
+        this.worldObjects.add(robot);
         //this.queue.add(new Truck(15, -20));
     }
 
@@ -51,19 +57,37 @@ public class World implements Model {
     @Override
     public void update() {
         Random random = new Random();
-        int r = random.nextInt(5000);
+        int r = random.nextInt(1000);
 
         if(r == 2){
-            this.worldObjects.add(new Truck(15, -20));
+            Object3D truck = new Truck(15, -20);
+            this.worldObjects.add(truck);
+
+            DeletionListener listener = new DeletionListener();
+
+            truck.events.subscribe("delete", listener);
         }
 
         for (Object3D object : this.worldObjects) {
             if(object instanceof Updatable) {
                 if (((Updatable)object).update()) {
-                    pcs.firePropertyChange(Model.UPDATE_COMMAND, null, new ProxyObject3D(object));
+                    if(object.status){
+                        pcs.firePropertyChange(Model.UPDATE_COMMAND, null, object); 
+                    } else {
+                        pcs.firePropertyChange(Model.DELETE_COMMAND, null, object); 
+                    }
                 }
             }
         }
+
+        for (Iterator<Object3D> iterator = this.worldObjects.iterator(); iterator.hasNext(); ) {
+            Object3D value = iterator.next();
+            if (!value.status) {
+                iterator.remove();
+                System.out.println(this.worldObjects.size());
+            }
+        }
+        
     }
 
     /*
@@ -84,7 +108,7 @@ public class World implements Model {
         ArrayList<Object3D> returnList = new ArrayList<>();
 
         for(Object3D object : this.worldObjects) {
-            returnList.add(new ProxyObject3D(object));
+            returnList.add(object);
         }
 
         return returnList;

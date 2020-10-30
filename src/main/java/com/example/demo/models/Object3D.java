@@ -1,5 +1,7 @@
 package com.example.demo.models;
 
+import com.example.demo.observers.EventManager;
+
 /*
  * Deze interface beschrijft wat een 3D model is. Het is een interface omdat alleen de
  * methoden worden gegeven die een object moet implementeren om een 3D model te kunnen zijn.
@@ -7,7 +9,11 @@ package com.example.demo.models;
  * uitvoering van het proxy pattern, en het feit dat in deze software eigenlijk bijna geen
  * setters nodig zijn.
  */
-public interface Object3D {
+
+public abstract class Object3D {
+    public EventManager events;
+    public Boolean status = true;
+    
     public abstract String getUUID();
     public abstract String getType();
 
