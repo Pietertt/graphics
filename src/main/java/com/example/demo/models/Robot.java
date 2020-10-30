@@ -14,11 +14,13 @@ class Robot implements Object3D, Updatable {
     private double x;
     private double y = 0;
     private double z;
+    private boolean stellage = false;
 
     private double rotationX = 0;
     private double rotationY = 0;
     private double rotationZ = 0;
 
+    
     public Robot(int x, int z) {
         this.x = x;
         this.z = z;
