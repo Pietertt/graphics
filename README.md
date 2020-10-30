@@ -38,13 +38,13 @@ git checkout <naam van je branch>
 Bestanden toevoegen
 
 ```bash
-git add <bestandsnaam> (-a voor het toevoegen van alle bestanden)
+git add <bestandsnaam> (--all voor het toevoegen van alle bestanden)
 ```
 
 Je veranderingen committen
 
 ```bash
-git commit -f "<beschrijving>"
+git commit -m "<beschrijving>"
 ```
 
 Je veranderingen pushen 
