@@ -24,6 +24,9 @@ class Robot extends Object3D implements Updatable {
 
     
     public Robot(int x, int z) {
+
+
+
         this.x = x;
         this.z = z;
         this.uuid = UUID.randomUUID();
