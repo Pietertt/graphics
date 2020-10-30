@@ -1,5 +1,7 @@
 package com.example.demo.models;
 
+import java.util.ArrayList;
+
 import com.example.demo.observers.EventManager;
 
 /*
@@ -24,4 +26,7 @@ public abstract class Object3D {
     public abstract double getRotationX();
     public abstract double getRotationY();
     public abstract double getRotationZ();
+
+
+    public abstract ArrayList<Integer> getInventory();
 }

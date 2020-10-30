@@ -7,6 +7,9 @@
 </head>
 
 <body style="margin: 0px; padding: 0px; overflow: hidden">
+    <div style="width: 200px; height: 200px; position: absolute; top: 20px; left: 20px; background-color: white; padding: 10px;" id="inventory">
+
+    </div>
     <!--
             Deze pagina is de standaardpagina van de client. Hierin wordt de 3D wereld opgezet en wordt geluisterd
             naar updates vanaf de server over de websocket communicatie.
@@ -189,6 +192,18 @@
                     object.rotation.x = command.parameters.rotationX;
                     object.rotation.y = command.parameters.rotationY;
                     object.rotation.z = command.parameters.rotationZ;
+
+                    if(command.parameters.type = "truck"){
+                        var element = document.getElementById("inventory");
+                        element.innerHTML = "";
+
+                        var inventory = command.parameters.inventory;
+
+                        for(var i = 0; i < inventory.length; i++){
+                            element.innerHTML += "Stellage " + inventory[i] + "<br>";
+                        }
+                    }
+
                 } else if (command.command == "object_delete") {
                         var object = scene.getObjectByName(command.parameters.uuid);
                         scene.remove(object);

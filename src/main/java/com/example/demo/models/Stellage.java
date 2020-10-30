@@ -1,6 +1,7 @@
 package com.example.demo.models;
 
 import java.util.UUID;
+import java.util.ArrayList;
 
 public class Stellage extends Object3D implements Updatable {
 
@@ -70,5 +71,10 @@ public class Stellage extends Object3D implements Updatable {
     public double getRotationZ() {
         return this.rotationZ;
     }
-    
+
+    @Override
+    public ArrayList<Integer> getInventory(){
+        ArrayList<Integer> empty = new ArrayList<Integer>();
+        return empty;
+    }     
 }
