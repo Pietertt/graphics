@@ -3,6 +3,7 @@
 Even voor de handigheid een kleine handleiding. Voeg vooral iets toe als je het niet snapt.
 
 ## Installatie
+
 Pull eerst de repo met deze commands.
 
 ```bash
@@ -16,9 +17,11 @@ Navigeer naar de hoofdmap en voer dit uit om het project te builden en om de ser
 ```bash
 ./mvnw spring-boot:run
 ```
+
 En dit voor Windows
+
 ```bash
-mvnw spring-boot:run
+
 ```
 
 ## Git commands
@@ -47,7 +50,7 @@ Je veranderingen committen
 git commit -f "<beschrijving>"
 ```
 
-Je veranderingen pushen 
+Je veranderingen pushen
 
 ```bash
 git push origin <je branchnaam>
