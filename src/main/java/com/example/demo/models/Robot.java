@@ -2,7 +2,6 @@ package com.example.demo.models;
 
 import java.util.Random;
 import java.util.UUID;
-import java.lang.Math;
 
 import com.example.demo.observers.EventManager;
 
@@ -17,11 +16,13 @@ class Robot extends Object3D implements Updatable {
     private double x;
     private double y = 0;
     private double z;
+    private boolean stellage = false;
 
     private double rotationX = 0;
     private double rotationY = 0;
     private double rotationZ = 0;
 
+    
     public Robot(int x, int z) {
         this.x = x;
         this.z = z;
@@ -47,24 +48,25 @@ class Robot extends Object3D implements Updatable {
     public boolean update() {
         Random random = new Random();
         
-        double randomX = (random.nextDouble() * 2) - 1;
-        double randomZ = (random.nextDouble() * 2) - 1;
+        double nextX = (random.nextDouble() * 2) - 1;
+        double nextZ = (random.nextDouble() * 2) - 1;
 
         double x = this.x;
         double z = this.z;
 
-        if((x + randomX <= 30.0) && (x + randomX >= 0.0)){
-            this.x += randomX;
+        if((x + nextX <= 30.0) && (x + nextX >= 0.0)){
+            this.x += nextX;
         }
 
-        if((z + randomZ <= 30.0) && (z + randomZ >= 0.0)){
-            this.z += randomZ;
+        if((z + nextZ <= 30.0) && (z + nextZ >= 0.0)){
+            this.z += nextZ;
         }
 
         //System.out.printf("%s - %s\n", this.x, this.z);
         
         return true;
     }
+
 
     @Override
     public String getUUID() {
