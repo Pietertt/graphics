@@ -24,6 +24,36 @@ class Robot extends Object3D implements Updatable {
 
     
     public Robot(int x, int z) {
+
+        Vertex vertexA = new Vertex("A");
+		Vertex vertexB = new Vertex("B");
+		Vertex vertexC = new Vertex("C");
+		Vertex vertexD = new Vertex("D");
+        Vertex vertexE = new Vertex("E");
+        Vertex vertexF = new Vertex("F");
+        Vertex vertexG = new Vertex("G");
+        Vertex vertexH = new Vertex("H");
+        Vertex vertexI = new Vertex("I");
+        Vertex vertexJ = new Vertex("J");
+        Vertex vertexK = new Vertex("K");
+        Vertex vertexL = new Vertex("L");
+        Vertex vertexM = new Vertex("M");
+        Vertex vertexN = new Vertex("N");
+		
+		vertexA.addNeighbour(new Edge(1,vertexA,vertexD));
+        vertexB.addNeighbour(new Edge(1,vertexB,vertexC));
+        vertexC.addNeighbour(new Edge(1,vertexC,vertexD));
+        vertexD.addNeighbour(new Edge(1,vertexD,vertexE));
+        vertexD.addNeighbour(new Edge(1,vertexD,vertexI));
+        vertexE.addNeighbour(new Edge(1,vertexE,vertexF));
+        vertexG.addNeighbour(new Edge(1,vertexG,vertexH));
+        vertexH.addNeighbour(new Edge(1,vertexH,vertexI));
+        vertexI.addNeighbour(new Edge(1,vertexI,vertexJ));
+        vertexI.addNeighbour(new Edge(1,vertexI,vertexM));
+        vertexJ.addNeighbour(new Edge(1,vertexJ,vertexK));
+        vertexL.addNeighbour(new Edge(1,vertexL,vertexM));
+        vertexM.addNeighbour(new Edge(1,vertexM,vertexN));
+
         this.x = x;
         this.z = z;
         this.uuid = UUID.randomUUID();
