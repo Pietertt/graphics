@@ -92,9 +92,11 @@ public class World implements Model {
             Object3D value = iterator.next();
             if (!value.status) {
                 iterator.remove();
-                Object3D popped = this.queue.get(0);
-                this.queue.remove(0);
-                this.worldObjects.add(popped);
+                if(this.queue.size() > 0){
+                    Object3D popped = this.queue.get(0);
+                    this.queue.remove(0);
+                    this.worldObjects.add(popped);
+                }
                 break;
                 // System.out.println(this.worldObjects.size());
             }
