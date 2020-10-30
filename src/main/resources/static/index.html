@@ -115,6 +115,7 @@
 
                                 var group = new THREE.Group();
                                 group.add(robot);
+                                group.name = command.parameters.uuid;
 
                                 scene.add(group);
                                 worldObjects[command.parameters.uuid] = group;
@@ -135,6 +136,10 @@
                         object.rotation.x = command.parameters.rotationX;
                         object.rotation.y = command.parameters.rotationY;
                         object.rotation.z = command.parameters.rotationZ;
+                    } else if(command.command == "object_delete"){
+                        var object = scene.getObjectByName(command.parameters.uuid);
+                        scene.remove(object);
+                        delete worldObjects[command.parameters.uuid];
                     }
                 }
 

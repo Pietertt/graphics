@@ -5,9 +5,10 @@ import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.Iterator;
 
 import com.example.demo.observers.EventListener;
-import com.example.demo.observers.NotificationListener;
+import com.example.demo.observers.DeletionListener;
 
 /*
  * Deze class is een versie van het model van de simulatie. In dit geval is het
@@ -56,30 +57,37 @@ public class World implements Model {
     @Override
     public void update() {
         Random random = new Random();
-        int r = random.nextInt(200);
+        int r = random.nextInt(1000);
 
         if(r == 2){
             Object3D truck = new Truck(15, -20);
             this.worldObjects.add(truck);
 
-            NotificationListener listener = new NotificationListener(this);
+            DeletionListener listener = new DeletionListener();
 
             truck.events.subscribe("delete", listener);
-
-            
-
-
-
-
         }
 
         for (Object3D object : this.worldObjects) {
             if(object instanceof Updatable) {
                 if (((Updatable)object).update()) {
-                    pcs.firePropertyChange(Model.UPDATE_COMMAND, null, object);
+                    if(object.status){
+                        pcs.firePropertyChange(Model.UPDATE_COMMAND, null, object); 
+                    } else {
+                        pcs.firePropertyChange(Model.DELETE_COMMAND, null, object); 
+                    }
                 }
             }
         }
+
+        for (Iterator<Object3D> iterator = this.worldObjects.iterator(); iterator.hasNext(); ) {
+            Object3D value = iterator.next();
+            if (!value.status) {
+                iterator.remove();
+                System.out.println(this.worldObjects.size());
+            }
+        }
+        
     }
 
     /*
@@ -104,9 +112,5 @@ public class World implements Model {
         }
 
         return returnList;
-    }
-
-    public void action(String event){
-        System.out.println(event);
     }
 }

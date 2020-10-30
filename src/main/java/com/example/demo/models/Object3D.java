@@ -12,6 +12,7 @@ import com.example.demo.observers.EventManager;
 
 public abstract class Object3D {
     public EventManager events;
+    public Boolean status = true;
     
     public abstract String getUUID();
     public abstract String getType();
