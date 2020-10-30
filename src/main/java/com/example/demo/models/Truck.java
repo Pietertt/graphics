@@ -42,6 +42,10 @@ class Truck implements Object3D, Updatable {
             }
         }  
 
+        // if((z + randomZ <= 30.0) && (z + randomZ >= 0.0)){
+        //     this.z += randomZ;
+        // }
+        
         return true;
     }
 
