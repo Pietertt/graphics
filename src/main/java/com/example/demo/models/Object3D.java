@@ -12,6 +12,8 @@ import java.util.ArrayList;
 
 public abstract class Object3D {
     public Boolean status = true;
+    public double speed;
+    public ArrayList<Integer> inventory;
     
     public abstract String getUUID();
     public abstract String getType();
@@ -26,4 +28,5 @@ public abstract class Object3D {
 
 
     public abstract ArrayList<Integer> getInventory();
+    public abstract void addOrder(double x, double y, double z);
 }

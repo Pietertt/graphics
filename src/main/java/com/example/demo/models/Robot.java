@@ -15,14 +15,18 @@ class Robot extends Object3D implements Updatable {
     private double x;
     private double y = 0;
     private double z;
-    private boolean stellage = false;
+    private boolean ordered = false;
 
     private double rotationX = 0;
     private double rotationY = 0;
     private double rotationZ = 0;
 
+    private double orderedX = 0;
+    private double orderedY = 0;
+    private double orderedZ = 0;
+
     
-    public Robot(int x, int z) {
+    public Robot(double x, double z) {
 
         Vertex vertexA = new Vertex("A");
 		Vertex vertexB = new Vertex("B");
@@ -55,6 +59,7 @@ class Robot extends Object3D implements Updatable {
 
         this.x = x;
         this.z = z;
+        this.speed = 0.1;
         this.uuid = UUID.randomUUID();
     }
 
@@ -73,7 +78,20 @@ class Robot extends Object3D implements Updatable {
      */
     @Override
     public boolean update() {
-        
+        if(this.ordered){
+            if(this.x != this.orderedX){
+                this.x += this.speed;
+            }
+
+            // if(this.y != this.orderedY){
+            //     this.y += this.speed;
+            // }
+
+            if(this.z != this.orderedZ){
+                this.z += this.speed;
+            }
+        }
+
         return true;
     }
 
@@ -129,4 +147,14 @@ class Robot extends Object3D implements Updatable {
         ArrayList<Integer> empty = new ArrayList<Integer>();
         return empty;
     } 
+
+    @Override
+    public void addOrder(double x, double y, double z){
+        this.ordered = true;
+        this.orderedX = x;
+        this.orderedY = y;
+        this.orderedZ = z;
+
+        System.out.printf("I have to move\n");
+    }
 }
