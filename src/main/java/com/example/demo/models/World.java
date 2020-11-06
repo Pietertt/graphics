@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Iterator;
 
-import com.example.demo.observers.EventListener;
-import com.example.demo.observers.DeletionListener;
-
 /*
  * Deze class is een versie van het model van de simulatie. In dit geval is het
  * de 3D wereld die we willen modelleren (magazijn). De zogenaamde domain-logic,
@@ -63,16 +60,10 @@ public class World implements Model {
         if(random.nextInt(200) == 2){
             if(this.worldObjectsContainsTruck()){
                 Object3D truck = new Truck(15, -50);
-
                 this.queue.add(truck);
-                DeletionListener listener = new DeletionListener();
-                truck.events.subscribe("delete", listener);
             } else {
                 Object3D truck = new Truck(15, -50);
-
                 this.worldObjects.add(truck);
-                DeletionListener listener = new DeletionListener();
-                truck.events.subscribe("delete", listener);
             }
         }
 

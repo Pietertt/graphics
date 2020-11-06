@@ -5,8 +5,6 @@ import java.util.Random;
 import java.util.UUID;
 import java.lang.Math;
 
-import com.example.demo.observers.EventManager;
-
 class Truck extends Object3D implements Updatable {
     private UUID uuid;
 
@@ -28,7 +26,6 @@ class Truck extends Object3D implements Updatable {
         this.z = z;
         this.uuid = UUID.randomUUID();
         this.inventory = new ArrayList<Integer>();
-        this.events = new EventManager("delete");
     }
 
     @Override
@@ -44,16 +41,15 @@ class Truck extends Object3D implements Updatable {
                 this.forward = false;
             }
         } else {
-            if(this.z - this.speed > -50){
-                this.z -= this.speed;
-            } else {
-                this.events.notify("delete", this);
+            // The truck doesn't move until the robots have unload it
+            if(this.inventory.size() == 0){
+                if(this.z - this.speed > -50){
+                    this.z -= this.speed;
+                } else {
+                    this.status = false;
+                }
             }
         }  
-
-        // if((z + randomZ <= 30.0) && (z + randomZ >= 0.0)){
-        //     this.z += randomZ;
-        // }
         
         return true;
     }

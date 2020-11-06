@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
-import com.example.demo.observers.EventManager;
-
 /*
  * Deze class stelt een robot voor. Hij impelementeerd de class Object3D, omdat het ook een
  * 3D object is. Ook implementeerd deze class de interface Updatable. Dit is omdat
@@ -58,8 +56,6 @@ class Robot extends Object3D implements Updatable {
         this.x = x;
         this.z = z;
         this.uuid = UUID.randomUUID();
-
-        this.events = new EventManager("delete");
     }
 
     /*
