@@ -294,6 +294,20 @@
                             worldObjects[command.parameters.uuid] = group;
                         }
 
+                        if (command.parameters.type == "stellage"){
+                            var geometry = new THREE.BoxGeometry(1, 1, 5);
+                            var material = new THREE.MeshBasicMaterial({
+                                color: 0x0000ff,
+                                side: THREE.DoubleSide,
+                            });
+                            var plane = new THREE.Mesh(geometry, material);
+                            plane.rotation.x = Math.PI / 2.0;
+                            plane.position.x = command.parameters.x;
+                            plane.position.z = command.parameters.z;
+                            plane.position.y = command.parameters.y;
+                            scene.add(plane);
+                        }
+
                         if (command.parameters.type == "truck") {
                             var geometry = new THREE.BoxGeometry(3, 3, 5);
                             var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });

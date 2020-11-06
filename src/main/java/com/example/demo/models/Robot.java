@@ -73,23 +73,6 @@ class Robot extends Object3D implements Updatable {
      */
     @Override
     public boolean update() {
-        Random random = new Random();
-        
-        double nextX = (random.nextDouble() * 2) - 1;
-        double nextZ = (random.nextDouble() * 2) - 1;
-
-        double x = this.x;
-        double z = this.z;
-
-        if((x + nextX <= 30.0) && (x + nextX >= 0.0)){
-            this.x += nextX;
-        }
-
-        if((z + nextZ <= 30.0) && (z + nextZ >= 0.0)){
-            this.z += nextZ;
-        }
-
-        //System.out.printf("%s - %s\n", this.x, this.z);
         
         return true;
     }

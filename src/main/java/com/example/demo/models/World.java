@@ -38,6 +38,28 @@ public class World implements Model {
         this.worldObjects = new ArrayList<Object3D>();
         this.queue = new ArrayList<Object3D>();
 
+        Object3D stellage1 = new Stellage(1, 2, 1);
+        Object3D stellage2 = new Stellage(1, 2, 4);
+        Object3D stellage3 = new Stellage(1, 2, 6);
+        Object3D stellage4 = new Stellage(1, 2, 8);
+        Object3D stellage5 = new Stellage(1, 2, 10);
+        Object3D stellage6 = new Stellage(1, 2, 12);
+        Object3D stellage7 = new Stellage(1, 2, 14);
+        Object3D stellage8 = new Stellage(1, 2, 16);
+        Object3D stellage9 = new Stellage(1, 2, 18);
+        Object3D stellage10 = new Stellage(1, 2, 20);
+
+        this.worldObjects.add(stellage1);
+        this.worldObjects.add(stellage2);
+        this.worldObjects.add(stellage3);
+        this.worldObjects.add(stellage4);
+        this.worldObjects.add(stellage5);
+        this.worldObjects.add(stellage6);
+        this.worldObjects.add(stellage7);
+        this.worldObjects.add(stellage8);
+        this.worldObjects.add(stellage9);
+        this.worldObjects.add(stellage10);
+
         Object3D robot = new Robot(5, 0);
 
         this.worldObjects.add(robot);
