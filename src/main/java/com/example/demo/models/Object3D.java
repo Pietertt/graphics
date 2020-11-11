@@ -29,4 +29,5 @@ public abstract class Object3D {
 
     public abstract ArrayList<Integer> getInventory();
     public abstract void addOrder(double x, double y, double z);
+    public abstract void moveTo(double x, double y, double z);
 }

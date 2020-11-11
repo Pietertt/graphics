@@ -74,6 +74,11 @@ public class Stellage extends Object3D implements Updatable {
     }
 
     @Override
+    public void moveTo(double x, double y, double z){
+        
+    }
+
+    @Override
     public void addOrder(double x, double y, double z){
 
     }

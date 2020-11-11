@@ -43,7 +43,7 @@ class Truck extends Object3D implements Updatable {
                 }
                 
                 for(Object3D robot : this.availableRobots){
-                    robot.moveTo(40, 40, 40);
+                    robot.moveTo(40, 0, 0);
                 }
 
                 this.forward = false;
@@ -109,6 +109,11 @@ class Truck extends Object3D implements Updatable {
 
     @Override
     public void addOrder(double x, double y, double z){
+
+    }
+
+    @Override
+    public void moveTo(double x, double y, double z){
 
     }
 

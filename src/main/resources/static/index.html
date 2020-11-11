@@ -195,13 +195,15 @@
                      */
                     var object = worldObjects[command.parameters.uuid];
 
-                    object.position.x = command.parameters.x;
-                    object.position.y = command.parameters.y;
-                    object.position.z = command.parameters.z;
+                    if(object != undefined){
+                        object.position.x = command.parameters.x;
+                        object.position.y = command.parameters.y;
+                        object.position.z = command.parameters.z;
 
-                    object.rotation.x = command.parameters.rotationX;
-                    object.rotation.y = command.parameters.rotationY;
-                    object.rotation.z = command.parameters.rotationZ;
+                        object.rotation.x = command.parameters.rotationX;
+                        object.rotation.y = command.parameters.rotationY;
+                        object.rotation.z = command.parameters.rotationZ;
+                    }
 
                     if(command.parameters.type = "truck"){
                         var element = document.getElementById("inventory");

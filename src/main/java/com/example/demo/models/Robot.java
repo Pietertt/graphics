@@ -80,15 +80,19 @@ class Robot extends Object3D implements Updatable {
     public boolean update() {
         if(this.ordered){
             if(this.x != this.orderedX){
-                this.x += this.speed;
+                if(this.orderedX > this.x){
+                    this.x += this.speed;
+                } else {
+                    this.x -= this.speed;
+                }
             }
 
-            // if(this.y != this.orderedY){
-            //     this.y += this.speed;
-            // }
-
             if(this.z != this.orderedZ){
-                this.z += this.speed;
+                if(this.orderedZ > this.z){
+                    this.z += this.speed;
+                } else {
+                    this.z -= this.speed;
+                }
             }
         }
 
@@ -149,12 +153,16 @@ class Robot extends Object3D implements Updatable {
     } 
 
     @Override
+    public void moveTo(double x, double y, double z){
+        this.addOrder(x, y, z);
+    }
+
+    @Override
     public void addOrder(double x, double y, double z){
         this.ordered = true;
         this.orderedX = x;
         this.orderedY = y;
         this.orderedZ = z;
 
-        System.out.printf("I have to move\n");
     }
 }
