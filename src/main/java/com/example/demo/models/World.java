@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Iterator;
 
-import com.example.demo.observers.EventListener;
-import com.example.demo.observers.DeletionListener;
+import com.example.demo.models.Robot;
 
 /*
  * Deze class is een versie van het model van de simulatie. In dit geval is het
@@ -41,6 +40,28 @@ public class World implements Model {
         this.worldObjects = new ArrayList<Object3D>();
         this.queue = new ArrayList<Object3D>();
 
+        Object3D stellage1 = new Stellage(26, 2, 9);
+        Object3D stellage2 = new Stellage(22, 2, 9);
+        Object3D stellage3 = new Stellage(10, 2, 9);
+        Object3D stellage4 = new Stellage(5, 2, 9);
+        Object3D stellage5 = new Stellage(26, 2, 17);
+        Object3D stellage6 = new Stellage(21, 2, 17);
+        Object3D stellage7 = new Stellage(10, 2, 17);
+        Object3D stellage8 = new Stellage(5, 2, 17);
+        Object3D stellage9 = new Stellage(21, 2, 24);
+        Object3D stellage10 = new Stellage(10, 2, 24);
+
+        this.worldObjects.add(stellage1);
+        this.worldObjects.add(stellage2);
+        this.worldObjects.add(stellage3);
+        this.worldObjects.add(stellage4);
+        this.worldObjects.add(stellage5);
+        this.worldObjects.add(stellage6);
+        this.worldObjects.add(stellage7);
+        this.worldObjects.add(stellage8);
+        this.worldObjects.add(stellage9);
+        this.worldObjects.add(stellage10);
+
         Object3D robot = new Robot(5, 0);
 
         this.worldObjects.add(robot);
@@ -61,18 +82,16 @@ public class World implements Model {
         Random random = new Random();
 
         if(random.nextInt(200) == 2){
-            if(this.worldObjectsContainsTruck()){
-                Object3D truck = new Truck(15, -50);
-
-                this.queue.add(truck);
-                DeletionListener listener = new DeletionListener();
-                truck.events.subscribe("delete", listener);
-            } else {
-                Object3D truck = new Truck(15, -50);
+            if(!this.worldObjectsContainsTruck()){
+                Truck truck = new Truck(15, -50);
+                for(Object3D object : this.worldObjects){
+                    if(object instanceof Robot){
+                        truck.subscribe(object);
+                        System.out.println("Added a robot to the truck");
+                    }
+                }
 
                 this.worldObjects.add(truck);
-                DeletionListener listener = new DeletionListener();
-                truck.events.subscribe("delete", listener);
             }
         }
 

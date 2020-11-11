@@ -5,8 +5,6 @@ import java.util.Random;
 import java.util.UUID;
 import java.lang.Math;
 
-import com.example.demo.observers.EventManager;
-
 class Truck extends Object3D implements Updatable {
     private UUID uuid;
 
@@ -20,15 +18,17 @@ class Truck extends Object3D implements Updatable {
     private double rotationY = 0;
     private double rotationZ = 0;
 
-    private double speed = 0.2;
-    private ArrayList<Integer> inventory;
+    private ArrayList<Object3D> availableRobots;
 
     public Truck(int x, int z) {
         this.x = x;
         this.z = z;
+        this.speed = 0.2;
         this.uuid = UUID.randomUUID();
         this.inventory = new ArrayList<Integer>();
-        this.events = new EventManager("delete");
+        this.availableRobots = new ArrayList<Object3D>();
+
+        System.out.println("Spawned truck");
     }
 
     @Override
@@ -41,19 +41,23 @@ class Truck extends Object3D implements Updatable {
                 for(int i = 0; i < new Random().nextInt(3) + 1; i++){
                     this.inventory.add(new Random().nextInt(10));
                 }
+                
+                for(Object3D robot : this.availableRobots){
+                    robot.moveTo(40, 0, 0);
+                }
+
                 this.forward = false;
             }
         } else {
-            if(this.z - this.speed > -50){
-                this.z -= this.speed;
-            } else {
-                this.events.notify("delete", this);
+            // The truck doesn't move until the robots have unload it
+            if(this.inventory.size() == 0){
+                if(this.z - this.speed > -50){
+                    this.z -= this.speed;
+                } else {
+                    this.status = false;
+                }
             }
         }  
-
-        // if((z + randomZ <= 30.0) && (z + randomZ >= 0.0)){
-        //     this.z += randomZ;
-        // }
         
         return true;
     }
@@ -102,4 +106,18 @@ class Truck extends Object3D implements Updatable {
     public ArrayList<Integer> getInventory(){
         return this.inventory;
     } 
+
+    @Override
+    public void addOrder(double x, double y, double z){
+
+    }
+
+    @Override
+    public void moveTo(double x, double y, double z){
+
+    }
+
+    public void subscribe(Object3D robot){
+        this.availableRobots.add(robot);
+    }
 }

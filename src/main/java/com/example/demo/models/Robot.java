@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
-import com.example.demo.observers.EventManager;
-
 /*
  * Deze class stelt een robot voor. Hij impelementeerd de class Object3D, omdat het ook een
  * 3D object is. Ook implementeerd deze class de interface Updatable. Dit is omdat
@@ -17,14 +15,18 @@ class Robot extends Object3D implements Updatable {
     private double x;
     private double y = 0;
     private double z;
-    private boolean stellage = false;
+    private boolean ordered = false;
 
     private double rotationX = 0;
     private double rotationY = 0;
     private double rotationZ = 0;
 
+    private double orderedX = 0;
+    private double orderedY = 0;
+    private double orderedZ = 0;
+
     
-    public Robot(int x, int z) {
+    public Robot(double x, double z) {
 
         Vertex vertexA = new Vertex("A");
 		Vertex vertexB = new Vertex("B");
@@ -57,9 +59,8 @@ class Robot extends Object3D implements Updatable {
 
         this.x = x;
         this.z = z;
+        this.speed = 0.1;
         this.uuid = UUID.randomUUID();
-
-        this.events = new EventManager("delete");
     }
 
     /*
@@ -77,24 +78,24 @@ class Robot extends Object3D implements Updatable {
      */
     @Override
     public boolean update() {
-        Random random = new Random();
-        
-        double nextX = (random.nextDouble() * 2) - 1;
-        double nextZ = (random.nextDouble() * 2) - 1;
+        if(this.ordered){
+            if(this.x != this.orderedX){
+                if(this.orderedX > this.x){
+                    this.x += this.speed;
+                } else {
+                    this.x -= this.speed;
+                }
+            }
 
-        double x = this.x;
-        double z = this.z;
-
-        if((x + nextX <= 30.0) && (x + nextX >= 0.0)){
-            this.x += nextX;
+            if(this.z != this.orderedZ){
+                if(this.orderedZ > this.z){
+                    this.z += this.speed;
+                } else {
+                    this.z -= this.speed;
+                }
+            }
         }
 
-        if((z + nextZ <= 30.0) && (z + nextZ >= 0.0)){
-            this.z += nextZ;
-        }
-
-        //System.out.printf("%s - %s\n", this.x, this.z);
-        
         return true;
     }
 
@@ -150,4 +151,18 @@ class Robot extends Object3D implements Updatable {
         ArrayList<Integer> empty = new ArrayList<Integer>();
         return empty;
     } 
+
+    @Override
+    public void moveTo(double x, double y, double z){
+        this.addOrder(x, y, z);
+    }
+
+    @Override
+    public void addOrder(double x, double y, double z){
+        this.ordered = true;
+        this.orderedX = x;
+        this.orderedY = y;
+        this.orderedZ = z;
+
+    }
 }

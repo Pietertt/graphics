@@ -2,8 +2,6 @@ package com.example.demo.models;
 
 import java.util.ArrayList;
 
-import com.example.demo.observers.EventManager;
-
 /*
  * Deze interface beschrijft wat een 3D model is. Het is een interface omdat alleen de
  * methoden worden gegeven die een object moet implementeren om een 3D model te kunnen zijn.
@@ -13,8 +11,9 @@ import com.example.demo.observers.EventManager;
  */
 
 public abstract class Object3D {
-    public EventManager events;
     public Boolean status = true;
+    public double speed;
+    public ArrayList<Integer> inventory;
     
     public abstract String getUUID();
     public abstract String getType();
@@ -29,4 +28,6 @@ public abstract class Object3D {
 
 
     public abstract ArrayList<Integer> getInventory();
+    public abstract void addOrder(double x, double y, double z);
+    public abstract void moveTo(double x, double y, double z);
 }

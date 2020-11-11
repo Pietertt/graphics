@@ -70,140 +70,6 @@
           plane.position.z = 15;
           plane.position.y = -0.001;
           scene.add(plane);
-
-          //Stelling 1
-          var geometry = new THREE.BoxGeometry(1, 1, 5);
-          var material = new THREE.MeshBasicMaterial({
-            color: 0x0000ff,
-            side: THREE.DoubleSide,
-          });
-          var plane = new THREE.Mesh(geometry, material);
-          plane.rotation.x = Math.PI / 2.0;
-          plane.position.x = 25.5;
-          plane.position.z = 9;
-          plane.position.y = 2.5;
-          scene.add(plane);
-
-          //Stelling 2
-          var geometry = new THREE.BoxGeometry(1, 1, 5);
-          var material = new THREE.MeshBasicMaterial({
-            color: 0x0000ff,
-            side: THREE.DoubleSide,
-          });
-          var plane = new THREE.Mesh(geometry, material);
-          plane.rotation.x = Math.PI / 2.0;
-          plane.position.x = 21;
-          plane.position.z = 9;
-          plane.position.y = 2.5;
-          scene.add(plane);
-
-          //Stelling 3
-          var geometry = new THREE.BoxGeometry(1, 1, 5);
-          var material = new THREE.MeshBasicMaterial({
-            color: 0x0000ff,
-            side: THREE.DoubleSide,
-          });
-          var plane = new THREE.Mesh(geometry, material);
-          plane.rotation.x = Math.PI / 2.0;
-          plane.position.x = 9.5;
-          plane.position.z = 9;
-          plane.position.y = 2.5;
-          scene.add(plane);
-
-          //Stelling 4
-          var geometry = new THREE.BoxGeometry(1, 1, 5);
-          var material = new THREE.MeshBasicMaterial({
-            color: 0x0000ff,
-            side: THREE.DoubleSide,
-          });
-          var plane = new THREE.Mesh(geometry, material);
-          plane.rotation.x = Math.PI / 2.0;
-          plane.position.x = 5;
-          plane.position.z = 9;
-          plane.position.y = 2.5;
-          scene.add(plane);
-
-          //Stelling 5
-          var geometry = new THREE.BoxGeometry(1, 1, 5);
-          var material = new THREE.MeshBasicMaterial({
-            color: 0x0000ff,
-            side: THREE.DoubleSide,
-          });
-          var plane = new THREE.Mesh(geometry, material);
-          plane.rotation.x = Math.PI / 2.0;
-          plane.position.x = 25.5;
-          plane.position.z = 16.5;
-          plane.position.y = 2.5;
-          scene.add(plane);
-
-          //Stelling 6
-          var geometry = new THREE.BoxGeometry(1, 1, 5);
-          var material = new THREE.MeshBasicMaterial({
-            color: 0x0000ff,
-            side: THREE.DoubleSide,
-          });
-          var plane = new THREE.Mesh(geometry, material);
-          plane.rotation.x = Math.PI / 2.0;
-          plane.position.x = 21;
-          plane.position.z = 16.5;
-          plane.position.y = 2.5;
-          scene.add(plane);
-
-          //Stelling 7
-          var geometry = new THREE.BoxGeometry(1, 1, 5);
-          var material = new THREE.MeshBasicMaterial({
-            color: 0x0000ff,
-            side: THREE.DoubleSide,
-          });
-          var plane = new THREE.Mesh(geometry, material);
-          plane.rotation.x = Math.PI / 2.0;
-          plane.position.x = 9.5;
-          plane.position.z = 16.5;
-          plane.position.y = 2.5;
-          scene.add(plane);
-
-          // Stelling 8
-          var geometry = new THREE.BoxGeometry(1, 1, 5);
-          var material = new THREE.MeshBasicMaterial({
-            color: 0x0000ff,
-            side: THREE.DoubleSide,
-          });
-          var plane = new THREE.Mesh(geometry, material);
-          plane.rotation.x = Math.PI / 2.0;
-          plane.position.x = 5;
-          plane.position.z = 16.5;
-          plane.position.y = 2.5;
-          scene.add(plane);
-
-          // Stelling 9
-          var geometry = new THREE.BoxGeometry(1, 1, 5);
-          var material = new THREE.MeshBasicMaterial({
-            color: 0x0000ff,
-            side: THREE.DoubleSide,
-          });
-          var plane = new THREE.Mesh(geometry, material);
-          plane.rotation.x = Math.PI / 2.0;
-          plane.position.x = 21;
-          plane.position.z = 24;
-          plane.position.y = 2.5;
-          scene.add(plane);
-
-          //Stelling 10
-          var geometry = new THREE.BoxGeometry(1, 1, 5);
-          var material = new THREE.MeshBasicMaterial({
-            color: 0x0000ff,
-            side: THREE.DoubleSide,
-          });
-          var plane = new THREE.Mesh(geometry, material);
-          plane.rotation.x = Math.PI / 2.0;
-          plane.position.x = 9.5;
-          plane.position.z = 24;
-          plane.position.y = 2.5;
-          scene.add(plane);
-
-          var light = new THREE.AmbientLight(0x404040);
-          light.intensity = 4;
-          scene.add(light);
         }
 
             function onWindowResize() {
@@ -294,6 +160,20 @@
                             worldObjects[command.parameters.uuid] = group;
                         }
 
+                        if (command.parameters.type == "stellage"){
+                            var geometry = new THREE.BoxGeometry(1, 1, 5);
+                            var material = new THREE.MeshBasicMaterial({
+                                color: 0x0000ff,
+                                side: THREE.DoubleSide,
+                            });
+                            var plane = new THREE.Mesh(geometry, material);
+                            plane.rotation.x = Math.PI / 2.0;
+                            plane.position.x = command.parameters.x;
+                            plane.position.z = command.parameters.z;
+                            plane.position.y = command.parameters.y;
+                            scene.add(plane);
+                        }
+
                         if (command.parameters.type == "truck") {
                             var geometry = new THREE.BoxGeometry(3, 3, 5);
                             var material = new THREE.MeshBasicMaterial({ color: 0x00ff00 });
@@ -315,13 +195,15 @@
                      */
                     var object = worldObjects[command.parameters.uuid];
 
-                    object.position.x = command.parameters.x;
-                    object.position.y = command.parameters.y;
-                    object.position.z = command.parameters.z;
+                    if(object != undefined){
+                        object.position.x = command.parameters.x;
+                        object.position.y = command.parameters.y;
+                        object.position.z = command.parameters.z;
 
-                    object.rotation.x = command.parameters.rotationX;
-                    object.rotation.y = command.parameters.rotationY;
-                    object.rotation.z = command.parameters.rotationZ;
+                        object.rotation.x = command.parameters.rotationX;
+                        object.rotation.y = command.parameters.rotationY;
+                        object.rotation.z = command.parameters.rotationZ;
+                    }
 
                     if(command.parameters.type = "truck"){
                         var element = document.getElementById("inventory");

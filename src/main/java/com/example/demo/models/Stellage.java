@@ -15,8 +15,9 @@ public class Stellage extends Object3D implements Updatable {
     private double rotationY = 0;
     private double rotationZ = 0;
 
-    public Stellage(int x, int z) {
+    public Stellage(int x, int y, int z) {
         this.x = x;
+        this.y = y;
         this.z = z;
         this.uuid = UUID.randomUUID();
     }
@@ -70,6 +71,16 @@ public class Stellage extends Object3D implements Updatable {
     @Override
     public double getRotationZ() {
         return this.rotationZ;
+    }
+
+    @Override
+    public void moveTo(double x, double y, double z){
+        
+    }
+
+    @Override
+    public void addOrder(double x, double y, double z){
+
     }
 
     @Override
