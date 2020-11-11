@@ -43,10 +43,10 @@ class Truck extends Object3D implements Updatable {
                 }
                 
                 for(Robot robot : this.availableRobots){
-                    robot.addOrder(new Order(30, 0, 0));
-                    robot.addOrder(new Order(0, 0, 0));
-                    robot.addOrder(new Order(0, 0, 30));
-                    robot.addOrder(new Order(0, 0, 0));
+                    robot.addOrder(new Stellage(30, 0, 0));
+                    robot.addOrder(new Stellage(0, 0, 0));
+                    robot.addOrder(new Stellage(0, 0, 30));
+                    robot.addOrder(new Stellage(0, 0, 0));
                 }
 
                 this.forward = false;

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
-import com.example.demo.models.Order;
-
 /*
  * Deze class stelt een robot voor. Hij impelementeerd de class Object3D, omdat het ook een
  * 3D object is. Ook implementeerd deze class de interface Updatable. Dit is omdat
@@ -27,10 +25,8 @@ class Robot extends Object3D implements Updatable {
     private double orderedY = 0;
     private double orderedZ = 0;
 
-    private ArrayList<Order> orders;
+    private ArrayList<Stellage> orders;
 
-
-    
     public Robot(double x, double z) {
 
         Vertex vertexA = new Vertex("A");
@@ -62,7 +58,7 @@ class Robot extends Object3D implements Updatable {
         vertexL.addNeighbour(new Edge(1,vertexL,vertexM));
         vertexM.addNeighbour(new Edge(1,vertexM,vertexN));
 
-        this.orders = new ArrayList<Order>();
+        this.orders = new ArrayList<Stellage>();
 
         this.x = x;
         this.z = z;
@@ -138,9 +134,9 @@ class Robot extends Object3D implements Updatable {
 
     private boolean robotHasArrivedX(){
         if(this.orders.size() > 0){
-            Order order = this.orders.get(0);
-            if((order.x - 0.01 <= this.x) && (this.x <= order.x + 0.01)){
-                if((order.z - 0.01 <= this.z) && (this.z <= order.z + 0.01)){
+            Stellage stellage = this.orders.get(0);
+            if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
+                if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
                     this.orders.remove(0);
                 }
                 return true;
@@ -152,9 +148,9 @@ class Robot extends Object3D implements Updatable {
 
     private boolean robotHasArrivedZ(){
         if(this.orders.size() > 0){
-            Order order = this.orders.get(0);
-            if((order.z - 0.01 <= this.z) && (this.z <= order.z + 0.01)){
-                if((order.x - 0.01 <= this.x) && (this.x <= order.x + 0.01)){
+            Stellage stellage = this.orders.get(0);
+            if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
+                if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
                     this.orders.remove(0);
                 }
                 return true;
@@ -166,8 +162,8 @@ class Robot extends Object3D implements Updatable {
 
     private void moveX(){
         if(this.orders.size() > 0){
-            Order order = this.orders.get(0);
-            if(order.x > this.x){
+            Stellage stellage = this.orders.get(0);
+            if(stellage.getX() > this.x){
                 this.x += this.speed;
             } else {
                 this.x -= this.speed;
@@ -177,8 +173,8 @@ class Robot extends Object3D implements Updatable {
 
     private void moveZ(){
         if(this.orders.size() > 0){
-            Order order = this.orders.get(0);
-            if(order.z > this.z){
+            Stellage stellage = this.orders.get(0);
+            if(stellage.getZ() > this.z){
                 this.z += this.speed;
             } else {
                 this.z -= this.speed;
@@ -196,8 +192,8 @@ class Robot extends Object3D implements Updatable {
         }
     }
 
-    public void addOrder(Order order){
-        this.orders.add(order);
+    public void addOrder(Stellage stellage){
+        this.orders.add(stellage);
         System.out.println("Adding order");
 
     }
