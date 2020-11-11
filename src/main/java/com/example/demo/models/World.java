@@ -92,6 +92,12 @@ public class World implements Model {
                     }
                 }
 
+                for(Object3D object : this.worldObjects){
+                    if(object instanceof Stellage){
+                        truck.addStellage((Stellage)object);
+                    }
+                }
+
                 this.worldObjects.add(truck);
             }
         }

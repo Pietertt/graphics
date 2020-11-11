@@ -18,6 +18,9 @@ class Truck extends Object3D implements Updatable {
     private double rotationY = 0;
     private double rotationZ = 0;
 
+    private ArrayList<Stellage> inventory;
+    private ArrayList<Stellage> availableStellages;
+
     private ArrayList<Robot> availableRobots;
 
     public Truck(int x, int z) {
@@ -25,7 +28,8 @@ class Truck extends Object3D implements Updatable {
         this.z = z;
         this.speed = 0.2;
         this.uuid = UUID.randomUUID();
-        this.inventory = new ArrayList<Integer>();
+        this.inventory = new ArrayList<Stellage>();
+        this.availableStellages = new ArrayList<Stellage>();
         this.availableRobots = new ArrayList<Robot>();
 
         System.out.println("Spawned truck");
@@ -39,27 +43,23 @@ class Truck extends Object3D implements Updatable {
                 this.z += this.speed;
             } else {
                 for(int i = 0; i < new Random().nextInt(3) + 1; i++){
-                    this.inventory.add(new Random().nextInt(10));
-                }
+                    for(Robot robot : this.availableRobots){
+                        robot.addOrder(this.availableStellages.get(new Random().nextInt(this.availableStellages.size() - 1)));
                 
-                for(Robot robot : this.availableRobots){
-                    robot.addOrder(new Stellage(30, 0, 0));
-                    robot.addOrder(new Stellage(0, 0, 0));
-                    robot.addOrder(new Stellage(0, 0, 30));
-                    robot.addOrder(new Stellage(0, 0, 0));
+                    }
                 }
 
                 this.forward = false;
             }
         } else {
-            // The truck doesn't move until the robots have unload it
-            if(this.inventory.size() == 0){
-                if(this.z - this.speed > -50){
-                    this.z -= this.speed;
-                } else {
-                    this.status = false;
-                }
-            }
+            // // The truck doesn't move until the robots have unload it
+            // if(this.inventory.size() == 0){
+            //     if(this.z - this.speed > -50){
+            //         this.z -= this.speed;
+            //     } else {
+            //         this.status = false;
+            //     }
+            // }
         }  
         
         return true;
@@ -105,12 +105,11 @@ class Truck extends Object3D implements Updatable {
         return this.rotationZ;
     }
 
-    // @Override
-    // public void moveTo(double x, double y, double z){
-
-    // }
-
     public void addRobot(Robot robot){
         this.availableRobots.add(robot);
+    }
+
+    public void addStellage(Stellage stellage){
+        this.availableStellages.add(stellage); 
     }
 }
