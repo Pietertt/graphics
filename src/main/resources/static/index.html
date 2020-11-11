@@ -209,10 +209,12 @@
                         var element = document.getElementById("inventory");
                         element.innerHTML = "";
 
-                        var inventory = command.parameters.inventory;
+                        if(command.parameters.inventory != undefined){
+                            var inventory = command.parameters.inventory;
 
-                        for(var i = 0; i < inventory.length; i++){
-                            element.innerHTML += "Stellage " + inventory[i] + "<br>";
+                            for(var i = 0; i < inventory.length; i++){
+                                element.innerHTML += "Stellage " + inventory[i] + "<br>";
+                            }
                         }
                     }
 

@@ -57,9 +57,6 @@ public class DefaultWebSocketView implements View {
      */
     private String jsonifyObject3D(Object3D object) {
         String inventory = "";
-        for(int i = 0; i < object.getInventory().size(); i++){
-            inventory += object.getInventory().get(i);
-        }
 
         return  "{" 
                 + surroundString("uuid") + ":" + surroundString(object.getUUID()) + ","
@@ -69,8 +66,7 @@ public class DefaultWebSocketView implements View {
                 + surroundString("z") + ":" + object.getZ() + ","
                 + surroundString("rotationX") + ":" + object.getRotationX() + ","
                 + surroundString("rotationY") + ":" + object.getRotationY() + ","
-                + surroundString("rotationZ") + ":" + object.getRotationZ() + ","
-                + surroundString("inventory") + ":" + surroundString(inventory)
+                + surroundString("rotationZ") + ":" + object.getRotationZ()
               + "}";
     }
 

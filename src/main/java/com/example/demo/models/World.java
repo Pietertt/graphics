@@ -83,11 +83,18 @@ public class World implements Model {
 
         if(random.nextInt(200) == 2){
             if(!this.worldObjectsContainsTruck()){
+
                 Truck truck = new Truck(15, -50);
+
                 for(Object3D object : this.worldObjects){
                     if(object instanceof Robot){
-                        truck.subscribe(object);
-                        System.out.println("Added a robot to the truck");
+                        truck.addRobot((Robot)object);
+                    }
+                }
+
+                for(Object3D object : this.worldObjects){
+                    if(object instanceof Stellage){
+                        truck.addStellage((Stellage)object);
                     }
                 }
 

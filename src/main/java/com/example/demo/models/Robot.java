@@ -25,7 +25,8 @@ class Robot extends Object3D implements Updatable {
     private double orderedY = 0;
     private double orderedZ = 0;
 
-    
+    private ArrayList<Stellage> orders;
+
     public Robot(double x, double z) {
 
         Vertex vertexA = new Vertex("A");
@@ -57,6 +58,8 @@ class Robot extends Object3D implements Updatable {
         vertexL.addNeighbour(new Edge(1,vertexL,vertexM));
         vertexM.addNeighbour(new Edge(1,vertexM,vertexN));
 
+        this.orders = new ArrayList<Stellage>();
+
         this.x = x;
         this.z = z;
         this.speed = 0.1;
@@ -78,24 +81,7 @@ class Robot extends Object3D implements Updatable {
      */
     @Override
     public boolean update() {
-        if(this.ordered){
-            if(this.x != this.orderedX){
-                if(this.orderedX > this.x){
-                    this.x += this.speed;
-                } else {
-                    this.x -= this.speed;
-                }
-            }
-
-            if(this.z != this.orderedZ){
-                if(this.orderedZ > this.z){
-                    this.z += this.speed;
-                } else {
-                    this.z -= this.speed;
-                }
-            }
-        }
-
+        this.move();
         return true;
     }
 
@@ -146,23 +132,69 @@ class Robot extends Object3D implements Updatable {
         return this.rotationZ;
     }
 
-    @Override
-    public ArrayList<Integer> getInventory(){
-        ArrayList<Integer> empty = new ArrayList<Integer>();
-        return empty;
-    } 
-
-    @Override
-    public void moveTo(double x, double y, double z){
-        this.addOrder(x, y, z);
+    private boolean robotHasArrivedX(){
+        if(this.orders.size() > 0){
+            Stellage stellage = this.orders.get(0);
+            if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
+                if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
+                    this.orders.remove(0);
+                }
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 
-    @Override
-    public void addOrder(double x, double y, double z){
-        this.ordered = true;
-        this.orderedX = x;
-        this.orderedY = y;
-        this.orderedZ = z;
+    private boolean robotHasArrivedZ(){
+        if(this.orders.size() > 0){
+            Stellage stellage = this.orders.get(0);
+            if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
+                if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
+                    this.orders.remove(0);
+                }
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    private void moveX(){
+        if(this.orders.size() > 0){
+            Stellage stellage = this.orders.get(0);
+            if(stellage.getX() > this.x){
+                this.x += this.speed;
+            } else {
+                this.x -= this.speed;
+            }
+        }
+    }
+
+    private void moveZ(){
+        if(this.orders.size() > 0){
+            Stellage stellage = this.orders.get(0);
+            if(stellage.getZ() > this.z){
+                this.z += this.speed;
+            } else {
+                this.z -= this.speed;
+            }
+        }
+    }
+
+    public void move(){
+        if(!this.robotHasArrivedX()){
+           this.moveX();
+        }
+
+        if(!this.robotHasArrivedZ()){
+            this.moveZ();
+        }
+    }
+
+    public void addOrder(Stellage stellage){
+        this.orders.add(stellage);
+        System.out.println("Adding order");
 
     }
 }
