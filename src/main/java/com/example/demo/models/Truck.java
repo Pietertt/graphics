@@ -18,7 +18,7 @@ class Truck extends Object3D implements Updatable {
     private double rotationY = 0;
     private double rotationZ = 0;
 
-    private ArrayList<Object3D> availableRobots;
+    private ArrayList<Robot> availableRobots;
 
     public Truck(int x, int z) {
         this.x = x;
@@ -26,7 +26,7 @@ class Truck extends Object3D implements Updatable {
         this.speed = 0.2;
         this.uuid = UUID.randomUUID();
         this.inventory = new ArrayList<Integer>();
-        this.availableRobots = new ArrayList<Object3D>();
+        this.availableRobots = new ArrayList<Robot>();
 
         System.out.println("Spawned truck");
     }
@@ -42,8 +42,11 @@ class Truck extends Object3D implements Updatable {
                     this.inventory.add(new Random().nextInt(10));
                 }
                 
-                for(Object3D robot : this.availableRobots){
-                    robot.moveTo(40, 0, 0);
+                for(Robot robot : this.availableRobots){
+                    robot.addOrder(new Order(30, 0, 0));
+                    robot.addOrder(new Order(0, 0, 0));
+                    robot.addOrder(new Order(0, 0, 30));
+                    robot.addOrder(new Order(0, 0, 0));
                 }
 
                 this.forward = false;
@@ -102,22 +105,12 @@ class Truck extends Object3D implements Updatable {
         return this.rotationZ;
     }
 
-    @Override
-    public ArrayList<Integer> getInventory(){
-        return this.inventory;
-    } 
+    // @Override
+    // public void moveTo(double x, double y, double z){
 
-    @Override
-    public void addOrder(double x, double y, double z){
+    // }
 
-    }
-
-    @Override
-    public void moveTo(double x, double y, double z){
-
-    }
-
-    public void subscribe(Object3D robot){
+    public void addRobot(Robot robot){
         this.availableRobots.add(robot);
     }
 }

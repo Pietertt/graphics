@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
+import com.example.demo.models.Order;
+
 /*
  * Deze class stelt een robot voor. Hij impelementeerd de class Object3D, omdat het ook een
  * 3D object is. Ook implementeerd deze class de interface Updatable. Dit is omdat
@@ -24,6 +26,9 @@ class Robot extends Object3D implements Updatable {
     private double orderedX = 0;
     private double orderedY = 0;
     private double orderedZ = 0;
+
+    private ArrayList<Order> orders;
+
 
     
     public Robot(double x, double z) {
@@ -57,6 +62,8 @@ class Robot extends Object3D implements Updatable {
         vertexL.addNeighbour(new Edge(1,vertexL,vertexM));
         vertexM.addNeighbour(new Edge(1,vertexM,vertexN));
 
+        this.orders = new ArrayList<Order>();
+
         this.x = x;
         this.z = z;
         this.speed = 0.1;
@@ -78,24 +85,7 @@ class Robot extends Object3D implements Updatable {
      */
     @Override
     public boolean update() {
-        if(this.ordered){
-            if(this.x != this.orderedX){
-                if(this.orderedX > this.x){
-                    this.x += this.speed;
-                } else {
-                    this.x -= this.speed;
-                }
-            }
-
-            if(this.z != this.orderedZ){
-                if(this.orderedZ > this.z){
-                    this.z += this.speed;
-                } else {
-                    this.z -= this.speed;
-                }
-            }
-        }
-
+        this.move();
         return true;
     }
 
@@ -146,23 +136,69 @@ class Robot extends Object3D implements Updatable {
         return this.rotationZ;
     }
 
-    @Override
-    public ArrayList<Integer> getInventory(){
-        ArrayList<Integer> empty = new ArrayList<Integer>();
-        return empty;
-    } 
-
-    @Override
-    public void moveTo(double x, double y, double z){
-        this.addOrder(x, y, z);
+    private boolean robotHasArrivedX(){
+        if(this.orders.size() > 0){
+            Order order = this.orders.get(0);
+            if((order.x - 0.01 <= this.x) && (this.x <= order.x + 0.01)){
+                if((order.z - 0.01 <= this.z) && (this.z <= order.z + 0.01)){
+                    this.orders.remove(0);
+                }
+                return true;
+            }
+            return false;
+        }
+        return false;
     }
 
-    @Override
-    public void addOrder(double x, double y, double z){
-        this.ordered = true;
-        this.orderedX = x;
-        this.orderedY = y;
-        this.orderedZ = z;
+    private boolean robotHasArrivedZ(){
+        if(this.orders.size() > 0){
+            Order order = this.orders.get(0);
+            if((order.z - 0.01 <= this.z) && (this.z <= order.z + 0.01)){
+                if((order.x - 0.01 <= this.x) && (this.x <= order.x + 0.01)){
+                    this.orders.remove(0);
+                }
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    private void moveX(){
+        if(this.orders.size() > 0){
+            Order order = this.orders.get(0);
+            if(order.x > this.x){
+                this.x += this.speed;
+            } else {
+                this.x -= this.speed;
+            }
+        }
+    }
+
+    private void moveZ(){
+        if(this.orders.size() > 0){
+            Order order = this.orders.get(0);
+            if(order.z > this.z){
+                this.z += this.speed;
+            } else {
+                this.z -= this.speed;
+            }
+        }
+    }
+
+    public void move(){
+        if(!this.robotHasArrivedX()){
+           this.moveX();
+        }
+
+        if(!this.robotHasArrivedZ()){
+            this.moveZ();
+        }
+    }
+
+    public void addOrder(Order order){
+        this.orders.add(order);
+        System.out.println("Adding order");
 
     }
 }

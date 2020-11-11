@@ -73,19 +73,8 @@ public class Stellage extends Object3D implements Updatable {
         return this.rotationZ;
     }
 
-    @Override
-    public void moveTo(double x, double y, double z){
+    // @Override
+    // public void moveTo(double x, double y, double z){
         
-    }
-
-    @Override
-    public void addOrder(double x, double y, double z){
-
-    }
-
-    @Override
-    public ArrayList<Integer> getInventory(){
-        ArrayList<Integer> empty = new ArrayList<Integer>();
-        return empty;
-    }     
+    // }
 }
