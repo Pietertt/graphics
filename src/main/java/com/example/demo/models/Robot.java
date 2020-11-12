@@ -15,7 +15,7 @@ class Robot extends Object3D implements Updatable {
     private double x;
     private double y = 0;
     private double z;
-    private boolean ordered = false;
+    private boolean delivering = false;
 
     private double rotationX = 0;
     private double rotationY = 0;
@@ -133,31 +133,53 @@ class Robot extends Object3D implements Updatable {
     }
 
     private boolean robotHasArrivedX(){
-        if(this.orders.size() > 0){
-            Stellage stellage = this.orders.get(0);
-            if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
-                if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
-                    this.orders.remove(0);
+        if(!this.delivering){
+            if(this.orders.size() > 0){
+                Stellage stellage = this.orders.get(0);
+                if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
+                    if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
+                        this.deliverInventory();
+                        this.orders.remove(0);
+                    }
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        } else {
+            if((15 - 0.01 <= this.x) && (this.x <= 15 + 0.01)){
+                if((0 - 0.01 <= this.z) && (this.z <= 0 + 0.01)){
+                    this.delivering = false;
                 }
                 return true;
             }
             return false;
         }
-        return false;
     }
 
     private boolean robotHasArrivedZ(){
-        if(this.orders.size() > 0){
-            Stellage stellage = this.orders.get(0);
-            if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
-                if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
-                    this.orders.remove(0);
+        if(!this.delivering){
+            if(this.orders.size() > 0){
+                Stellage stellage = this.orders.get(0);
+                if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
+                    if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
+                        this.deliverInventory();
+                        this.orders.remove(0);
+                    }
+                    return true;
+                }
+                return false;
+            }
+            return false;
+        } else {
+            if((0 - 0.01 <= this.z) && (this.z <= 0 + 0.01)){
+                if((15 - 0.01 <= this.x) && (this.x <= 15 + 0.01)){
+                    this.delivering = false;
                 }
                 return true;
             }
             return false;
         }
-        return false;
     }
 
     private void moveX(){
@@ -182,19 +204,76 @@ class Robot extends Object3D implements Updatable {
         }
     }
 
-    public void move(){
-        if(!this.robotHasArrivedX()){
-           this.moveX();
+    private boolean robotHasArrivedHomeX(){
+        if(this.orders.size() == 0){
+            if((15 - 0.01 <= this.x) && (this.x <= 15 + 0.01)){
+                return true;
+            }
+            return false;
         }
+        return false;
+    }
 
-        if(!this.robotHasArrivedZ()){
-            this.moveZ();
+    private boolean robotHasArrivedHomeZ(){
+        if(this.orders.size() == 0){
+            if((0 - 0.01 <= this.z) && (this.z <= 0 + 0.01)){
+                return true;
+            }
+            return false;
+        }
+        return false;
+    }
+
+    private void moveHomeX(){
+        if(this.x > 15){
+            this.x -= this.speed;
+        } else {
+            this.x += this.speed;
+        }
+    }
+
+    private void moveHomeZ(){
+        if(this.z > 0){
+            this.z -= this.speed;
+        } else {
+            this.z += this.speed;
+        }
+    }
+
+    private boolean hasNoOrders(){
+        if(this.orders.size() == 0){
+            return true;
+        }
+        return false;
+    }
+
+    private void deliverInventory(){
+        this.delivering = true;
+    }
+
+    public void move(){
+        if(!this.delivering){
+            if(!this.robotHasArrivedX()){
+                this.moveX();
+            }
+
+            if(!this.robotHasArrivedZ()){
+                this.moveZ();
+            }
+        } else {
+            if(!this.robotHasArrivedX()){
+                this.moveHomeX();
+            }
+            
+            if(!this.robotHasArrivedZ()){
+                this.moveHomeZ();
+            }
         }
     }
 
     public void addOrder(Stellage stellage){
         this.orders.add(stellage);
-        System.out.println("Adding order");
+        System.out.printf("[ROBOT] Moving to stellage %s on coordinates (%s %s %s)\n", stellage.getUUID(), stellage.getRotationX(), stellage.getY(), stellage.getZ());
 
     }
 }
