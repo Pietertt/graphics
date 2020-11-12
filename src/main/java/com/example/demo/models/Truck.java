@@ -32,7 +32,7 @@ class Truck extends Object3D implements Updatable {
         this.availableStellages = new ArrayList<Stellage>();
         this.availableRobots = new ArrayList<Robot>();
 
-        System.out.println("Spawned truck");
+        System.out.println("[Truck] Moving to warehouse");
     }
 
     @Override

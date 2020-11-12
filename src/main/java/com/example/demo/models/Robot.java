@@ -15,7 +15,7 @@ class Robot extends Object3D implements Updatable {
     private double x;
     private double y = 0;
     private double z;
-    private boolean delivering = false;
+    private boolean filling = false;
 
     private double rotationX = 0;
     private double rotationY = 0;
@@ -133,12 +133,12 @@ class Robot extends Object3D implements Updatable {
     }
 
     private boolean robotHasArrivedX(){
-        if(!this.delivering){
-            if(this.orders.size() > 0){
+        if(!this.isFillingTruck()){
+            if(!this.hasNoOrders()){
                 Stellage stellage = this.orders.get(0);
                 if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
                     if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
-                        this.deliverInventory();
+                        this.fillTruck();
                         this.orders.remove(0);
                     }
                     return true;
@@ -149,7 +149,7 @@ class Robot extends Object3D implements Updatable {
         } else {
             if((15 - 0.01 <= this.x) && (this.x <= 15 + 0.01)){
                 if((0 - 0.01 <= this.z) && (this.z <= 0 + 0.01)){
-                    this.delivering = false;
+                    this.takeNextStellage();
                 }
                 return true;
             }
@@ -158,12 +158,12 @@ class Robot extends Object3D implements Updatable {
     }
 
     private boolean robotHasArrivedZ(){
-        if(!this.delivering){
-            if(this.orders.size() > 0){
+        if(!this.isFillingTruck()){
+            if(!this.hasNoOrders()){
                 Stellage stellage = this.orders.get(0);
                 if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
                     if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
-                        this.deliverInventory();
+                        this.fillTruck();
                         this.orders.remove(0);
                     }
                     return true;
@@ -174,7 +174,7 @@ class Robot extends Object3D implements Updatable {
         } else {
             if((0 - 0.01 <= this.z) && (this.z <= 0 + 0.01)){
                 if((15 - 0.01 <= this.x) && (this.x <= 15 + 0.01)){
-                    this.delivering = false;
+                    this.takeNextStellage();
                 }
                 return true;
             }
@@ -183,60 +183,40 @@ class Robot extends Object3D implements Updatable {
     }
 
     private void moveX(){
-        if(this.orders.size() > 0){
-            Stellage stellage = this.orders.get(0);
-            if(stellage.getX() > this.x){
-                this.x += this.speed;
-            } else {
+        if(!this.isFillingTruck()){
+            if(!this.hasNoOrders()){
+                Stellage stellage = this.orders.get(0);
+                if(stellage.getX() > this.x){
+                    this.x += this.speed;
+                } else {
+                    this.x -= this.speed;
+                }
+            }
+        } else {
+            if(this.x > 15){
                 this.x -= this.speed;
+            } else {
+                this.x += this.speed;
             }
         }
     }
 
     private void moveZ(){
-        if(this.orders.size() > 0){
-            Stellage stellage = this.orders.get(0);
-            if(stellage.getZ() > this.z){
-                this.z += this.speed;
-            } else {
+        if(!this.isFillingTruck()){
+            if(!this.hasNoOrders()){
+                Stellage stellage = this.orders.get(0);
+                if(stellage.getZ() > this.z){
+                    this.z += this.speed;
+                } else {
+                    this.z -= this.speed;
+                }
+            }
+        } else {
+            if(this.z > 0){
                 this.z -= this.speed;
+            } else {
+                this.z += this.speed;
             }
-        }
-    }
-
-    private boolean robotHasArrivedHomeX(){
-        if(this.orders.size() == 0){
-            if((15 - 0.01 <= this.x) && (this.x <= 15 + 0.01)){
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
-
-    private boolean robotHasArrivedHomeZ(){
-        if(this.orders.size() == 0){
-            if((0 - 0.01 <= this.z) && (this.z <= 0 + 0.01)){
-                return true;
-            }
-            return false;
-        }
-        return false;
-    }
-
-    private void moveHomeX(){
-        if(this.x > 15){
-            this.x -= this.speed;
-        } else {
-            this.x += this.speed;
-        }
-    }
-
-    private void moveHomeZ(){
-        if(this.z > 0){
-            this.z -= this.speed;
-        } else {
-            this.z += this.speed;
         }
     }
 
@@ -247,27 +227,25 @@ class Robot extends Object3D implements Updatable {
         return false;
     }
 
-    private void deliverInventory(){
-        this.delivering = true;
+    private void fillTruck(){
+        this.filling = true;
+    }
+
+    private void takeNextStellage(){
+        this.filling = false;
+    }
+
+    private boolean isFillingTruck(){
+        return this.filling;
     }
 
     public void move(){
-        if(!this.delivering){
-            if(!this.robotHasArrivedX()){
-                this.moveX();
-            }
+        if(!this.robotHasArrivedX()){
+            this.moveX();
+        }
 
-            if(!this.robotHasArrivedZ()){
-                this.moveZ();
-            }
-        } else {
-            if(!this.robotHasArrivedX()){
-                this.moveHomeX();
-            }
-            
-            if(!this.robotHasArrivedZ()){
-                this.moveHomeZ();
-            }
+        if(!this.robotHasArrivedZ()){
+            this.moveZ();
         }
     }
 
