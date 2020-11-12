@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 
+import com.example.demo.models.Observer.EventManager;
+
+import jdk.internal.event.Event;
+
 /*
  * Deze class stelt een robot voor. Hij impelementeerd de class Object3D, omdat het ook een
  * 3D object is. Ook implementeerd deze class de interface Updatable. Dit is omdat
@@ -26,6 +30,8 @@ class Robot extends Object3D implements Updatable {
     private double orderedZ = 0;
 
     private ArrayList<Stellage> orders;
+
+    public EventManager events;
 
     public Robot(double x, double z) {
 
@@ -64,6 +70,7 @@ class Robot extends Object3D implements Updatable {
         this.z = z;
         this.speed = 0.1;
         this.uuid = UUID.randomUUID();
+        this.events = new EventManager("deliver");
     }
 
     /*
@@ -149,7 +156,11 @@ class Robot extends Object3D implements Updatable {
         } else {
             if((15 - 0.01 <= this.x) && (this.x <= 15 + 0.01)){
                 if((0 - 0.01 <= this.z) && (this.z <= 0 + 0.01)){
-                    this.takeNextStellage();
+                    if(!this.hasNoOrders()){
+                        this.takeNextStellage();
+                    } else {
+                        this.events.notify("deliver"); // TODO
+                    }
                 }
                 return true;
             }
@@ -174,7 +185,11 @@ class Robot extends Object3D implements Updatable {
         } else {
             if((0 - 0.01 <= this.z) && (this.z <= 0 + 0.01)){
                 if((15 - 0.01 <= this.x) && (this.x <= 15 + 0.01)){
-                    this.takeNextStellage();
+                    if(!this.hasNoOrders()){
+                        this.takeNextStellage();
+                    } else {
+                        this.events.notify("deliver"); // TODO
+                    }
                 }
                 return true;
             }
