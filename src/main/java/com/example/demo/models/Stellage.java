@@ -24,6 +24,7 @@ public class Stellage extends Object3D implements Updatable {
         this.y = y;
         this.z = z;
         this.uuid = UUID.randomUUID();
+        this.events = new EventManager("loaded");
     }
 
     @Override
@@ -83,9 +84,5 @@ public class Stellage extends Object3D implements Updatable {
     @Override
     public double getRotationZ() {
         return this.rotationZ;
-    }
-
-    public void update(String event, String message){
-
     }
 }

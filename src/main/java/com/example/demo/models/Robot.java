@@ -162,6 +162,7 @@ class Robot extends Object3D implements Updatable {
                 if((0 - 0.01 <= this.z) && (this.z <= 0 + 0.01)){
                     if(!this.hasNoOrders()){
                         this.events.notify("deliver", this.orders.get(0).getUUID());
+                        this.orders.get(0).events.notify("loaded", this.orders.get(0).getUUID());
                         this.orders.remove(0);
                         this.takeNextStellage();
                     } else {
@@ -193,6 +194,7 @@ class Robot extends Object3D implements Updatable {
                 if((15 - 0.01 <= this.x) && (this.x <= 15 + 0.01)){
                     if(!this.hasNoOrders()){
                         this.events.notify("deliver", this.orders.get(0).getUUID()); 
+                        this.orders.get(0).events.notify("loaded", this.orders.get(0).getUUID());
                         this.orders.remove(0);
                         this.takeNextStellage();
                     } else {
@@ -279,10 +281,6 @@ class Robot extends Object3D implements Updatable {
         if(!this.robotHasArrivedZ()){
             this.moveZ();
         }
-    }
-
-    public void update(String event, String message){
-
     }
 
     public void addOrder(Stellage stellage){

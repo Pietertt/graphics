@@ -50,7 +50,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
                 this.z += this.speed;
             } else {
                 for(int i = 0; i < new Random().nextInt(3) + 1; i++){
-                    Stellage stellage = this.availableStellages.get(new Random().nextInt(this.availableStellages.size() - 1));
+                    Stellage stellage = this.availableStellages.get(new Random().nextInt(this.availableStellages.size()));
                     this.orderList.add(stellage);
                 }
 

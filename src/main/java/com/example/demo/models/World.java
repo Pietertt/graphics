@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.Iterator;
 
 import com.example.demo.models.Robot;
+import com.example.demo.models.Observer.EventListener;
 
 /*
  * Deze class is een versie van het model van de simulatie. In dit geval is het
@@ -15,7 +16,7 @@ import com.example.demo.models.Robot;
  * de logica die van toepassing is op het domein dat de applicatie modelleerd, staat
  * in het model. Dit betekent dus de logica die het magazijn simuleert.
  */
-public class World implements Model {
+public class World implements Model, EventListener {
     /*
      * De wereld bestaat uit objecten, vandaar de naam worldObjects. Dit is een lijst
      * van alle objecten in de 3D wereld. Deze objecten zijn in deze voorbeeldcode alleen
@@ -24,6 +25,7 @@ public class World implements Model {
      * een lijst van Object3D onderdelen. Deze kunnen in principe alles zijn. (Robots, vrachrtwagens, etc)
      */
     public ArrayList<Object3D> worldObjects;
+    public ArrayList<Stellage> availableStellages;
     public ArrayList<Object3D> queue;
 
     /*
@@ -38,29 +40,28 @@ public class World implements Model {
      */
     public World() {
         this.worldObjects = new ArrayList<Object3D>();
+        this.availableStellages = new ArrayList<Stellage>();
         this.queue = new ArrayList<Object3D>();
 
-        Object3D stellage1 = new Stellage(26, 2, 9);
-        Object3D stellage2 = new Stellage(22, 2, 9);
-        Object3D stellage3 = new Stellage(10, 2, 9);
-        Object3D stellage4 = new Stellage(5, 2, 9);
-        Object3D stellage5 = new Stellage(26, 2, 17);
-        Object3D stellage6 = new Stellage(21, 2, 17);
-        Object3D stellage7 = new Stellage(10, 2, 17);
-        Object3D stellage8 = new Stellage(5, 2, 17);
-        Object3D stellage9 = new Stellage(21, 2, 24);
-        Object3D stellage10 = new Stellage(10, 2, 24);
+        double[][] stellages = {
+            {26, 2, 9},
+            {22, 2, 9},
+            {10, 2, 9},
+            {5, 2, 9},
+            {26, 2, 17},
+            {21, 2, 17},
+            {10, 2, 17},
+            {5, 2, 17},
+            {21, 2, 24},
+            {10, 2, 24}
+        };
 
-        this.worldObjects.add(stellage1);
-        this.worldObjects.add(stellage2);
-        this.worldObjects.add(stellage3);
-        this.worldObjects.add(stellage4);
-        this.worldObjects.add(stellage5);
-        this.worldObjects.add(stellage6);
-        this.worldObjects.add(stellage7);
-        this.worldObjects.add(stellage8);
-        this.worldObjects.add(stellage9);
-        this.worldObjects.add(stellage10);
+        for(int i = 0; i < stellages.length; i++){
+            Stellage stellage = new Stellage(stellages[i][0], stellages[i][1], stellages[i][2]);
+            stellage.events.subscribe("loaded", this);
+            this.worldObjects.add(stellage);
+            this.availableStellages.add(stellage);
+        }
 
         Object3D robot1 = new Robot(5, 0);
         Object3D robot2 = new Robot(10, 0);
@@ -94,10 +95,8 @@ public class World implements Model {
                     }
                 }
 
-                for(Object3D object : this.worldObjects){
-                    if(object instanceof Stellage){
-                        truck.addStellage((Stellage)object);
-                    }
+                for(Stellage stellage : this.availableStellages){
+                    truck.addStellage(stellage);
                 }
 
                 this.worldObjects.add(truck);
@@ -164,5 +163,14 @@ public class World implements Model {
         }
 
         return false;
+    }
+
+    public void update(String event, String message){
+        for(int i = 0; i < this.availableStellages.size(); i++){
+            Stellage stellage = this.availableStellages.get(i);
+            if(stellage.getUUID().equals(message)){
+                this.availableStellages.remove(stellage);
+            }
+        }
     }
 }
