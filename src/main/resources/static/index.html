@@ -177,15 +177,15 @@
 
                             var stellage = new THREE.Mesh(geometry, material);
                             stellage.rotation.x = Math.PI / 2.0;
-                            stellage.position.x = command.parameters.x;
-                            stellage.position.z = command.parameters.z;
-                            stellage.position.y = command.parameters.y;
+                            // stellage.position.x = command.parameters.x;
+                            // stellage.position.z = command.parameters.z;
+                            // stellage.position.y = command.parameters.y;
 
-                            // var group = new THREE.Group();
-                            // group.add(stellage);
-                            // group.name = command.parameters.uuid;
+                            var group = new THREE.Group();
+                            group.add(stellage);
+                            group.name = command.parameters.uuid;
 
-                            scene.add(stellage);
+                            scene.add(group);
                             worldObjects[command.parameters.uuid] = group;
                         }
 

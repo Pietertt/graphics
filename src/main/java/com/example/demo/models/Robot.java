@@ -70,7 +70,7 @@ class Robot extends Object3D implements Updatable {
         this.z = z;
         this.speed = 0.1;
         this.uuid = UUID.randomUUID();
-        this.events = new EventManager("deliver", "done_delivering");
+        this.events = new EventManager("deliver", "done_delivering", "load");
     }
 
     /*
@@ -150,6 +150,7 @@ class Robot extends Object3D implements Updatable {
                 if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
                     if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
                         this.fillTruck();
+                        //this.events.notify("load", "test"); 
                     }
                     return true;
                 }
@@ -179,7 +180,8 @@ class Robot extends Object3D implements Updatable {
                 Stellage stellage = this.orders.get(0);
                 if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
                     if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
-                        this.fillTruck();    
+                        this.fillTruck();   
+                        //this.events.notify("load", "test"); 
                     }
                     return true;
                 }
@@ -214,10 +216,15 @@ class Robot extends Object3D implements Updatable {
                 }
             }
         } else {
+            Stellage stellage = this.orders.get(0);
             if(this.x > 15){
                 this.x -= this.speed;
+                this.orders.get(0).setX(this.x);
+                this.orders.get(0).setZ(this.z); 
             } else {
                 this.x += this.speed;
+                this.orders.get(0).setX(this.x);
+                this.orders.get(0).setZ(this.z); 
             }
         }
     }
@@ -235,8 +242,12 @@ class Robot extends Object3D implements Updatable {
         } else {
             if(this.z > 0){
                 this.z -= this.speed;
+                this.orders.get(0).setX(this.x);
+                this.orders.get(0).setZ(this.z);
             } else {
                 this.z += this.speed;
+                this.orders.get(0).setX(this.x);
+                this.orders.get(0).setZ(this.z);
             }
         }
     }
@@ -268,6 +279,10 @@ class Robot extends Object3D implements Updatable {
         if(!this.robotHasArrivedZ()){
             this.moveZ();
         }
+    }
+
+    public void update(String event, String message){
+
     }
 
     public void addOrder(Stellage stellage){

@@ -1,5 +1,6 @@
 package com.example.demo.models.Observer;
 
+import com.example.demo.models.Object3D;
 import com.example.demo.models.Stellage;
 import com.example.demo.models.Truck;
 

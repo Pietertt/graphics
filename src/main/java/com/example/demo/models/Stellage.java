@@ -3,6 +3,8 @@ package com.example.demo.models;
 import java.util.UUID;
 import java.util.ArrayList;
 
+import com.example.demo.models.Observer.*;
+
 public class Stellage extends Object3D implements Updatable {
 
     private UUID uuid;
@@ -14,6 +16,8 @@ public class Stellage extends Object3D implements Updatable {
     private double rotationX = 0;
     private double rotationY = 0;
     private double rotationZ = 0;
+
+    public EventManager events;
 
     public Stellage(double x, double y, double z) {
         this.x = x;
@@ -58,6 +62,14 @@ public class Stellage extends Object3D implements Updatable {
         return this.z;
     }
 
+    public void setX(double x){
+        this.x = x;
+    }
+
+    public void setZ(double z){
+        this.z = z;
+    }
+
     @Override
     public double getRotationX() {
         return this.rotationX;
@@ -73,8 +85,7 @@ public class Stellage extends Object3D implements Updatable {
         return this.rotationZ;
     }
 
-    // @Override
-    // public void moveTo(double x, double y, double z){
-        
-    // }
+    public void update(String event, String message){
+
+    }
 }

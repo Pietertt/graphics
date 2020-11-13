@@ -25,5 +25,5 @@ public abstract class Object3D {
     public abstract double getRotationY();
     public abstract double getRotationZ();
 
-    //public abstract void moveTo(double x, double y, double z);
+    public abstract void update(String event, String message);
 }
