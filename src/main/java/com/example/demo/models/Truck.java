@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.UUID;
 import java.lang.Math;
+import java.util.Iterator;
 
 import com.example.demo.models.Observer.EventListener;
 
@@ -22,6 +23,8 @@ public class Truck extends Object3D implements Updatable, EventListener {
     private double rotationZ = 0;
 
     private ArrayList<Stellage> availableStellages;
+    private ArrayList<Stellage> inventory;
+    private ArrayList<Stellage> orderList;
 
     private ArrayList<Robot> availableRobots;
 
@@ -33,7 +36,10 @@ public class Truck extends Object3D implements Updatable, EventListener {
         this.availableStellages = new ArrayList<Stellage>();
         this.availableRobots = new ArrayList<Robot>();
 
-        System.out.println("[Truck] Moving to warehouse");
+        this.orderList = new ArrayList<Stellage>();
+        this.inventory = new ArrayList<Stellage>();
+
+        System.out.println("[TRUCK] Moving to warehouse");
     }
 
     @Override
@@ -44,11 +50,26 @@ public class Truck extends Object3D implements Updatable, EventListener {
                 this.z += this.speed;
             } else {
                 for(int i = 0; i < new Random().nextInt(3) + 1; i++){
-                    for(Robot robot : this.availableRobots){
-                        robot.addOrder(this.availableStellages.get(new Random().nextInt(this.availableStellages.size() - 1)));
-                        robot.events.subscribe("deliver", this);
-                    }
+                    Stellage stellage = this.availableStellages.get(new Random().nextInt(this.availableStellages.size() - 1));
+                    this.orderList.add(stellage);
                 }
+
+                for(Robot robot : this.availableRobots){
+                    robot.events.subscribe("deliver", this);
+                }
+
+                System.out.printf("[TRUCK] I want %s packages\n", this.orderList.size());
+
+                int currentRobot = 0;
+
+                for(int i = 0; i < this.orderList.size(); i++){
+                    if(currentRobot == (this.availableRobots.size())){
+                        currentRobot = 0;
+                    }
+                    this.availableRobots.get(currentRobot).addOrder(this.orderList.get(i));
+                    currentRobot++;
+                }
+
                 this.forward = false;
             }
         } else {
@@ -105,9 +126,18 @@ public class Truck extends Object3D implements Updatable, EventListener {
         return this.rotationZ;
     }
 
-    @Override
-    public void update(String event){
-        this.full = false;
+    public void update(String event, String message){
+        if(event == "deliver"){
+            this.inventory.add(new Stellage(0, 0, 0));
+            if(this.inventory.size() == this.orderList.size()){
+                System.out.println("[TRUCK] Full! Returning");
+                this.full = false;
+
+                for(int i = 0; i < this.availableRobots.size(); i++){
+                    this.availableRobots.get(i).events.unsubscribe(event, this);
+                }
+            }
+        } 
     }
 
     public void addRobot(Robot robot){

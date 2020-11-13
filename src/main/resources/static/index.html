@@ -7,9 +7,6 @@
 </head>
 
 <body style="margin: 0px; padding: 0px; overflow: hidden">
-    <div style="width: 200px; height: 200px; position: absolute; top: 20px; left: 20px; background-color: white; padding: 10px;" id="inventory">
-
-    </div>
     <!--
             Deze pagina is de standaardpagina van de client. Hierin wordt de 3D wereld opgezet en wordt geluisterd
             naar updates vanaf de server over de websocket communicatie.
@@ -160,19 +157,20 @@
                             worldObjects[command.parameters.uuid] = group;
                         }
 
-                        if (command.parameters.type == "stellage"){
-                            var geometry = new THREE.BoxGeometry(1, 1, 5);
-                            var material = new THREE.MeshBasicMaterial({
-                                color: 0x0000ff,
-                                side: THREE.DoubleSide,
-                            });
-                            var plane = new THREE.Mesh(geometry, material);
-                            plane.rotation.x = Math.PI / 2.0;
-                            plane.position.x = command.parameters.x;
-                            plane.position.z = command.parameters.z;
-                            plane.position.y = command.parameters.y;
-                            scene.add(plane);
-                        }
+                        // if (command.parameters.type == "stellage"){
+                        //     console.log("Created stellage");
+                        //     var geometry = new THREE.BoxGeometry(1, 1, 5);
+                        //     var material = new THREE.MeshBasicMaterial({
+                        //         color: 0x0000ff,
+                        //         side: THREE.DoubleSide,
+                        //     });
+                        //     var plane = new THREE.Mesh(geometry, material);
+                        //     plane.rotation.x = Math.PI / 2.0;
+                        //     plane.position.x = command.parameters.x;
+                        //     plane.position.z = command.parameters.z;
+                        //     plane.position.y = command.parameters.y;
+                        //     scene.add(plane);
+                        // }
 
                         if (command.parameters.type == "truck") {
                             var geometry = new THREE.BoxGeometry(3, 3, 5);
@@ -203,19 +201,6 @@
                         object.rotation.x = command.parameters.rotationX;
                         object.rotation.y = command.parameters.rotationY;
                         object.rotation.z = command.parameters.rotationZ;
-                    }
-
-                    if(command.parameters.type = "truck"){
-                        var element = document.getElementById("inventory");
-                        element.innerHTML = "";
-
-                        if(command.parameters.inventory != undefined){
-                            var inventory = command.parameters.inventory;
-
-                            for(var i = 0; i < inventory.length; i++){
-                                element.innerHTML += "Stellage " + inventory[i] + "<br>";
-                            }
-                        }
                     }
 
                 } else if (command.command == "object_delete") {

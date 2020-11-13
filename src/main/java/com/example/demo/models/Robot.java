@@ -70,7 +70,7 @@ class Robot extends Object3D implements Updatable {
         this.z = z;
         this.speed = 0.1;
         this.uuid = UUID.randomUUID();
-        this.events = new EventManager("deliver");
+        this.events = new EventManager("deliver", "done_delivering");
     }
 
     /*
@@ -139,6 +139,10 @@ class Robot extends Object3D implements Updatable {
         return this.rotationZ;
     }
 
+    /*
+        Check whenever the robot has reached its destination. The destination can be either 
+        his spawn point or a stellage.
+    */
     private boolean robotHasArrivedX(){
         if(!this.isFillingTruck()){
             if(!this.hasNoOrders()){
@@ -146,6 +150,7 @@ class Robot extends Object3D implements Updatable {
                 if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
                     if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
                         this.fillTruck();
+                        this.events.notify("deliver", this.orders.get(0).getUUID());
                         this.orders.remove(0);
                     }
                     return true;
@@ -159,7 +164,7 @@ class Robot extends Object3D implements Updatable {
                     if(!this.hasNoOrders()){
                         this.takeNextStellage();
                     } else {
-                        this.events.notify("deliver"); // TODO
+                        //this.events.notify("deliver", this.getUUID());
                     }
                 }
                 return true;
@@ -175,6 +180,7 @@ class Robot extends Object3D implements Updatable {
                 if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
                     if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
                         this.fillTruck();
+                        this.events.notify("deliver", this.orders.get(0).getUUID()); 
                         this.orders.remove(0);
                     }
                     return true;
@@ -188,7 +194,7 @@ class Robot extends Object3D implements Updatable {
                     if(!this.hasNoOrders()){
                         this.takeNextStellage();
                     } else {
-                        this.events.notify("deliver"); // TODO
+                        //this.events.notify("deliver", this.getUUID());
                     }
                 }
                 return true;

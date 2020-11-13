@@ -62,9 +62,11 @@ public class World implements Model {
         this.worldObjects.add(stellage9);
         this.worldObjects.add(stellage10);
 
-        Object3D robot = new Robot(5, 0);
+        Object3D robot1 = new Robot(5, 0);
+        Object3D robot2 = new Robot(10, 0);
 
-        this.worldObjects.add(robot);
+        this.worldObjects.add(robot1);
+        this.worldObjects.add(robot2);
         //this.queue.add(new Truck(15, -20));
     }
 
