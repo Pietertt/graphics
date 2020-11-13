@@ -49,15 +49,11 @@ public class Truck extends Object3D implements Updatable, EventListener {
             if(this.z + this.speed < 0.0){
                 this.z += this.speed;
             } else {
-                for(int i = 0; i < new Random().nextInt(3) + 1; i++){
-                    Stellage stellage = this.availableStellages.get(new Random().nextInt(this.availableStellages.size()));
-                    this.orderList.add(stellage);
-                }
-
                 for(Robot robot : this.availableRobots){
                     robot.events.subscribe("deliver", this);
                 }
 
+                System.out.printf("[TRUCK] I got %s packages\n", this.inventory.size());
                 System.out.printf("[TRUCK] I want %s packages\n", this.orderList.size());
 
                 int currentRobot = 0;
@@ -144,7 +140,11 @@ public class Truck extends Object3D implements Updatable, EventListener {
         this.availableRobots.add(robot);
     }
 
-    public void addStellage(Stellage stellage){
-        this.availableStellages.add(stellage); 
+    public void addToInventory(Stellage stellage){
+        this.inventory.add(stellage);
+    }
+
+    public void addOrder(Stellage stellage){
+        this.orderList.add(stellage); 
     }
 }
