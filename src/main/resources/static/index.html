@@ -102,9 +102,7 @@
                 if (command.command == "object_update") {
                     //Wanneer het object dat moet worden geupdate nog niet bestaat (komt niet voor in de lijst met worldObjects op de client),
                     //dan wordt het 3D model eerst aangemaakt in de 3D wereld.
-                    if (
-                        Object.keys(worldObjects).indexOf(command.parameters.uuid) < 0
-                    ) {
+                    if (Object.keys(worldObjects).indexOf(command.parameters.uuid) < 0) {
                         //Wanneer het object een robot is, wordt de code hieronder uitgevoerd.
                         if (command.parameters.type == "robot") {
                             var geometry = new THREE.BoxGeometry(0.9, 0.3, 0.9);
@@ -157,7 +155,7 @@
                             worldObjects[command.parameters.uuid] = group;
                         }
 
-                        // if (command.parameters.type == "stellage"){
+                        if (command.parameters.type == "stellage"){
                         //     console.log("Created stellage");
                         //     var geometry = new THREE.BoxGeometry(1, 1, 5);
                         //     var material = new THREE.MeshBasicMaterial({
@@ -170,7 +168,26 @@
                         //     plane.position.z = command.parameters.z;
                         //     plane.position.y = command.parameters.y;
                         //     scene.add(plane);
-                        // }
+
+                            var geometry = new THREE.BoxGeometry(1, 1, 5);
+                            var material = new THREE.MeshBasicMaterial({
+                                color: 0x0000ff,
+                                side: THREE.DoubleSide,
+                            });
+
+                            var stellage = new THREE.Mesh(geometry, material);
+                            stellage.rotation.x = Math.PI / 2.0;
+                            stellage.position.x = command.parameters.x;
+                            stellage.position.z = command.parameters.z;
+                            stellage.position.y = command.parameters.y;
+
+                            // var group = new THREE.Group();
+                            // group.add(stellage);
+                            // group.name = command.parameters.uuid;
+
+                            scene.add(stellage);
+                            worldObjects[command.parameters.uuid] = group;
+                        }
 
                         if (command.parameters.type == "truck") {
                             var geometry = new THREE.BoxGeometry(3, 3, 5);
