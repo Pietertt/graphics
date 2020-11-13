@@ -150,8 +150,6 @@ class Robot extends Object3D implements Updatable {
                 if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
                     if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
                         this.fillTruck();
-                        this.events.notify("deliver", this.orders.get(0).getUUID());
-                        this.orders.remove(0);
                     }
                     return true;
                 }
@@ -162,6 +160,8 @@ class Robot extends Object3D implements Updatable {
             if((15 - 0.01 <= this.x) && (this.x <= 15 + 0.01)){
                 if((0 - 0.01 <= this.z) && (this.z <= 0 + 0.01)){
                     if(!this.hasNoOrders()){
+                        this.events.notify("deliver", this.orders.get(0).getUUID());
+                        this.orders.remove(0);
                         this.takeNextStellage();
                     } else {
                         //this.events.notify("deliver", this.getUUID());
@@ -179,9 +179,7 @@ class Robot extends Object3D implements Updatable {
                 Stellage stellage = this.orders.get(0);
                 if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
                     if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
-                        this.fillTruck();
-                        this.events.notify("deliver", this.orders.get(0).getUUID()); 
-                        this.orders.remove(0);
+                        this.fillTruck();    
                     }
                     return true;
                 }
@@ -192,6 +190,8 @@ class Robot extends Object3D implements Updatable {
             if((0 - 0.01 <= this.z) && (this.z <= 0 + 0.01)){
                 if((15 - 0.01 <= this.x) && (this.x <= 15 + 0.01)){
                     if(!this.hasNoOrders()){
+                        this.events.notify("deliver", this.orders.get(0).getUUID()); 
+                        this.orders.remove(0);
                         this.takeNextStellage();
                     } else {
                         //this.events.notify("deliver", this.getUUID());
