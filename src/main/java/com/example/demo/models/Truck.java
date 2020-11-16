@@ -25,6 +25,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
     private ArrayList<Stellage> availableStellages;
     private ArrayList<Stellage> inventory;
     private ArrayList<Stellage> orderList;
+    private ArrayList<Stellage> wishingList;
 
     private ArrayList<Robot> availableRobots;
 
@@ -38,6 +39,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
 
         this.orderList = new ArrayList<Stellage>();
         this.inventory = new ArrayList<Stellage>();
+        this.wishingList = new ArrayList<Stellage>();
 
         System.out.println("[TRUCK] Moving to warehouse");
     }
@@ -53,10 +55,20 @@ public class Truck extends Object3D implements Updatable, EventListener {
                     robot.events.subscribe("deliver", this);
                 }
 
-                System.out.printf("[TRUCK] I got %s packages\n", this.inventory.size());
+                System.out.printf("[TRUCK] I got %s packages\n", this.wishingList.size());
                 System.out.printf("[TRUCK] I want %s packages\n", this.orderList.size());
 
                 int currentRobot = 0;
+
+                for(int i = 0; i < this.wishingList.size(); i++){
+                    if(currentRobot == (this.availableRobots.size())){
+                        currentRobot = 0;
+                    }
+                    this.availableRobots.get(currentRobot).addOrder(this.wishingList.get(i));
+                    currentRobot++;
+                }
+
+                currentRobot = 0;
 
                 for(int i = 0; i < this.orderList.size(); i++){
                     if(currentRobot == (this.availableRobots.size())){
@@ -140,8 +152,8 @@ public class Truck extends Object3D implements Updatable, EventListener {
         this.availableRobots.add(robot);
     }
 
-    public void addToInventory(Stellage stellage){
-        //this.inventory.add(stellage);
+    public void addToWishinglist(Stellage stellage){
+        this.wishingList.add(stellage);
     }
 
     public void addAvailableStellage(Stellage stellage){

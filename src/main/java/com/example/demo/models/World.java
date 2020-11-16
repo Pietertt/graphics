@@ -95,17 +95,17 @@ public class World implements Model, EventListener {
                     }
                 }
 
-                for(int i = 0; i < new Random().nextInt(5) + 1; i++){
+                for(int i = 0; i < new Random().nextInt(10) + 1; i++){
                     boolean available = true;
                     Object3D stellage = this.worldObjects.get(i);
                     if(stellage instanceof Stellage){
                         for(Stellage s : this.availableStellages){
-                            if(s.getUUID().equals(stellage)){
+                            if(s.getUUID().equals(stellage.getUUID())){
                                 available = false;
                             }
                         }
                         if(available){
-                            truck.addToInventory((Stellage)stellage);
+                            truck.addToWishinglist((Stellage)stellage);
                         }
                     }
                 }
