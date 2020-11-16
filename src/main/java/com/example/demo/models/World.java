@@ -100,13 +100,6 @@ public class World implements Model, EventListener {
                     truck.addOrder(stellage);
                 }
 
-                // for(int i = 0; i < new Random().nextInt(3) + 1; i++){
-                //     Object3D stellage = this.worldObjects.get(new Random().nextInt(this.availableStellages.size()));
-                //     if(stellage instanceof Stellage){
-                //         truck.addToInventory((Stellage)stellage);
-                //     }
-                // }
-
                 this.worldObjects.add(truck);
             }
         }
@@ -133,7 +126,6 @@ public class World implements Model, EventListener {
                     this.worldObjects.add(popped);
                 }
                 break;
-                // System.out.println(this.worldObjects.size());
             }
         }
         
