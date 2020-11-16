@@ -16,6 +16,7 @@ public class LoadWithStellageStrategy extends Strategy {
             if((0 - 0.01 <= robot.getZ()) && (robot.getZ() <= 0 + 0.01)){
                 robot.events.notify("deliver", robot.orders.get(0).getUUID());
                 robot.orders.get(0).events.notify("loaded", robot.orders.get(0).getUUID());
+                robot.orders.get(0).status = false;
                 robot.orders.remove(0);  
                 robot.setStrategy(new LoadWithoutStellageStrategy());
             } else {

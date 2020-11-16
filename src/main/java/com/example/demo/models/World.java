@@ -126,6 +126,7 @@ public class World implements Model, EventListener {
                         pcs.firePropertyChange(Model.UPDATE_COMMAND, null, object); 
                     } else {
                         pcs.firePropertyChange(Model.DELETE_COMMAND, null, object); 
+                        System.out.printf("Removing object %s\n", object.getType());
                     }
                 }
             }
@@ -185,6 +186,14 @@ public class World implements Model, EventListener {
             Stellage stellage = this.availableStellages.get(i);
             if(stellage.getUUID().equals(message)){
                 this.availableStellages.remove(stellage);
+            }
+        }
+
+        for(int i = 0; i < this.worldObjects.size(); i++){
+            if(this.worldObjects.get(i) instanceof Stellage){
+                if(this.worldObjects.get(i).getUUID().equals(message)){
+                    this.worldObjects.get(i).status = false;
+                }
             }
         }
     }
