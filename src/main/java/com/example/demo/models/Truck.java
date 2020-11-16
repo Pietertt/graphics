@@ -141,7 +141,11 @@ public class Truck extends Object3D implements Updatable, EventListener {
     }
 
     public void addToInventory(Stellage stellage){
-        this.inventory.add(stellage);
+        //this.inventory.add(stellage);
+    }
+
+    public void addAvailableStellage(Stellage stellage){
+        this.availableStellages.add(stellage);
     }
 
     public void addOrder(Stellage stellage){
