@@ -24,7 +24,7 @@ public class Stellage extends Object3D implements Updatable {
         this.y = y;
         this.z = z;
         this.uuid = UUID.randomUUID();
-        this.events = new EventManager("loaded");
+        this.events = new EventManager("loaded", "unloaded");
     }
 
     @Override

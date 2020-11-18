@@ -343,6 +343,15 @@ public class Robot extends Object3D implements Updatable, EventListener {
         return false;
     }
 
+    public boolean gotAnyOrders(){
+        for(Order order : this.orders){
+            if(order.getType() == "order"){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public void addOrder(Order order){
         if(order.getType() == "wish"){
             this.setStrategy(new UnloadWithStellageStrategy());

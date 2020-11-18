@@ -60,6 +60,7 @@ public class World implements Model, EventListener {
         for(int i = 0; i < stellages.length; i++){
             Stellage stellage = new Stellage(stellages[i][0], stellages[i][1], stellages[i][2]);
             stellage.events.subscribe("loaded", this);
+            stellage.events.subscribe("unloaded", this);
             this.worldObjects.add(stellage);
             this.availableStellages.add(stellage);
         }
@@ -185,20 +186,31 @@ public class World implements Model, EventListener {
     }
 
     public void update(String event, String message){
-        for(int i = 0; i < this.availableStellages.size(); i++){
-            Stellage stellage = this.availableStellages.get(i);
-            if(stellage.getUUID().equals(message)){
-                this.availableStellages.remove(stellage);
+        if(event == "loaded"){
+            for(int i = 0; i < this.availableStellages.size(); i++){
+                Stellage stellage = this.availableStellages.get(i);
+                if(stellage.getUUID().equals(message)){
+                    this.availableStellages.remove(stellage);
+                    System.out.println("Removed stellage from the world");
+                }
             }
-        }
-
-        for(Object3D object : this.worldObjects){
-           
-            if(object.getUUID().equals(message)){
-                //object.remove();
-                System.out.println("I am deleted");
+    
+            for(Object3D object : this.worldObjects){
+               
+                if(object.getUUID().equals(message)){
+                    //object.remove();
+                    System.out.println("I am deleted");
+                }
+                
             }
-            
+        } else {
+            for(int i = 0; i < this.availableStellages.size(); i++){
+                Object3D stellage = this.availableStellages.get(i);
+                if(stellage.getUUID().equals(message)){
+                    this.worldObjects.add(stellage);
+                    System.out.println("Added stellage to the world");
+                }
+            }
         }
     }
 }
