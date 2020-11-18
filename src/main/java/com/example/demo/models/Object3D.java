@@ -24,4 +24,6 @@ public abstract class Object3D {
     public abstract double getRotationX();
     public abstract double getRotationY();
     public abstract double getRotationZ();
+
+    public abstract void remove();
 }

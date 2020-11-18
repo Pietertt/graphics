@@ -11,7 +11,27 @@ public class UnloadWithStellageStrategy extends Strategy {
     }
 
     @Override
-    public void execute(Stellage order, Robot robot){
-        System.out.println("Unloading...");
+    public void execute(Order order, Robot robot){
+        if(((order.getX() - 0.01 <= robot.getX()) && (robot.getX() <= order.getX() + 0.01))){
+            if(((order.getZ() - 0.01 <= robot.getZ()) && (robot.getZ() <= order.getZ() + 0.01))){
+                robot.setStrategy(new UnloadWithoutStellageStrategy());
+            } else {
+                if(order.getZ() > robot.getZ()){
+                    robot.setZ(robot.getZ() + robot.getSpeed());
+                    order.stellage.setZ(robot.getZ());
+                } else {
+                    robot.setZ(robot.getZ() - robot.getSpeed());
+                    order.stellage.setZ(robot.getZ());
+                }
+            }
+        } else {
+            if(order.getX() > robot.getX()){
+                robot.setX(robot.getX() + robot.getSpeed());
+                order.stellage.setX(robot.getX());
+            } else {
+                robot.setX(robot.getX() - robot.getSpeed());
+                order.stellage.setX(robot.getX());
+            }
+        }  
     }
 }

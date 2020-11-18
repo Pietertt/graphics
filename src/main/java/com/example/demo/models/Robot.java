@@ -5,7 +5,9 @@ import java.util.Random;
 import java.util.UUID;
 
 import com.example.demo.models.Observer.EventManager;
+import com.example.demo.models.Observer.EventListener;
 import com.example.demo.strategies.*;
+import com.example.demo.models.Order;
 
 import jdk.internal.event.Event;
 
@@ -14,7 +16,7 @@ import jdk.internal.event.Event;
  * 3D object is. Ook implementeerd deze class de interface Updatable. Dit is omdat
  * een robot geupdate kan worden binnen de 3D wereld om zich zo voort te bewegen.
  */
-public class Robot extends Object3D implements Updatable {
+public class Robot extends Object3D implements Updatable, EventListener {
     private UUID uuid;
 
     private double x;
@@ -32,7 +34,8 @@ public class Robot extends Object3D implements Updatable {
 
     private Strategy strategy;
 
-    public ArrayList<Stellage> orders;
+    public ArrayList<Order> orders;
+    //public ArrayList<Stellage> wishing;
 
     public EventManager events;
 
@@ -67,13 +70,14 @@ public class Robot extends Object3D implements Updatable {
         vertexL.addNeighbour(new Edge(1,vertexL,vertexM));
         vertexM.addNeighbour(new Edge(1,vertexM,vertexN));
 
-        this.orders = new ArrayList<Stellage>();
+        this.orders = new ArrayList<Order>();
+        //this.wishing = new ArrayList<Stellage>();
 
         this.x = x;
         this.z = z;
         this.speed = 0.1;
         this.uuid = UUID.randomUUID();
-        this.events = new EventManager("deliver", "done_delivering", "load");
+        this.events = new EventManager("deliver", "load");
 
         this.setStrategy(new LoadWithoutStellageStrategy());
     }
@@ -293,6 +297,13 @@ public class Robot extends Object3D implements Updatable {
         return false;
     }
 
+    // public boolean hasWishes(){
+    //     if(this.wishing.size() != 0){
+    //         return true;
+    //     }
+    //     return false;
+    // }
+
     public void fillTruck(){
         this.filling = true;
     }
@@ -311,9 +322,44 @@ public class Robot extends Object3D implements Updatable {
         }
     }
 
-    public void addOrder(Stellage stellage){
-        this.orders.add(stellage);
-        System.out.printf("[ROBOT] Moving to stellage %s on coordinates (%s %s %s)\n", stellage.getUUID(), stellage.getRotationX(), stellage.getY(), stellage.getZ());
-
+    public void remove(){
+        this.status = false;
     }
+
+    public void removeOrder(int index){
+        this.orders.remove(index);
+    }
+
+    public void removeOrder(Order order){
+        this.orders.remove(order);
+    }
+
+    public boolean gotAnyWishOrders(){
+        for(Order order : this.orders){
+            if(order.getType() == "wish"){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void addOrder(Order order){
+        if(order.getType() == "wish"){
+            this.setStrategy(new UnloadWithStellageStrategy());
+        }
+        this.orders.add(order);
+        System.out.printf("[ROBOT] Moving stellage %s to coordinates (%s, %s, %s)\n", order.stellage.getUUID(), order.getX(), order.getY(), order.getZ());
+    }
+
+    public void update(String event, String message){
+        if(event == "full"){
+            System.out.println("[ROBOT] Waiting for new truck");
+            this.setStrategy(new UnloadWithStellageStrategy());
+        } 
+    }
+
+    // public void addWishing(Stellage stellage){
+    //     this.wishing.add(stellage);
+    //     System.out.printf("[ROBOT] Moving to stellage %s on coordinates (%s %s %s)\n", stellage.getUUID(), stellage.getRotationX(), stellage.getY(), stellage.getZ());
+    // }
 }

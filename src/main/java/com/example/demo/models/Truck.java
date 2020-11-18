@@ -6,7 +6,9 @@ import java.util.UUID;
 import java.lang.Math;
 import java.util.Iterator;
 
+import com.example.demo.models.Observer.EventManager;
 import com.example.demo.models.Observer.EventListener;
+import com.example.demo.models.Order;
 
 public class Truck extends Object3D implements Updatable, EventListener {
     private UUID uuid;
@@ -22,12 +24,12 @@ public class Truck extends Object3D implements Updatable, EventListener {
     private double rotationY = 0;
     private double rotationZ = 0;
 
-    private ArrayList<Stellage> availableStellages;
     private ArrayList<Stellage> inventory;
-    private ArrayList<Stellage> orderList;
-    private ArrayList<Stellage> wishingList;
-
+    private ArrayList<Order> orderList;
     private ArrayList<Robot> availableRobots;
+    private ArrayList<Stellage> availableStellages;
+
+    private EventManager events;
 
     public Truck(int x, int z) {
         this.x = x;
@@ -37,9 +39,11 @@ public class Truck extends Object3D implements Updatable, EventListener {
         this.availableStellages = new ArrayList<Stellage>();
         this.availableRobots = new ArrayList<Robot>();
 
-        this.orderList = new ArrayList<Stellage>();
+        this.orderList = new ArrayList<Order>();
+
+
         this.inventory = new ArrayList<Stellage>();
-        this.wishingList = new ArrayList<Stellage>();
+        this.events = new EventManager("full");
 
         System.out.println("[TRUCK] Moving to warehouse");
     }
@@ -53,20 +57,31 @@ public class Truck extends Object3D implements Updatable, EventListener {
             } else {
                 for(Robot robot : this.availableRobots){
                     robot.events.subscribe("deliver", this);
+                    this.events.subscribe("full", robot);
                 }
 
-                System.out.printf("[TRUCK] I got %s packages\n", this.wishingList.size());
-                System.out.printf("[TRUCK] I want %s packages\n", this.orderList.size());
+                int wishings = 0;
+                int orders = 0;
+                for(Order order : this.orderList){
+                    if(order.getType() == "wish"){
+                        wishings++;
+                    } else {
+                        orders++;
+                    }
+                }
+
+                System.out.printf("[TRUCK] I got %s packages\n", wishings);
+                System.out.printf("[TRUCK] I want %s packages\n", orders);
 
                 int currentRobot = 0;
 
-                for(int i = 0; i < this.wishingList.size(); i++){
-                    if(currentRobot == (this.availableRobots.size())){
-                        currentRobot = 0;
-                    }
-                    this.availableRobots.get(currentRobot).addOrder(this.wishingList.get(i));
-                    currentRobot++;
-                }
+                // for(int i = 0; i < this.wishingList.size(); i++){
+                //     if(currentRobot == (this.availableRobots.size())){
+                //         currentRobot = 0;
+                //     }
+                //     this.availableRobots.get(currentRobot).addWishing(this.wishingList.get(i));
+                //     currentRobot++;
+                // }
 
                 currentRobot = 0;
 
@@ -86,7 +101,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
                 if(this.z - this.speed > -50){
                     this.z -= this.speed;
                 } else {
-                    this.status = false;
+                    this.remove();
                 }
             }
         }  
@@ -142,6 +157,8 @@ public class Truck extends Object3D implements Updatable, EventListener {
                 this.full = false;
 
                 for(int i = 0; i < this.availableRobots.size(); i++){
+                    this.events.notify("full", "");
+                    this.events.unsubscribe("full", this.availableRobots.get(i));
                     this.availableRobots.get(i).events.unsubscribe(event, this);
                 }
             }
@@ -152,15 +169,15 @@ public class Truck extends Object3D implements Updatable, EventListener {
         this.availableRobots.add(robot);
     }
 
-    public void addToWishinglist(Stellage stellage){
-        this.wishingList.add(stellage);
-    }
-
     public void addAvailableStellage(Stellage stellage){
         this.availableStellages.add(stellage);
     }
 
-    public void addOrder(Stellage stellage){
-        this.orderList.add(stellage); 
+    public void addOrder(Order order){
+        this.orderList.add(order); 
+    }
+
+    public void remove(){
+        this.status = false;
     }
 }

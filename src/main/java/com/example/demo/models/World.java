@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.Iterator;
 
 import com.example.demo.models.Robot;
+import com.example.demo.models.Order;
 import com.example.demo.models.Observer.EventListener;
 
 /*
@@ -99,20 +100,22 @@ public class World implements Model, EventListener {
                     boolean available = true;
                     Object3D stellage = this.worldObjects.get(i);
                     if(stellage instanceof Stellage){
-                        for(Stellage s : this.availableStellages){
-                            if(s.getUUID().equals(stellage.getUUID())){
-                                available = false;
-                            }
-                        }
+                        // for(Stellage s : this.availableStellages){
+                        //     if(s.getUUID().equals(stellage.getUUID())){
+                        //         available = false;
+                        //     }
+                        // }
                         if(available){
-                            truck.addToWishinglist((Stellage)stellage);
+                            Order order = new Order(stellage.getX(), stellage.getY(), stellage.getZ(), (Stellage)stellage, "wish");
+                            truck.addOrder(order);
                         }
                     }
                 }
 
                 for(int i = 0; i < new Random().nextInt(3) + 1; i++){
                     Stellage stellage = this.availableStellages.get(new Random().nextInt(this.availableStellages.size()));
-                    truck.addOrder(stellage);
+                    Order order = new Order(stellage.getX(), stellage.getY(), stellage.getZ(), stellage, "order");
+                    truck.addOrder(order);
                 }
 
                 this.worldObjects.add(truck);
@@ -189,12 +192,13 @@ public class World implements Model, EventListener {
             }
         }
 
-        for(int i = 0; i < this.worldObjects.size(); i++){
-            if(this.worldObjects.get(i) instanceof Stellage){
-                if(this.worldObjects.get(i).getUUID().equals(message)){
-                    this.worldObjects.get(i).status = false;
-                }
+        for(Object3D object : this.worldObjects){
+           
+            if(object.getUUID().equals(message)){
+                //object.remove();
+                System.out.println("I am deleted");
             }
+            
         }
     }
 }

@@ -85,4 +85,9 @@ public class Stellage extends Object3D implements Updatable {
     public double getRotationZ() {
         return this.rotationZ;
     }
+
+    public void remove(){
+        this.status = false;
+        System.out.printf("My status is %s\n", this.status);
+    }
 }
