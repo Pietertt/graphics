@@ -8,7 +8,9 @@ import java.util.Iterator;
 
 import com.example.demo.models.Observer.EventManager;
 import com.example.demo.models.Observer.EventListener;
-import com.example.demo.models.Order;
+import com.example.demo.models.Order.Request;
+import com.example.demo.models.Order.Deliver;
+import com.example.demo.models.Order.Order;
 
 public class Truck extends Object3D implements Updatable, EventListener {
     private UUID uuid;
@@ -74,7 +76,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
                 int wishings = 0;
                 int orders = 0;
                 for(Order order : this.orderList){
-                    if(order.getType() == "wish"){
+                    if(order instanceof Request){
                         wishings++;
                     } else {
                         orders++;
@@ -199,7 +201,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
         if(this.availableStellages.size() > 0){
             for(int i = 0; i < 3; i++){
                 Stellage stellage = this.availableStellages.get(i);
-                Order order = new Order(stellage.getX(), stellage.getY(), stellage.getZ(), stellage, "order");
+                Deliver order = new Deliver(stellage.getX(), stellage.getY(), stellage.getZ(), stellage);
                 this.addOrder(order);
             }
         }
@@ -207,7 +209,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
         if(this.unavailableStellages.size() > 0){
             for(int i = 0; i < random.nextInt(5); i++){
                 Stellage stellage = this.unavailableStellages.get(i);
-                Order order = new Order(stellage.getX(), stellage.getY(), stellage.getZ(), stellage, "wish");
+                Request order = new Request(stellage.getX(), stellage.getY(), stellage.getZ(), stellage);
                 this.addOrder(order);
             }
         }

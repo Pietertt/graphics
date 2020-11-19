@@ -6,8 +6,9 @@ import java.util.UUID;
 
 import com.example.demo.models.Observer.EventManager;
 import com.example.demo.models.Observer.EventListener;
-import com.example.demo.strategies.*;
-import com.example.demo.models.Order;
+import com.example.demo.models.Order.Request;
+import com.example.demo.models.Order.Deliver;
+import com.example.demo.models.Order.Order;
 
 import jdk.internal.event.Event;
 
@@ -32,7 +33,8 @@ public class Robot extends Object3D implements Updatable, EventListener {
     private double orderedY = 0;
     private double orderedZ = 0;
 
-    private Strategy strategy;
+    private boolean returning = false;
+
 
     public ArrayList<Order> orders;
     //public ArrayList<Stellage> wishing;
@@ -79,7 +81,6 @@ public class Robot extends Object3D implements Updatable, EventListener {
         this.uuid = UUID.randomUUID();
         this.events = new EventManager("deliver", "load");
 
-        this.setStrategy(new LoadWithoutStellageStrategy());
     }
 
     /*
@@ -116,14 +117,6 @@ public class Robot extends Object3D implements Updatable, EventListener {
          * javascript code wordt dit dan weer verder afgehandeld.
          */
         return Robot.class.getSimpleName().toLowerCase();
-    }
-
-    public void setStrategy(Strategy strategy){
-        this.strategy = strategy;
-    }
-
-    private void executeStrategy(){
-        this.strategy.execute(this.orders.get(0), this);
     }
 
     @Override
@@ -290,19 +283,25 @@ public class Robot extends Object3D implements Updatable, EventListener {
     //     }
     // }
 
-    public boolean hasOrders(){
-        if(this.orders.size() != 0){
-            return true;
+    public int getDeliverables(){
+        int amount = 0;
+        for(Order order : this.orders){
+            if(order instanceof Deliver){
+                amount = amount + 1;
+            }
         }
-        return false;
+        return amount;
     }
 
-    // public boolean hasWishes(){
-    //     if(this.wishing.size() != 0){
-    //         return true;
-    //     }
-    //     return false;
-    // }
+    public int getRequests(){
+        int amount = 0;
+        for(Order order : this.orders){
+            if(order instanceof Request){
+                amount = amount + 1;
+            }
+        }
+        return amount;
+    }
 
     public void fillTruck(){
         this.filling = true;
@@ -316,9 +315,39 @@ public class Robot extends Object3D implements Updatable, EventListener {
         return this.filling;
     }
 
+    public Order getFirstOrder(){
+        return this.orders.get(0);
+    }
+
     public void move(){
-        if(this.hasOrders()){
-            this.strategy.execute(this.orders.get(0), this);
+        if(this.getDeliverables() > 0){
+            if(((this.getFirstOrder().getX() - 0.01 <= this.getX()) && (this.getX() <= this.getFirstOrder().getX() + 0.01))){
+                if(((this.getFirstOrder().getZ() - 0.01 <= this.getZ()) && (this.getZ() <= this.getFirstOrder().getZ() + 0.01))){
+                    this.returning = true;
+                } else {
+                    if(this.getFirstOrder().getZ() > this.getZ()){
+                        this.setZ(this.getZ() + this.getSpeed());
+                        this.getFirstOrder().stellage.setX(this.getX());
+                        this.getFirstOrder().stellage.setZ(this.getZ());
+                    } else {
+                        this.setZ(this.getZ() - this.getSpeed());
+                        this.getFirstOrder().stellage.setX(this.getX());
+                        this.getFirstOrder().stellage.setZ(this.getZ());
+                    }
+                }
+            } else {
+                if(this.getFirstOrder().getX() > this.getX()){
+                    this.setX(this.getX() + this.getSpeed());
+                    this.getFirstOrder().stellage.setX(this.getX());
+                    this.getFirstOrder().stellage.setZ(this.getZ());
+                } else {
+                    this.setX(this.getX() - this.getSpeed());
+                    this.getFirstOrder().stellage.setX(this.getX());
+                    this.getFirstOrder().stellage.setZ(this.getZ());
+                }
+            } 
+        } else {
+            
         }
     }
 
@@ -334,37 +363,16 @@ public class Robot extends Object3D implements Updatable, EventListener {
         this.orders.remove(order);
     }
 
-    public boolean gotAnyWishOrders(){
-        for(Order order : this.orders){
-            if(order.getType() == "wish"){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public boolean gotAnyOrders(){
-        for(Order order : this.orders){
-            if(order.getType() == "order"){
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void addOrder(Order order){
-        if(order.getType() == "wish"){
-            this.setStrategy(new UnloadWithStellageStrategy());
-        }
         this.orders.add(order);
-        System.out.printf("[ROBOT] Moving stellage %s to coordinates (%s, %s, %s)\n", order.stellage.getUUID(), order.getX(), order.getY(), order.getZ());
+        System.out.printf("[ROBOT] Moving stellage to coordinates (%s, %s, %s)\n", order.getX(), order.getY(), order.getZ());
     }
 
     public void update(String event, String message){
-        if(event == "full"){
-            System.out.println("[ROBOT] Waiting for new truck");
-            this.setStrategy(new UnloadWithStellageStrategy());
-        } 
+        // if(event == "full"){
+        //     System.out.println("[ROBOT] Waiting for new truck");
+        //     this.setStrategy(new UnloadWithStellageStrategy());
+        // } 
     }
 
     // public void addWishing(Stellage stellage){
