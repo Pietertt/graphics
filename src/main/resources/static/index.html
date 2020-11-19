@@ -45,28 +45,28 @@
 
           window.addEventListener("resize", onWindowResize, false);
 
-          var geometry = new THREE.PlaneGeometry(30, 30, 30); //Vloer magazijn
-          var material = new THREE.MeshBasicMaterial({
-            map: new THREE.TextureLoader().load("textures/floor.png"),
-            side: THREE.DoubleSide,
-          });
-          var plane = new THREE.Mesh(geometry, material);
-          plane.rotation.x = Math.PI / 2.0;
-          plane.position.x = 15;
-          plane.position.z = 15;
-          scene.add(plane);
+        //   var geometry = new THREE.PlaneGeometry(30, 30, 30); //Vloer magazijn
+        //   var material = new THREE.MeshBasicMaterial({
+        //     map: new THREE.TextureLoader().load("textures/floor.png"),
+        //     side: THREE.DoubleSide,
+        //   });
+        //   var plane = new THREE.Mesh(geometry, material);
+        //   plane.rotation.x = Math.PI / 2.0;
+        //   plane.position.x = 15;
+        //   plane.position.z = 15;
+        //   scene.add(plane);
 
-          var geometry = new THREE.PlaneGeometry(600, 600, 600); //Omgeving grond
-          var material = new THREE.MeshBasicMaterial({
-            map: new THREE.TextureLoader().load("textures/ground1.png"),
-            side: THREE.DoubleSide,
-          });
-          var plane = new THREE.Mesh(geometry, material);
-          plane.rotation.x = Math.PI / 2.0;
-          plane.position.x = 15;
-          plane.position.z = 15;
-          plane.position.y = -0.001;
-          scene.add(plane);
+        //   var geometry = new THREE.PlaneGeometry(600, 600, 600); //Omgeving grond
+        //   var material = new THREE.MeshBasicMaterial({
+        //     map: new THREE.TextureLoader().load("textures/ground1.png"),
+        //     side: THREE.DoubleSide,
+        //   });
+        //   var plane = new THREE.Mesh(geometry, material);
+        //   plane.rotation.x = Math.PI / 2.0;
+        //   plane.position.x = 15;
+        //   plane.position.z = 15;
+        //   plane.position.y = -0.001;
+        //   scene.add(plane);
         }
 
             function onWindowResize() {

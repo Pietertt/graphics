@@ -24,9 +24,11 @@ public class LoadWithStellageStrategy extends Strategy {
                 if(robot.getZ() > 0){
                     robot.setZ(robot.getZ() - robot.getSpeed());
                     order.stellage.setZ(robot.getZ());
+                    order.stellage.setX(robot.getX());
                 } else {
                     robot.setZ(robot.getZ() + robot.getSpeed());
                     order.stellage.setZ(robot.getZ());
+                    order.stellage.setX(robot.getX());
                 }
             }
         } else {

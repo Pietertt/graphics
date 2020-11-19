@@ -28,6 +28,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
     private ArrayList<Order> orderList;
     private ArrayList<Robot> availableRobots;
     private ArrayList<Stellage> availableStellages;
+    private ArrayList<Stellage> unavailableStellages;
 
     private EventManager events;
 
@@ -37,6 +38,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
         this.speed = 0.2;
         this.uuid = UUID.randomUUID();
         this.availableStellages = new ArrayList<Stellage>();
+        this.unavailableStellages = new ArrayList<Stellage>();
         this.availableRobots = new ArrayList<Robot>();
 
         this.orderList = new ArrayList<Order>();
@@ -55,10 +57,19 @@ public class Truck extends Object3D implements Updatable, EventListener {
             if(this.z + this.speed < 0.0){
                 this.z += this.speed;
             } else {
+
+                this.generateOrders();
+                
                 for(Robot robot : this.availableRobots){
                     robot.events.subscribe("deliver", this);
                     this.events.subscribe("full", robot);
                 }
+
+
+
+
+
+
 
                 int wishings = 0;
                 int orders = 0;
@@ -75,14 +86,6 @@ public class Truck extends Object3D implements Updatable, EventListener {
 
                 int currentRobot = 0;
 
-                // for(int i = 0; i < this.wishingList.size(); i++){
-                //     if(currentRobot == (this.availableRobots.size())){
-                //         currentRobot = 0;
-                //     }
-                //     this.availableRobots.get(currentRobot).addWishing(this.wishingList.get(i));
-                //     currentRobot++;
-                // }
-
                 currentRobot = 0;
 
                 for(int i = 0; i < this.orderList.size(); i++){
@@ -94,6 +97,11 @@ public class Truck extends Object3D implements Updatable, EventListener {
                 }
 
                 this.forward = false;
+
+
+
+
+
             }
         } else {
             // The truck doesn't move until the robots have unload it
@@ -173,11 +181,35 @@ public class Truck extends Object3D implements Updatable, EventListener {
         this.availableStellages.add(stellage);
     }
 
+    public void addUnavailableStellages(Stellage stellage){
+        this.unavailableStellages.add(stellage);
+    }
+
     public void addOrder(Order order){
         this.orderList.add(order); 
     }
 
     public void remove(){
         this.status = false;
+    }
+
+    public void generateOrders(){
+        Random random = new Random();
+
+        if(this.availableStellages.size() > 0){
+            for(int i = 0; i < 3; i++){
+                Stellage stellage = this.availableStellages.get(i);
+                Order order = new Order(stellage.getX(), stellage.getY(), stellage.getZ(), stellage, "order");
+                this.addOrder(order);
+            }
+        }
+
+        if(this.unavailableStellages.size() > 0){
+            for(int i = 0; i < random.nextInt(5); i++){
+                Stellage stellage = this.unavailableStellages.get(i);
+                Order order = new Order(stellage.getX(), stellage.getY(), stellage.getZ(), stellage, "wish");
+                this.addOrder(order);
+            }
+        }
     }
 }

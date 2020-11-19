@@ -28,9 +28,11 @@ public class UnloadWithStellageStrategy extends Strategy {
             if(order.getX() > robot.getX()){
                 robot.setX(robot.getX() + robot.getSpeed());
                 order.stellage.setX(robot.getX());
+                order.stellage.setZ(robot.getZ());
             } else {
                 robot.setX(robot.getX() - robot.getSpeed());
                 order.stellage.setX(robot.getX());
+                order.stellage.setZ(robot.getZ());
             }
         }  
     }
