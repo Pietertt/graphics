@@ -32,6 +32,9 @@ public class Truck extends Object3D implements Updatable, EventListener {
     private ArrayList<Stellage> availableStellages;
     private ArrayList<Stellage> unavailableStellages;
 
+    private int wanted = 0;
+    private int having = 0;
+
     private EventManager events;
 
     public Truck(int x, int z) {
@@ -177,7 +180,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
 
             System.out.printf("%s : %s\n", this.inventory.size(), orders);
 
-            if(this.inventory.size() == 3){
+            if(this.inventory.size() == this.wanted){
                 System.out.println("[TRUCK] Full! Returning");
                 this.full = false;
 
@@ -215,16 +218,18 @@ public class Truck extends Object3D implements Updatable, EventListener {
         Random random = new Random();
 
         if(this.unavailableStellages.size() > 0){
-            for(int i = 0; i < this.unavailableStellages.size(); i++){
-                Stellage stellage = this.unavailableStellages.get(i);
+            this.having++;
+            for(int i = 0; i < random.nextInt(this.unavailableStellages.size()); i++){
+                Stellage stellage = this.unavailableStellages.get(random.nextInt(this.unavailableStellages.size()));
                 Deliver order = new Deliver(stellage.initX, stellage.initY, stellage.initZ, stellage);
                 this.addOrder(order);
             }
         }
 
         if(this.availableStellages.size() > 0){
-            for(int i = 0; i < 3; i++){
-                Stellage stellage = this.availableStellages.get(i);
+            for(int i = 0; i < random.nextInt(this.availableStellages.size()); i++){
+                this.wanted++;
+                Stellage stellage = this.availableStellages.get(random.nextInt(this.availableStellages.size()));
                 Request order = new Request(stellage.initX, stellage.initY, stellage.initZ, stellage);
                 this.addOrder(order);
             }

@@ -47,12 +47,32 @@ public class World implements Model, EventListener {
             {22, 2, 9},
             {10, 2, 9},
             {5, 2, 9},
+
             {26, 2, 17},
             {21, 2, 17},
             {10, 2, 17},
             {5, 2, 17},
+
+            {26, 2, 24},
             {21, 2, 24},
-            {10, 2, 24}
+            {10, 2, 24},
+            {5, 2, 24},
+
+            {26, 2, 31},
+            {21, 2, 31},
+            {10, 2, 31},
+            {5, 2, 31},
+
+            {26, 2, 38},
+            {21, 2, 38},
+            {10, 2, 38},
+            {5, 2, 38},
+
+            {26, 2, 45},
+            {21, 2, 45},
+            {10, 2, 45},
+            {5, 2, 45},
+
         };
 
         for(int i = 0; i < stellages.length; i++){
@@ -64,9 +84,13 @@ public class World implements Model, EventListener {
 
         Object3D robot1 = new Robot(5, 0);
         Object3D robot2 = new Robot(10, 0);
+        Object3D robot3 = new Robot(15, 0);
+        Object3D robot4 = new Robot(20, 0);
 
         this.worldObjects.add(robot1);
         this.worldObjects.add(robot2);
+        this.worldObjects.add(robot3);
+        this.worldObjects.add(robot4);
         //this.queue.add(new Truck(15, -20));
     }
 
