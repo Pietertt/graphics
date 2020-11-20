@@ -5,6 +5,10 @@ import java.util.Random;
 import java.util.UUID;
 
 import com.example.demo.models.Observer.EventManager;
+import com.example.demo.models.Observer.EventListener;
+import com.example.demo.models.Order.Request;
+import com.example.demo.models.Order.Deliver;
+import com.example.demo.models.Order.Order;
 
 import jdk.internal.event.Event;
 
@@ -13,7 +17,7 @@ import jdk.internal.event.Event;
  * 3D object is. Ook implementeerd deze class de interface Updatable. Dit is omdat
  * een robot geupdate kan worden binnen de 3D wereld om zich zo voort te bewegen.
  */
-class Robot extends Object3D implements Updatable {
+public class Robot extends Object3D implements Updatable, EventListener {
     private UUID uuid;
 
     private double x;
@@ -29,7 +33,11 @@ class Robot extends Object3D implements Updatable {
     private double orderedY = 0;
     private double orderedZ = 0;
 
-    private ArrayList<Stellage> orders;
+    private boolean returning = false;
+
+
+    public ArrayList<Order> orders;
+    //public ArrayList<Stellage> wishing;
 
     public EventManager events;
 
@@ -64,13 +72,15 @@ class Robot extends Object3D implements Updatable {
         vertexL.addNeighbour(new Edge(1,vertexL,vertexM));
         vertexM.addNeighbour(new Edge(1,vertexM,vertexN));
 
-        this.orders = new ArrayList<Stellage>();
+        this.orders = new ArrayList<Order>();
+        //this.wishing = new ArrayList<Stellage>();
 
         this.x = x;
         this.z = z;
         this.speed = 0.1;
         this.uuid = UUID.randomUUID();
-        this.events = new EventManager("deliver", "done_delivering", "load");
+        this.events = new EventManager("loaded", "unloaded");
+
     }
 
     /*
@@ -139,129 +149,161 @@ class Robot extends Object3D implements Updatable {
         return this.rotationZ;
     }
 
-    /*
-        Check whenever the robot has reached its destination. The destination can be either 
-        his spawn point or a stellage.
-    */
-    private boolean robotHasArrivedX(){
-        if(!this.isFillingTruck()){
-            if(!this.hasNoOrders()){
-                Stellage stellage = this.orders.get(0);
-                if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
-                    if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
-                        this.fillTruck();
-                        //this.events.notify("load", "test"); 
-                    }
-                    return true;
-                }
-                return false;
-            }
-            return false;
-        } else {
-            if((15 - 0.01 <= this.x) && (this.x <= 15 + 0.01)){
-                if((0 - 0.01 <= this.z) && (this.z <= 0 + 0.01)){
-                    if(!this.hasNoOrders()){
-                        this.events.notify("deliver", this.orders.get(0).getUUID());
-                        this.orders.get(0).events.notify("loaded", this.orders.get(0).getUUID());
-                        this.orders.remove(0);
-                        this.takeNextStellage();
-                    } else {
-                        //this.events.notify("deliver", this.getUUID());
-                    }
-                }
-                return true;
-            }
-            return false;
-        }
+    public double getSpeed(){
+        return this.speed;
     }
 
-    private boolean robotHasArrivedZ(){
-        if(!this.isFillingTruck()){
-            if(!this.hasNoOrders()){
-                Stellage stellage = this.orders.get(0);
-                if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
-                    if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
-                        this.fillTruck();   
-                        //this.events.notify("load", "test"); 
-                    }
-                    return true;
-                }
-                return false;
-            }
-            return false;
-        } else {
-            if((0 - 0.01 <= this.z) && (this.z <= 0 + 0.01)){
-                if((15 - 0.01 <= this.x) && (this.x <= 15 + 0.01)){
-                    if(!this.hasNoOrders()){
-                        this.events.notify("deliver", this.orders.get(0).getUUID()); 
-                        this.orders.get(0).events.notify("loaded", this.orders.get(0).getUUID());
-                        this.orders.remove(0);
-                        this.takeNextStellage();
-                    } else {
-                        //this.events.notify("deliver", this.getUUID());
-                    }
-                }
-                return true;
-            }
-            return false;
-        }
+    public void setX(double x){
+        this.x = x;
     }
 
-    private void moveX(){
-        if(!this.isFillingTruck()){
-            if(!this.hasNoOrders()){
-                Stellage stellage = this.orders.get(0);
-                if(stellage.getX() > this.x){
-                    this.x += this.speed;
-                } else {
-                    this.x -= this.speed;
-                }
-            }
-        } else {
-            Stellage stellage = this.orders.get(0);
-            if(this.x > 15){
-                this.x -= this.speed;
-                this.orders.get(0).setX(this.x);
-                this.orders.get(0).setZ(this.z); 
-            } else {
-                this.x += this.speed;
-                this.orders.get(0).setX(this.x);
-                this.orders.get(0).setZ(this.z); 
-            }
-        }
+    public void setY(double y){
+        this.y = y;
     }
 
-    private void moveZ(){
-        if(!this.isFillingTruck()){
-            if(!this.hasNoOrders()){
-                Stellage stellage = this.orders.get(0);
-                if(stellage.getZ() > this.z){
-                    this.z += this.speed;
-                } else {
-                    this.z -= this.speed;
-                }
-            }
-        } else {
-            if(this.z > 0){
-                this.z -= this.speed;
-                this.orders.get(0).setX(this.x);
-                this.orders.get(0).setZ(this.z);
-            } else {
-                this.z += this.speed;
-                this.orders.get(0).setX(this.x);
-                this.orders.get(0).setZ(this.z);
-            }
-        }
+    public void setZ(double z){
+        this.z = z;
     }
 
-    private boolean hasNoOrders(){
-        if(this.orders.size() == 0){
-            return true;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // /*
+    //     Check whenever the robot has reached its destination. The destination can be either 
+    //     his spawn point or a stellage.
+    // */
+    // private boolean robotHasArrivedX(){
+    //     if(!this.isFillingTruck()){
+    //         if(!this.hasNoOrders()){
+    //             Stellage stellage = this.orders.get(0);
+    //             if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
+    //                 if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
+    //                     this.fillTruck();
+    //                     //this.events.notify("load", "test"); 
+    //                 }
+    //                 return true;
+    //             }
+    //             return false;
+    //         }
+    //         return false;
+    //     } else {
+    //         if((15 - 0.01 <= this.x) && (this.x <= 15 + 0.01)){
+    //             if((0 - 0.01 <= this.z) && (this.z <= 0 + 0.01)){
+    //                 if(!this.hasNoOrders()){
+    //                     this.events.notify("deliver", this.orders.get(0).getUUID());
+    //                     this.orders.get(0).events.notify("loaded", this.orders.get(0).getUUID());
+    //                     this.orders.remove(0);
+    //                     this.takeNextStellage();
+    //                 } else {
+    //                     //this.events.notify("deliver", this.getUUID());
+    //                 }
+    //             }
+    //             return true;
+    //         }
+    //         return false;
+    //     }
+    // }
+
+    // private boolean robotHasArrivedZ(){
+        
+    // }
+
+    // private void moveX(){
+    //     if(!this.isFillingTruck()){
+    //         if(!this.hasNoOrders()){
+    //             Stellage stellage = this.orders.get(0);
+    //             if(stellage.getX() > this.x){
+    //                 this.x += this.speed;
+    //             } else {
+    //                 this.x -= this.speed;
+    //             }
+    //         }
+    //     } else {
+    //         Stellage stellage = this.orders.get(0);
+    //         if(this.x > 15){
+    //             this.x -= this.speed;
+    //             this.orders.get(0).setX(this.x);
+    //             this.orders.get(0).setZ(this.z); 
+    //         } else {
+    //             this.x += this.speed;
+    //             this.orders.get(0).setX(this.x);
+    //             this.orders.get(0).setZ(this.z); 
+    //         }
+    //     }
+    // }
+
+    // private void moveZ(){
+    //     if(!this.isFillingTruck()){
+    //         if(!this.hasNoOrders()){
+    //             Stellage stellage = this.orders.get(0);
+    //             if(stellage.getZ() > this.z){
+    //                 this.z += this.speed;
+    //             } else {
+    //                 this.z -= this.speed;
+    //             }
+    //         }
+    //     } else {
+    //         if(this.z > 0){
+    //             this.z -= this.speed;
+    //             this.orders.get(0).setX(this.x);
+    //             this.orders.get(0).setZ(this.z);
+    //         } else {
+    //             this.z += this.speed;
+    //             this.orders.get(0).setX(this.x);
+    //             this.orders.get(0).setZ(this.z);
+    //         }
+    //     }
+    // }
+
+    public int getDeliverables(){
+        int amount = 0;
+        for(Order order : this.orders){
+            if(order instanceof Deliver){
+                amount = amount + 1;
+            }
         }
-        return false;
+        return amount;
     }
 
-    private void fillTruck(){
+    public int getRequests(){
+        int amount = 0;
+        for(Order order : this.orders){
+            if(order instanceof Request){
+                amount = amount + 1;
+            }
+        }
+        return amount;
+    }
+
+    public void fillTruck(){
         this.filling = true;
     }
 
@@ -269,23 +311,173 @@ class Robot extends Object3D implements Updatable {
         this.filling = false;
     }
 
-    private boolean isFillingTruck(){
+    public boolean isFillingTruck(){
         return this.filling;
     }
 
-    public void move(){
-        if(!this.robotHasArrivedX()){
-            this.moveX();
-        }
-
-        if(!this.robotHasArrivedZ()){
-            this.moveZ();
-        }
+    public Order getFirstOrder(){
+        return this.orders.get(0);
     }
 
-    public void addOrder(Stellage stellage){
-        this.orders.add(stellage);
-        System.out.printf("[ROBOT] Moving to stellage %s on coordinates (%s %s %s)\n", stellage.getUUID(), stellage.getRotationX(), stellage.getY(), stellage.getZ());
+    public int move(){
+        if(this.getDeliverables() > 0){
+            
+            if(this.returning == false){
+                if(((this.getFirstOrder().getX() - 0.01 <= this.getX()) && (this.getX() <= this.getFirstOrder().getX() + 0.01))){
+                    if(((this.getFirstOrder().getZ() - 0.01 <= this.getZ()) && (this.getZ() <= this.getFirstOrder().getZ() + 0.01))){
+                        //robot.setStrategy(new UnloadWithoutStellageStrategy());
+                        this.returning = true;
+                        System.out.println("Delivered stellage to place");
+                    } else {
+                        if(this.getFirstOrder().getZ() > this.getZ()){
+                            this.setZ(this.getZ() + this.getSpeed());
+                            this.getFirstOrder().stellage.setZ(this.getZ());
+                        } else {
+                            this.setZ(this.getZ() - this.getSpeed());
+                            this.getFirstOrder().stellage.setZ(this.getZ());
+                        }
+                    }
+                } else {
+                    this.getFirstOrder().stellage.status = true;
+                    if(this.getFirstOrder().getX() > this.getX()){
+                        this.setX(this.getX() + this.getSpeed());
+                        this.getFirstOrder().stellage.setX(this.getX());
+                        this.getFirstOrder().stellage.setZ(this.getZ());
+                    } else {
+                        this.setX(this.getX() - this.getSpeed());
+                        this.getFirstOrder().stellage.setX(this.getX());
+                        this.getFirstOrder().stellage.setZ(this.getZ());
+                    }
+                }
+            } else {
+                if(((15 - 0.01 <= this.getX()) && (this.getX() <= 15 + 0.01))){
+                    if((0 - 0.01 <= this.getZ()) && (this.getZ() <= 0 + 0.01)){
+                        this.events.notify("unloaded", this.getFirstOrder().stellage.getUUID());
+                        this.getFirstOrder().stellage.events.notify("unloaded", this.getFirstOrder().stellage.getUUID());
+                        this.getFirstOrder().stellage.status = true;
+                        this.removeOrder(this.getFirstOrder());
+                        this.returning = false;
+                        System.out.println("Returned to truck");
+                        return 1;
+                    } else {
+                        if(this.getZ() > 0){
+                            this.setZ(this.getZ() - this.getSpeed());
+                        } else {
+                            this.setZ(this.getZ() + this.getSpeed());
+                        }
+                    }
+                } else {
+                    if(this.getX() > 15){
+                        this.setX(this.getX() - this.getSpeed());
+                    } else {
+                        this.setX(this.getX() + this.getSpeed());
+                    }
+                }
+            }            
+        }
 
+        if(this.getRequests() > 0){
+            if(this.getDeliverables() == 0){
+                if(this.returning == false){
+                    if(((this.getFirstOrder().getX() - 0.01 <= this.getX()) && (this.getX() <= this.getFirstOrder().getX() + 0.01))){
+                        if(((this.getFirstOrder().getZ() - 0.01 <= this.getZ()) && (this.getZ() <= this.getFirstOrder().getZ() + 0.01))){
+                            this.returning = true;
+                            System.out.println("Arrived at desired stellage");
+                        } else {
+                            if(this.getFirstOrder().getZ() > this.getZ()){
+                                this.setZ(this.getZ() + this.getSpeed());
+                                // this.getFirstOrder().stellage.setX(this.getX());
+                                // this.getFirstOrder().stellage.setZ(this.getZ());
+                            } else {
+                                this.setZ(this.getZ() - this.getSpeed());
+                                // this.getFirstOrder().stellage.setX(this.getX());
+                                // this.getFirstOrder().stellage.setZ(this.getZ());
+                            }
+                        }
+                    } else {
+                        if(this.getFirstOrder().getX() > this.getX()){
+                            this.setX(this.getX() + this.getSpeed());
+                            // this.getFirstOrder().stellage.setX(this.getX());
+                            // this.getFirstOrder().stellage.setZ(this.getZ());
+                        } else {
+                            this.setX(this.getX() - this.getSpeed());
+                            // this.getFirstOrder().stellage.setX(this.getX());
+                            // this.getFirstOrder().stellage.setZ(this.getZ());
+                        }
+                    } 
+                } else {
+                    if(((15 - 0.01 <= this.getX()) && (this.getX() <= 15 + 0.01))){
+                        if((0 - 0.01 <= this.getZ()) && (this.getZ() <= 0 + 0.01)){
+                            this.events.notify("loaded", this.getFirstOrder().stellage.getUUID());
+                            this.getFirstOrder().stellage.events.notify("loaded", this.getFirstOrder().stellage.getUUID());
+                            this.getFirstOrder().stellage.status = false;
+                            this.removeOrder(this.getFirstOrder());
+                            this.returning = false;
+                            System.out.println("Delivered stellage to truck");
+                            // if(robot.gotAnyWishOrders()){
+                            //     robot.setStrategy(new UnloadWithStellageStrategy());
+                            // } else {
+                            //     if(robot.gotAnyOrders()){
+                            //         robot.setStrategy(new LoadWithoutStellageStrategy());
+                            //     }
+                            // }
+                            //System.out.println("[ROBOT] Returning empty to truck");
+                        } else {
+                            if(this.getZ() > 0){
+                                this.setZ(this.getZ() - this.getSpeed());
+                                this.getFirstOrder().stellage.setX(this.getX());
+                                this.getFirstOrder().stellage.setZ(this.getZ());
+                            } else {
+                                this.setZ(this.getZ() + this.getSpeed());
+                                this.getFirstOrder().stellage.setX(this.getX());
+                                this.getFirstOrder().stellage.setZ(this.getZ());
+                            }
+                        }
+                    } else {
+                        if(this.getX() > 15){
+                            this.setX(this.getX() - this.getSpeed());
+                            this.getFirstOrder().stellage.setX(this.getX());
+                            this.getFirstOrder().stellage.setZ(this.getZ());
+                        } else {
+                            this.setX(this.getX() + this.getSpeed());
+                            this.getFirstOrder().stellage.setX(this.getX());
+                            this.getFirstOrder().stellage.setZ(this.getZ());
+                        }
+                    }
+                }
+            }
+        } 
+        
+        return 0;
+        
     }
+
+    public void remove(){
+        this.status = false;
+    }
+
+    public void removeOrder(int index){
+        this.orders.remove(index);
+    }
+
+    public void removeOrder(Order order){
+        this.orders.remove(order);
+    }
+
+    public void addOrder(Order order){
+        this.orders.add(order);
+        System.out.printf("[ROBOT] Moving stellage to coordinates (%s, %s, %s)\n", order.getX(), order.getY(), order.getZ());
+    }
+
+    public void update(String event, String message){
+        // if(event == "full"){
+        //     System.out.println("[ROBOT] Waiting for new truck");
+        //     this.setStrategy(new UnloadWithStellageStrategy());
+        // } 
+    }
+
+    // public void addWishing(Stellage stellage){
+    //     this.wishing.add(stellage);
+    //     System.out.printf("[ROBOT] Moving to stellage %s on coordinates (%s %s %s)\n", stellage.getUUID(), stellage.getRotationX(), stellage.getY(), stellage.getZ());
+    // }
 }

@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.Iterator;
 
 import com.example.demo.models.Robot;
+import com.example.demo.models.Order.Order;
 import com.example.demo.models.Observer.EventListener;
 
 /*
@@ -25,7 +26,6 @@ public class World implements Model, EventListener {
      * een lijst van Object3D onderdelen. Deze kunnen in principe alles zijn. (Robots, vrachrtwagens, etc)
      */
     public ArrayList<Object3D> worldObjects;
-    public ArrayList<Stellage> availableStellages;
     public ArrayList<Object3D> queue;
 
     /*
@@ -40,7 +40,6 @@ public class World implements Model, EventListener {
      */
     public World() {
         this.worldObjects = new ArrayList<Object3D>();
-        this.availableStellages = new ArrayList<Stellage>();
         this.queue = new ArrayList<Object3D>();
 
         double[][] stellages = {
@@ -59,8 +58,8 @@ public class World implements Model, EventListener {
         for(int i = 0; i < stellages.length; i++){
             Stellage stellage = new Stellage(stellages[i][0], stellages[i][1], stellages[i][2]);
             stellage.events.subscribe("loaded", this);
+            stellage.events.subscribe("unloaded", this);
             this.worldObjects.add(stellage);
-            this.availableStellages.add(stellage);
         }
 
         Object3D robot1 = new Robot(5, 0);
@@ -84,7 +83,7 @@ public class World implements Model, EventListener {
     public void update() {
         Random random = new Random();
 
-        if(random.nextInt(200) == 2){
+        if(random.nextInt(3) == 1){
             if(!this.worldObjectsContainsTruck()){
 
                 Truck truck = new Truck(15, -50);
@@ -95,24 +94,19 @@ public class World implements Model, EventListener {
                     }
                 }
 
-                for(int i = 0; i < new Random().nextInt(5) + 1; i++){
-                    boolean available = true;
-                    Object3D stellage = this.worldObjects.get(i);
-                    if(stellage instanceof Stellage){
-                        for(Stellage s : this.availableStellages){
-                            if(s.getUUID().equals(stellage)){
-                                available = false;
-                            }
-                        }
-                        if(available){
-                            truck.addToInventory((Stellage)stellage);
+                /*
+                    De volgende regels geven de vrachtwagen een overzicht van alle stellages die op het moment in
+                    de wereld zijn. De vrachtwagen kiest hier vervolgens een willekeurig aantal uit die de robots
+                    moeten brengen of ophalen.
+                */
+                for(Object3D object : this.worldObjects){
+                    if(object instanceof Stellage){
+                        if(object.status == true){
+                            truck.addAvailableStellage((Stellage)object);
+                        } else {
+                            truck.addUnavailableStellages((Stellage)object);
                         }
                     }
-                }
-
-                for(int i = 0; i < new Random().nextInt(3) + 1; i++){
-                    Stellage stellage = this.availableStellages.get(new Random().nextInt(this.availableStellages.size()));
-                    truck.addOrder(stellage);
                 }
 
                 this.worldObjects.add(truck);
@@ -125,7 +119,8 @@ public class World implements Model, EventListener {
                     if(object.status){
                         pcs.firePropertyChange(Model.UPDATE_COMMAND, null, object); 
                     } else {
-                        pcs.firePropertyChange(Model.DELETE_COMMAND, null, object); 
+                        pcs.firePropertyChange(Model.DELETE_COMMAND, null, object); // TODO: gets called multiple times
+                        //System.out.printf("Removing object %s\n", object.getType());
                     }
                 }
             }
@@ -134,13 +129,15 @@ public class World implements Model, EventListener {
         for (Iterator<Object3D> iterator = this.worldObjects.iterator(); iterator.hasNext(); ) {
             Object3D value = iterator.next();
             if (!value.status) {
-                iterator.remove();
+                if(value instanceof Truck){
+                    iterator.remove();
                 if(this.queue.size() > 0){
                     Object3D popped = this.queue.get(0);
                     this.queue.remove(0);
                     this.worldObjects.add(popped);
                 }
                 break;
+                }
             }
         }
         
@@ -181,11 +178,25 @@ public class World implements Model, EventListener {
     }
 
     public void update(String event, String message){
-        for(int i = 0; i < this.availableStellages.size(); i++){
-            Stellage stellage = this.availableStellages.get(i);
-            if(stellage.getUUID().equals(message)){
-                this.availableStellages.remove(stellage);
+        if(event == "loaded"){
+            for(Object3D object : this.worldObjects){
+                if(object.getUUID().equals(message)){
+                    object.status = false;
+                }
             }
+        } else {
+            for(Object3D object : this.worldObjects){
+                if(object.getUUID().equals(message)){
+                    object.status = true;
+                }
+            }
+            // for(int i = 0; i < this.availableStellages.size(); i++){
+            //     Object3D stellage = this.availableStellages.get(i);
+            //     if(stellage.getUUID().equals(message)){
+            //         //this.worldObjects.add(stellage);
+            //         System.out.println("Added stellage to the world");
+            //     }
+            // }
         }
     }
 }
