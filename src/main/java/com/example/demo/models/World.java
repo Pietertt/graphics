@@ -83,7 +83,7 @@ public class World implements Model, EventListener {
     public void update() {
         Random random = new Random();
 
-        if(random.nextInt(200) == 2){
+        if(random.nextInt(3) == 1){
             if(!this.worldObjectsContainsTruck()){
 
                 Truck truck = new Truck(15, -50);

@@ -63,7 +63,8 @@ public class Truck extends Object3D implements Updatable, EventListener {
                 this.generateOrders();
                 
                 for(Robot robot : this.availableRobots){
-                    robot.events.subscribe("deliver", this);
+                    robot.events.subscribe("loaded", this);
+                    robot.events.subscribe("unloaded", this);
                     this.events.subscribe("full", robot);
                 }
 
@@ -160,16 +161,31 @@ public class Truck extends Object3D implements Updatable, EventListener {
     }
 
     public void update(String event, String message){
-        if(event == "deliver"){
+        System.out.println(event);
+        if(event == "loaded"){
             this.inventory.add(new Stellage(0, 0, 0));
-            if(this.inventory.size() == this.orderList.size()){
+
+            int wishings = 0;
+            int orders = 0;
+            for(Order order : this.orderList){
+                if(order instanceof Request){
+                    wishings++;
+                } else {
+                    orders++;
+                }
+            }
+
+            System.out.printf("%s : %s\n", this.inventory.size(), orders);
+
+            if(this.inventory.size() == 3){
                 System.out.println("[TRUCK] Full! Returning");
                 this.full = false;
 
                 for(int i = 0; i < this.availableRobots.size(); i++){
                     this.events.notify("full", "");
                     this.events.unsubscribe("full", this.availableRobots.get(i));
-                    this.availableRobots.get(i).events.unsubscribe(event, this);
+                    this.availableRobots.get(i).events.unsubscribe("loaded", this);
+                    this.availableRobots.get(i).events.unsubscribe("unloaded", this);
                 }
             }
         } 
@@ -198,18 +214,18 @@ public class Truck extends Object3D implements Updatable, EventListener {
     public void generateOrders(){
         Random random = new Random();
 
-        if(this.availableStellages.size() > 0){
-            for(int i = 0; i < 3; i++){
-                Stellage stellage = this.availableStellages.get(i);
-                Deliver order = new Deliver(stellage.getX(), stellage.getY(), stellage.getZ(), stellage);
+        if(this.unavailableStellages.size() > 0){
+            for(int i = 0; i < this.unavailableStellages.size(); i++){
+                Stellage stellage = this.unavailableStellages.get(i);
+                Deliver order = new Deliver(stellage.initX, stellage.initY, stellage.initZ, stellage);
                 this.addOrder(order);
             }
         }
 
-        if(this.unavailableStellages.size() > 0){
-            for(int i = 0; i < random.nextInt(5); i++){
-                Stellage stellage = this.unavailableStellages.get(i);
-                Request order = new Request(stellage.getX(), stellage.getY(), stellage.getZ(), stellage);
+        if(this.availableStellages.size() > 0){
+            for(int i = 0; i < 3; i++){
+                Stellage stellage = this.availableStellages.get(i);
+                Request order = new Request(stellage.initX, stellage.initY, stellage.initZ, stellage);
                 this.addOrder(order);
             }
         }

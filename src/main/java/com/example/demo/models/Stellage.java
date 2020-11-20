@@ -9,6 +9,10 @@ public class Stellage extends Object3D implements Updatable {
 
     private UUID uuid;
 
+    public double initX;
+    public double initY;
+    public double initZ;
+
     private double x;
     private double y = 0;
     private double z;
@@ -23,6 +27,11 @@ public class Stellage extends Object3D implements Updatable {
         this.x = x;
         this.y = y;
         this.z = z;
+
+        this.initX = x;
+        this.initY = y;
+        this.initZ = z;
+
         this.uuid = UUID.randomUUID();
         this.events = new EventManager("loaded", "unloaded");
     }

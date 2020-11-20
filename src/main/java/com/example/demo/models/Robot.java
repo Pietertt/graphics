@@ -79,7 +79,7 @@ public class Robot extends Object3D implements Updatable, EventListener {
         this.z = z;
         this.speed = 0.1;
         this.uuid = UUID.randomUUID();
-        this.events = new EventManager("deliver", "load");
+        this.events = new EventManager("loaded", "unloaded");
 
     }
 
@@ -319,36 +319,137 @@ public class Robot extends Object3D implements Updatable, EventListener {
         return this.orders.get(0);
     }
 
-    public void move(){
+    public int move(){
         if(this.getDeliverables() > 0){
-            if(((this.getFirstOrder().getX() - 0.01 <= this.getX()) && (this.getX() <= this.getFirstOrder().getX() + 0.01))){
-                if(((this.getFirstOrder().getZ() - 0.01 <= this.getZ()) && (this.getZ() <= this.getFirstOrder().getZ() + 0.01))){
-                    this.returning = true;
+            
+            if(this.returning == false){
+                if(((this.getFirstOrder().getX() - 0.01 <= this.getX()) && (this.getX() <= this.getFirstOrder().getX() + 0.01))){
+                    if(((this.getFirstOrder().getZ() - 0.01 <= this.getZ()) && (this.getZ() <= this.getFirstOrder().getZ() + 0.01))){
+                        //robot.setStrategy(new UnloadWithoutStellageStrategy());
+                        this.returning = true;
+                        System.out.println("Delivered stellage to place");
+                    } else {
+                        if(this.getFirstOrder().getZ() > this.getZ()){
+                            this.setZ(this.getZ() + this.getSpeed());
+                            this.getFirstOrder().stellage.setZ(this.getZ());
+                        } else {
+                            this.setZ(this.getZ() - this.getSpeed());
+                            this.getFirstOrder().stellage.setZ(this.getZ());
+                        }
+                    }
                 } else {
-                    if(this.getFirstOrder().getZ() > this.getZ()){
-                        this.setZ(this.getZ() + this.getSpeed());
+                    this.getFirstOrder().stellage.status = true;
+                    if(this.getFirstOrder().getX() > this.getX()){
+                        this.setX(this.getX() + this.getSpeed());
                         this.getFirstOrder().stellage.setX(this.getX());
                         this.getFirstOrder().stellage.setZ(this.getZ());
                     } else {
-                        this.setZ(this.getZ() - this.getSpeed());
+                        this.setX(this.getX() - this.getSpeed());
                         this.getFirstOrder().stellage.setX(this.getX());
                         this.getFirstOrder().stellage.setZ(this.getZ());
                     }
                 }
             } else {
-                if(this.getFirstOrder().getX() > this.getX()){
-                    this.setX(this.getX() + this.getSpeed());
-                    this.getFirstOrder().stellage.setX(this.getX());
-                    this.getFirstOrder().stellage.setZ(this.getZ());
+                if(((15 - 0.01 <= this.getX()) && (this.getX() <= 15 + 0.01))){
+                    if((0 - 0.01 <= this.getZ()) && (this.getZ() <= 0 + 0.01)){
+                        this.events.notify("unloaded", this.getFirstOrder().stellage.getUUID());
+                        this.getFirstOrder().stellage.events.notify("unloaded", this.getFirstOrder().stellage.getUUID());
+                        this.getFirstOrder().stellage.status = true;
+                        this.removeOrder(this.getFirstOrder());
+                        this.returning = false;
+                        System.out.println("Returned to truck");
+                        return 1;
+                    } else {
+                        if(this.getZ() > 0){
+                            this.setZ(this.getZ() - this.getSpeed());
+                        } else {
+                            this.setZ(this.getZ() + this.getSpeed());
+                        }
+                    }
                 } else {
-                    this.setX(this.getX() - this.getSpeed());
-                    this.getFirstOrder().stellage.setX(this.getX());
-                    this.getFirstOrder().stellage.setZ(this.getZ());
+                    if(this.getX() > 15){
+                        this.setX(this.getX() - this.getSpeed());
+                    } else {
+                        this.setX(this.getX() + this.getSpeed());
+                    }
                 }
-            } 
-        } else {
-            
+            }            
         }
+
+        if(this.getRequests() > 0){
+            if(this.getDeliverables() == 0){
+                if(this.returning == false){
+                    if(((this.getFirstOrder().getX() - 0.01 <= this.getX()) && (this.getX() <= this.getFirstOrder().getX() + 0.01))){
+                        if(((this.getFirstOrder().getZ() - 0.01 <= this.getZ()) && (this.getZ() <= this.getFirstOrder().getZ() + 0.01))){
+                            this.returning = true;
+                            System.out.println("Arrived at desired stellage");
+                        } else {
+                            if(this.getFirstOrder().getZ() > this.getZ()){
+                                this.setZ(this.getZ() + this.getSpeed());
+                                // this.getFirstOrder().stellage.setX(this.getX());
+                                // this.getFirstOrder().stellage.setZ(this.getZ());
+                            } else {
+                                this.setZ(this.getZ() - this.getSpeed());
+                                // this.getFirstOrder().stellage.setX(this.getX());
+                                // this.getFirstOrder().stellage.setZ(this.getZ());
+                            }
+                        }
+                    } else {
+                        if(this.getFirstOrder().getX() > this.getX()){
+                            this.setX(this.getX() + this.getSpeed());
+                            // this.getFirstOrder().stellage.setX(this.getX());
+                            // this.getFirstOrder().stellage.setZ(this.getZ());
+                        } else {
+                            this.setX(this.getX() - this.getSpeed());
+                            // this.getFirstOrder().stellage.setX(this.getX());
+                            // this.getFirstOrder().stellage.setZ(this.getZ());
+                        }
+                    } 
+                } else {
+                    if(((15 - 0.01 <= this.getX()) && (this.getX() <= 15 + 0.01))){
+                        if((0 - 0.01 <= this.getZ()) && (this.getZ() <= 0 + 0.01)){
+                            this.events.notify("loaded", this.getFirstOrder().stellage.getUUID());
+                            this.getFirstOrder().stellage.events.notify("loaded", this.getFirstOrder().stellage.getUUID());
+                            this.getFirstOrder().stellage.status = false;
+                            this.removeOrder(this.getFirstOrder());
+                            this.returning = false;
+                            System.out.println("Delivered stellage to truck");
+                            // if(robot.gotAnyWishOrders()){
+                            //     robot.setStrategy(new UnloadWithStellageStrategy());
+                            // } else {
+                            //     if(robot.gotAnyOrders()){
+                            //         robot.setStrategy(new LoadWithoutStellageStrategy());
+                            //     }
+                            // }
+                            //System.out.println("[ROBOT] Returning empty to truck");
+                        } else {
+                            if(this.getZ() > 0){
+                                this.setZ(this.getZ() - this.getSpeed());
+                                this.getFirstOrder().stellage.setX(this.getX());
+                                this.getFirstOrder().stellage.setZ(this.getZ());
+                            } else {
+                                this.setZ(this.getZ() + this.getSpeed());
+                                this.getFirstOrder().stellage.setX(this.getX());
+                                this.getFirstOrder().stellage.setZ(this.getZ());
+                            }
+                        }
+                    } else {
+                        if(this.getX() > 15){
+                            this.setX(this.getX() - this.getSpeed());
+                            this.getFirstOrder().stellage.setX(this.getX());
+                            this.getFirstOrder().stellage.setZ(this.getZ());
+                        } else {
+                            this.setX(this.getX() + this.getSpeed());
+                            this.getFirstOrder().stellage.setX(this.getX());
+                            this.getFirstOrder().stellage.setZ(this.getZ());
+                        }
+                    }
+                }
+            }
+        } 
+        
+        return 0;
+        
     }
 
     public void remove(){
