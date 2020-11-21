@@ -40,6 +40,10 @@ public class Robot extends Object3D implements Updatable, EventListener {
 
     private boolean returning = false;
 
+    private Node graph;
+    private Dijkstra dijkstra;
+    private ArrayList<Node> nodes;
+
 
     public ArrayList<Order> orders;
     //public ArrayList<Stellage> wishing;
@@ -59,7 +63,8 @@ public class Robot extends Object3D implements Updatable, EventListener {
         this.uuid = UUID.randomUUID();
         this.events = new EventManager("loaded", "unloaded");
 
-        Node S = new Node("S");
+        this.graph = new Node("S");
+        this.nodes = new ArrayList<Node>();
 
         Node A = new Node("A");
         Node B = new Node("B");
@@ -75,54 +80,49 @@ public class Robot extends Object3D implements Updatable, EventListener {
         Node L = new Node("L");
         Node M = new Node("M");
 
-        S.addDestination(new Edge(3, S, A));
+        this.nodes.add(A);
+        this.nodes.add(B);
+        this.nodes.add(C);
+        this.nodes.add(D);
+        this.nodes.add(E);
+        this.nodes.add(F);
+        this.nodes.add(G);
+        this.nodes.add(H);
+        this.nodes.add(I);
+        this.nodes.add(J);
+        this.nodes.add(K);
+        this.nodes.add(L);
+        this.nodes.add(M);
+
+        this.graph.addDestination(new Edge(3, this.graph, A));
 
         A.addDestination(new Edge(3, A, B));
+        A.addDestination(new Edge(12, A, I));
 
-        B.addDestination(new Edge(3, B, C));
-        B.addDestination(new Edge(6, B, G));
+        B.addDestination(new Edge(6, B, M));
+
+        M.addDestination(new Edge(3, M, K));
+        M.addDestination(new Edge(3, M, L));
+
+        L.addDestination(new Edge(3, L, J));
+        L.addDestination(new Edge(6, L, C));
 
         C.addDestination(new Edge(3, C, D));
 
         D.addDestination(new Edge(3, D, E));
 
-        E.addDestination(new Edge(9, E, J));
+        E.addDestination(new Edge(9, E, F));
 
-        G.addDestination(new Edge(3, G, I));
+        F.addDestination(new Edge(3, F, G));
 
-        I.addDestination(new Edge(3, I, H));
+        J.addDestination(new Edge(3, J, G));
 
-        H.addDestination(new Edge(3, H, F));
-        H.addDestination(new Edge(3, H, K));
+        G.addDestination(new Edge(3, G, H));
 
-        J.addDestination(new Edge(3, J, K));
+        H.addDestination(new Edge(3, H, I));
 
-        K.addDestination(new Edge(3, K, L));
 
-        L.addDestination(new Edge(3, L, M));
-
-        Dijkstra dijkstra = new Dijkstra();
-
-        dijkstra.c(S);
-
-        System.out.println(dijkstra.getShortestPathTo(J));
-
-        // Graph graph = new Graph();
-
-        // graph.addNode(A);
-        // graph.addNode(B);
-        // graph.addNode(C);
-        // graph.addNode(D);
-        // graph.addNode(E);
-        // graph.addNode(F);
-        // graph.addNode(G);
-        // graph.addNode(H);
-        // graph.addNode(I);
-        // graph.addNode(J);
-        // graph.addNode(K);
-        // graph.addNode(L);
-        // graph.addNode(M);
-
+        this.dijkstra = new Dijkstra();
     }
 
     /*
@@ -206,124 +206,6 @@ public class Robot extends Object3D implements Updatable, EventListener {
     public void setZ(double z){
         this.z = z;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    // /*
-    //     Check whenever the robot has reached its destination. The destination can be either 
-    //     his spawn point or a stellage.
-    // */
-    // private boolean robotHasArrivedX(){
-    //     if(!this.isFillingTruck()){
-    //         if(!this.hasNoOrders()){
-    //             Stellage stellage = this.orders.get(0);
-    //             if((stellage.getX() - 0.01 <= this.x) && (this.x <= stellage.getX() + 0.01)){
-    //                 if((stellage.getZ() - 0.01 <= this.z) && (this.z <= stellage.getZ() + 0.01)){
-    //                     this.fillTruck();
-    //                     //this.events.notify("load", "test"); 
-    //                 }
-    //                 return true;
-    //             }
-    //             return false;
-    //         }
-    //         return false;
-    //     } else {
-    //         if((15 - 0.01 <= this.x) && (this.x <= 15 + 0.01)){
-    //             if((0 - 0.01 <= this.z) && (this.z <= 0 + 0.01)){
-    //                 if(!this.hasNoOrders()){
-    //                     this.events.notify("deliver", this.orders.get(0).getUUID());
-    //                     this.orders.get(0).events.notify("loaded", this.orders.get(0).getUUID());
-    //                     this.orders.remove(0);
-    //                     this.takeNextStellage();
-    //                 } else {
-    //                     //this.events.notify("deliver", this.getUUID());
-    //                 }
-    //             }
-    //             return true;
-    //         }
-    //         return false;
-    //     }
-    // }
-
-    // private boolean robotHasArrivedZ(){
-        
-    // }
-
-    // private void moveX(){
-    //     if(!this.isFillingTruck()){
-    //         if(!this.hasNoOrders()){
-    //             Stellage stellage = this.orders.get(0);
-    //             if(stellage.getX() > this.x){
-    //                 this.x += this.speed;
-    //             } else {
-    //                 this.x -= this.speed;
-    //             }
-    //         }
-    //     } else {
-    //         Stellage stellage = this.orders.get(0);
-    //         if(this.x > 15){
-    //             this.x -= this.speed;
-    //             this.orders.get(0).setX(this.x);
-    //             this.orders.get(0).setZ(this.z); 
-    //         } else {
-    //             this.x += this.speed;
-    //             this.orders.get(0).setX(this.x);
-    //             this.orders.get(0).setZ(this.z); 
-    //         }
-    //     }
-    // }
-
-    // private void moveZ(){
-    //     if(!this.isFillingTruck()){
-    //         if(!this.hasNoOrders()){
-    //             Stellage stellage = this.orders.get(0);
-    //             if(stellage.getZ() > this.z){
-    //                 this.z += this.speed;
-    //             } else {
-    //                 this.z -= this.speed;
-    //             }
-    //         }
-    //     } else {
-    //         if(this.z > 0){
-    //             this.z -= this.speed;
-    //             this.orders.get(0).setX(this.x);
-    //             this.orders.get(0).setZ(this.z);
-    //         } else {
-    //             this.z += this.speed;
-    //             this.orders.get(0).setX(this.x);
-    //             this.orders.get(0).setZ(this.z);
-    //         }
-    //     }
-    // }
 
     public int getDeliverables(){
         int amount = 0;
@@ -508,7 +390,16 @@ public class Robot extends Object3D implements Updatable, EventListener {
 
     public void addOrder(Order order){
         this.orders.add(order);
-        System.out.printf("[ROBOT] Moving stellage to coordinates (%s, %s, %s)\n", order.getX(), order.getY(), order.getZ());
+
+        this.dijkstra.computerShortestPath(this.graph);
+
+        for(Node node : this.nodes){
+            if(node.getName().equals(order.stellage.getName())){
+                System.out.println(this.dijkstra.getShortestPathTo(node));
+            }
+        }
+
+        System.out.printf("[ROBOT] Moving stellage %s to coordinates (%s, %s, %s)\n", order.stellage.getName(), order.getX(), order.getY(), order.getZ());
     }
 
     public void update(String event, String message){
@@ -517,9 +408,4 @@ public class Robot extends Object3D implements Updatable, EventListener {
         //     this.setStrategy(new UnloadWithStellageStrategy());
         // } 
     }
-
-    // public void addWishing(Stellage stellage){
-    //     this.wishing.add(stellage);
-    //     System.out.printf("[ROBOT] Moving to stellage %s on coordinates (%s %s %s)\n", stellage.getUUID(), stellage.getRotationX(), stellage.getY(), stellage.getZ());
-    // }
 }

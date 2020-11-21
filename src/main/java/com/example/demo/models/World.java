@@ -11,6 +11,7 @@ import com.example.demo.models.Robot;
 import com.example.demo.models.Order.Order;
 import com.example.demo.models.Observer.EventListener;
 
+
 /*
  * Deze class is een versie van het model van de simulatie. In dit geval is het
  * de 3D wereld die we willen modelleren (magazijn). De zogenaamde domain-logic,
@@ -51,29 +52,48 @@ public class World implements Model, EventListener {
         //     }
         // }
 
-        double[][] stellages = {
-            {26, 2, 9},     // A
-            {22, 2, 9},     // B
-            {10, 2, 9},     // C
-            {5, 2, 9},      // D
+        // Stellage[] stellages = {
+        //     {26, 2, 9},     // A
+        //     {22, 2, 9},     // B
+        //     {10, 2, 9},     // C
+        //     {5, 2, 9},      // D
 
-            {26, 2, 17},    // E
+        //     {26, 2, 17},    // E
 
-            {21, 2, 24},    // F
-            {10, 2, 24},    // G
+        //     {21, 2, 24},    // F
+        //     {10, 2, 24},    // G
 
-            {21, 2, 31},    // H
-            {10, 2, 31},    // I
+        //     {21, 2, 31},    // H
+        //     {10, 2, 31},    // I
 
-            {26, 2, 38},    // J
-            {21, 2, 38},    // K
-            {10, 2, 38},    // L
-            {5, 2, 38}      // M
+        //     {26, 2, 38},    // J
+        //     {21, 2, 38},    // K
+        //     {10, 2, 38},    // L
+        //     {5, 2, 38}      // M
 
+        // };
+
+        Stellage[] stellages = {
+            new Stellage(26, 2, 9, "A"),
+            new Stellage(22, 2, 9, "B"),
+            new Stellage(10, 2, 9, "C"),
+            new Stellage(5, 2, 9, "D"),
+
+            new Stellage(26, 2, 17, "E"),
+
+            new Stellage(21, 2, 24, "F"),
+            new Stellage(10, 2, 24, "G"),
+
+            new Stellage(21, 2, 31, "H"),
+            new Stellage(10, 2, 31, "I"),
+
+            new Stellage(26, 2, 38, "J"),
+            new Stellage(21, 2, 38, "K"),
+            new Stellage(10, 2, 38, "L"),
+            new Stellage(5, 2, 38, "M")
         };
 
-        for(int i = 0; i < stellages.length; i++){
-            Stellage stellage = new Stellage(stellages[i][0], stellages[i][1], stellages[i][2]);
+        for(Stellage stellage : stellages){
             stellage.events.subscribe("loaded", this);
             stellage.events.subscribe("unloaded", this);
             this.worldObjects.add(stellage);
