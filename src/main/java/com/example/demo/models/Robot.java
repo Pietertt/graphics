@@ -342,7 +342,11 @@ public class Robot extends Object3D implements Updatable, EventListener {
                                 this.getFirstOrder().removeUnvisitedNove();
 
                                 if(!this.getFirstOrder().containsVisitedNodes()){
-                                    System.out.println("Back at the truck");
+                                    this.events.notify("loaded", this.getFirstOrder().stellage.getUUID());
+                                    this.getFirstOrder().stellage.events.notify("loaded", this.getFirstOrder().stellage.getUUID());
+                                    this.getFirstOrder().stellage.status = false;
+                                    this.removeOrder(this.getFirstOrder());
+                                    this.returning = false;
                                 }
                             } else {
                                 if(this.getZ() > this.getFirstOrder().getLastNode().getZ()){
