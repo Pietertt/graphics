@@ -6,9 +6,15 @@ import java.util.UUID;
 
 import com.example.demo.models.Observer.EventManager;
 import com.example.demo.models.Observer.EventListener;
+
 import com.example.demo.models.Order.Request;
 import com.example.demo.models.Order.Deliver;
 import com.example.demo.models.Order.Order;
+
+import com.example.demo.models.Dijkstra.Node;
+import com.example.demo.models.Dijkstra.Graph;
+import com.example.demo.models.Dijkstra.Edge;
+import com.example.demo.models.Dijkstra.Dijkstra;
 
 import jdk.internal.event.Event;
 
@@ -43,34 +49,7 @@ public class Robot extends Object3D implements Updatable, EventListener {
 
     public Robot(double x, double z) {
 
-        Vertex vertexA = new Vertex("A");
-		Vertex vertexB = new Vertex("B");
-		Vertex vertexC = new Vertex("C");
-		Vertex vertexD = new Vertex("D");
-        Vertex vertexE = new Vertex("E");
-        Vertex vertexF = new Vertex("F");
-        Vertex vertexG = new Vertex("G");
-        Vertex vertexH = new Vertex("H");
-        Vertex vertexI = new Vertex("I");
-        Vertex vertexJ = new Vertex("J");
-        Vertex vertexK = new Vertex("K");
-        Vertex vertexL = new Vertex("L");
-        Vertex vertexM = new Vertex("M");
-        Vertex vertexN = new Vertex("N");
-		
-		vertexA.addNeighbour(new Edge(1,vertexA,vertexD));
-        vertexB.addNeighbour(new Edge(1,vertexB,vertexC));
-        vertexC.addNeighbour(new Edge(1,vertexC,vertexD));
-        vertexD.addNeighbour(new Edge(1,vertexD,vertexE));
-        vertexD.addNeighbour(new Edge(1,vertexD,vertexI));
-        vertexE.addNeighbour(new Edge(1,vertexE,vertexF));
-        vertexG.addNeighbour(new Edge(1,vertexG,vertexH));
-        vertexH.addNeighbour(new Edge(1,vertexH,vertexI));
-        vertexI.addNeighbour(new Edge(1,vertexI,vertexJ));
-        vertexI.addNeighbour(new Edge(1,vertexI,vertexM));
-        vertexJ.addNeighbour(new Edge(1,vertexJ,vertexK));
-        vertexL.addNeighbour(new Edge(1,vertexL,vertexM));
-        vertexM.addNeighbour(new Edge(1,vertexM,vertexN));
+        
 
         this.orders = new ArrayList<Order>();
         //this.wishing = new ArrayList<Stellage>();
@@ -80,6 +59,70 @@ public class Robot extends Object3D implements Updatable, EventListener {
         this.speed = 0.1;
         this.uuid = UUID.randomUUID();
         this.events = new EventManager("loaded", "unloaded");
+
+        Node S = new Node("S");
+
+        Node A = new Node("A");
+        Node B = new Node("B");
+        Node C = new Node("C");
+        Node D = new Node("D");
+        Node E = new Node("E");
+        Node F = new Node("F");
+        Node G = new Node("G");
+        Node H = new Node("H");
+        Node I = new Node("I");
+        Node J = new Node("J");
+        Node K = new Node("K");
+        Node L = new Node("L");
+        Node M = new Node("M");
+
+        S.addDestination(new Edge(3, S, A));
+
+        A.addDestination(new Edge(3, A, B));
+
+        B.addDestination(new Edge(3, B, C));
+        B.addDestination(new Edge(6, B, G));
+
+        C.addDestination(new Edge(3, C, D));
+
+        D.addDestination(new Edge(3, D, E));
+
+        E.addDestination(new Edge(9, E, J));
+
+        G.addDestination(new Edge(3, G, I));
+
+        I.addDestination(new Edge(3, I, H));
+
+        H.addDestination(new Edge(3, H, F));
+        H.addDestination(new Edge(3, H, K));
+
+        J.addDestination(new Edge(3, J, K));
+
+        K.addDestination(new Edge(3, K, L));
+
+        L.addDestination(new Edge(3, L, M));
+
+        Dijkstra dijkstra = new Dijkstra();
+
+        dijkstra.c(S);
+
+        System.out.println(dijkstra.getShortestPathTo(J));
+
+        // Graph graph = new Graph();
+
+        // graph.addNode(A);
+        // graph.addNode(B);
+        // graph.addNode(C);
+        // graph.addNode(D);
+        // graph.addNode(E);
+        // graph.addNode(F);
+        // graph.addNode(G);
+        // graph.addNode(H);
+        // graph.addNode(I);
+        // graph.addNode(J);
+        // graph.addNode(K);
+        // graph.addNode(L);
+        // graph.addNode(M);
 
     }
 

@@ -1,51 +1,49 @@
-package com.example.demo.models;
+package com.example.demo.models.Dijkstra;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.PriorityQueue;
 
+
 public class Dijkstra {
-    
-    public void computeShortestPaths(Vertex sourceVertex){
- 
-		sourceVertex.setDistance(0);
-		PriorityQueue<Vertex> priorityQueue = new PriorityQueue<>();
-		priorityQueue.add(sourceVertex);
-		sourceVertex.setVisited(true);
- 
-		while( !priorityQueue.isEmpty() ){
-            // Getting the minimum distance vertex from priority queue
-			Vertex actualVertex = priorityQueue.poll();
- 
-			for(Edge edge : actualVertex.getAdjacenciesList()){
- 
-				Vertex v = edge.getTargetVertex();
-				if(!v.isVisited())
-				{
-					double newDistance = actualVertex.getDistance() + edge.getWeight();
- 
-					if( newDistance < v.getDistance() ){
-						priorityQueue.remove(v);
-						v.setDistance(newDistance);
-						v.setPredecessor(actualVertex);
-						priorityQueue.add(v);
-					}
-				}
-			}
-			actualVertex.setVisited(true);
-		}
-	}
- 
-	public List<Vertex> getShortestPathTo(Vertex targetVertex){
-		List<Vertex> path = new ArrayList<>();
- 
-		for(Vertex vertex=targetVertex;vertex!=null;vertex=vertex.getPredecessor()){
-			path.add(vertex);
-		}
- 
-		Collections.reverse(path);
-		return path;
-	}
+
+    public void c(Node source){
+        source.setDistance(0);
+
+        PriorityQueue<Node> queue = new PriorityQueue<Node>();
+        queue.add(source);
+        source.setVisited(true);
+
+        while(!queue.isEmpty()){
+            Node node = queue.poll();
+
+            for(Edge edge : node.getAdjacenciesList()){
+                Node v = edge.endNode;
+                if(!v.isVisited()){
+                    double newDistance = node.getDistance() + edge.weight;
+                    if(newDistance < v.getDistance()){
+                        queue.remove(v);
+                        v.setDistance(newDistance);
+                        v.setPredecessor(node);
+                        queue.add(v);
+                    }
+                }
+            }
+            node.setVisited(true);
+        }
+    }
+
+    public List<Node> getShortestPathTo(Node n){
+        List<Node> path = new ArrayList<>();
+
+        for(Node node = n; node != null; node = node.getPredecessor()){
+            path.add(node);
+        }
+
+        Collections.reverse(path);
+
+        return path;
+    }
 
 }
