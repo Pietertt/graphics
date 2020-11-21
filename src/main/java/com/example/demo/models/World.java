@@ -75,7 +75,7 @@ public class World implements Model, EventListener {
 
         Stellage[] stellages = {
             new Stellage(26, 2, 9, "A"),
-            new Stellage(22, 2, 9, "B"),
+            new Stellage(21, 2, 9, "B"),
             new Stellage(10, 2, 9, "C"),
             new Stellage(5, 2, 9, "D"),
 
@@ -99,7 +99,7 @@ public class World implements Model, EventListener {
             this.worldObjects.add(stellage);
         }
 
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < 1; i++){
             Object3D robot = new Robot(5, 0);
             this.worldObjects.add(robot);
         }

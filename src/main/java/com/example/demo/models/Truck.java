@@ -26,7 +26,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
     private double rotationY = 0;
     private double rotationZ = 0;
 
-    private ArrayList<Stellage> inventory;
+    private int inventory = 0;
     private ArrayList<Order> orderList;
     private ArrayList<Robot> availableRobots;
     private ArrayList<Stellage> availableStellages;
@@ -48,8 +48,6 @@ public class Truck extends Object3D implements Updatable, EventListener {
 
         this.orderList = new ArrayList<Order>();
 
-
-        this.inventory = new ArrayList<Stellage>();
         this.events = new EventManager("full");
 
         System.out.println("[TRUCK] Moving to warehouse");
@@ -70,12 +68,6 @@ public class Truck extends Object3D implements Updatable, EventListener {
                     robot.events.subscribe("unloaded", this);
                     this.events.subscribe("full", robot);
                 }
-
-
-
-
-
-
 
                 int wishings = 0;
                 int orders = 0;
@@ -103,15 +95,10 @@ public class Truck extends Object3D implements Updatable, EventListener {
                 }
 
                 this.forward = false;
-
-
-
-
-
             }
         } else {
             // The truck doesn't move until the robots have unload it
-            if(!this.full || this.wanted == 0){
+            if(!this.full || ((this.wanted == 0) && (this.having != 0))){
                 if(this.z - this.speed > -50){
                     this.z -= this.speed;
                 } else {
@@ -119,7 +106,6 @@ public class Truck extends Object3D implements Updatable, EventListener {
                 }
             }
         }  
-        
         return true;
     }
 
@@ -166,9 +152,9 @@ public class Truck extends Object3D implements Updatable, EventListener {
     public void update(String event, String message){
         System.out.println(event);
         if(event == "loaded"){
-            this.inventory.add(new Stellage(0, 0, 0, "none"));
+            this.inventory++;
 
-            if(this.inventory.size() == this.wanted){
+            if(this.inventory == this.wanted){
                 System.out.println("[TRUCK] Full! Returning");
                 this.full = false;
 

@@ -25,6 +25,10 @@ public class Node implements Comparable<Node> {
         this.z = z;
     }
 
+    public Node(){
+        
+    }
+
     public double getX(){
         return this.x;
     }
