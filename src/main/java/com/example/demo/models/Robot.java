@@ -250,54 +250,68 @@ public class Robot extends Object3D implements Updatable, EventListener {
         if(this.getDeliverables() > 0){
             
             if(this.returning == false){
-                if(((this.getFirstOrder().getX() - 0.01 <= this.getX()) && (this.getX() <= this.getFirstOrder().getX() + 0.01))){
-                    if(((this.getFirstOrder().getZ() - 0.01 <= this.getZ()) && (this.getZ() <= this.getFirstOrder().getZ() + 0.01))){
-                        //robot.setStrategy(new UnloadWithoutStellageStrategy());
-                        this.returning = true;
-                        System.out.println("Delivered stellage to place");
-                    } else {
-                        if(this.getFirstOrder().getZ() > this.getZ()){
-                            this.setZ(this.getZ() + this.getSpeed());
-                            this.getFirstOrder().stellage.setZ(this.getZ());
+                if(this.getFirstOrder().containsNodes()){
+                    if(((this.getFirstOrder().getFirstNode().getX() - 0.01 <= this.getX()) && (this.getX() <= this.getFirstOrder().getFirstNode().getX() + 0.01))){
+                        if(((this.getFirstOrder().getFirstNode().getZ() - 0.01 <= this.getZ()) && (this.getZ() <= this.getFirstOrder().getFirstNode().getZ() + 0.01))){
+                            System.out.printf("Arrived at node %s\n", this.getFirstOrder().getFirstNode().getName());
+                            this.getFirstOrder().removeVisitedNode();
+
+                            if(!this.getFirstOrder().containsNodes()){
+                                this.returning = true;
+                            }
                         } else {
-                            this.setZ(this.getZ() - this.getSpeed());
-                            this.getFirstOrder().stellage.setZ(this.getZ());
+                            if(this.getFirstOrder().getFirstNode().getZ() > this.getZ()){
+                                this.setZ(this.getZ() + this.getSpeed());
+                                this.getFirstOrder().stellage.setX(this.getX());
+                                this.getFirstOrder().stellage.setZ(this.getZ());
+                            } else {
+                                this.setZ(this.getZ() - this.getSpeed());
+                                this.getFirstOrder().stellage.setX(this.getX());
+                                this.getFirstOrder().stellage.setZ(this.getZ());
+                            }
                         }
-                    }
-                } else {
-                    this.getFirstOrder().stellage.status = true;
-                    if(this.getFirstOrder().getX() > this.getX()){
-                        this.setX(this.getX() + this.getSpeed());
-                        this.getFirstOrder().stellage.setX(this.getX());
-                        this.getFirstOrder().stellage.setZ(this.getZ());
                     } else {
-                        this.setX(this.getX() - this.getSpeed());
-                        this.getFirstOrder().stellage.setX(this.getX());
-                        this.getFirstOrder().stellage.setZ(this.getZ());
-                    }
-                }
-            } else {
-                if(((15 - 0.01 <= this.getX()) && (this.getX() <= 15 + 0.01))){
-                    if((0 - 0.01 <= this.getZ()) && (this.getZ() <= 0 + 0.01)){
-                        this.events.notify("unloaded", this.getFirstOrder().stellage.getUUID());
-                        this.getFirstOrder().stellage.events.notify("unloaded", this.getFirstOrder().stellage.getUUID());
                         this.getFirstOrder().stellage.status = true;
-                        this.removeOrder(this.getFirstOrder());
-                        this.returning = false;
-                        System.out.println("Returned to truck");
-                        return 1;
-                    } else {
-                        if(this.getZ() > 0){
-                            this.setZ(this.getZ() - this.getSpeed());
+                        if(this.getFirstOrder().getFirstNode().getX() > this.getX()){
+                            this.setX(this.getX() + this.getSpeed());
+                            this.getFirstOrder().stellage.setX(this.getX());
+                            this.getFirstOrder().stellage.setZ(this.getZ());
                         } else {
-                            this.setZ(this.getZ() + this.getSpeed());
+                            this.setX(this.getX() - this.getSpeed());
+                            this.getFirstOrder().stellage.setX(this.getX());
+                            this.getFirstOrder().stellage.setZ(this.getZ());
                         }
                     }
-                } else {
-                    if(this.getX() > 15){
-                        this.setX(this.getX() - this.getSpeed());
+                } 
+            } else {
+                if(this.getFirstOrder().containsVisitedNodes()){
+                    if(((this.getFirstOrder().getLastNode().getX() - 0.01 <= this.getX()) && (this.getX() <= this.getFirstOrder().getLastNode().getX() + 0.01))){
+                        if(((this.getFirstOrder().getLastNode().getZ() - 0.01 <= this.getZ()) && (this.getZ() <= this.getFirstOrder().getLastNode().getZ() + 0.01))){
+                            System.out.printf("Arrived at node %s\n", this.getFirstOrder().getLastNode().getName());
+                            this.getFirstOrder().removeUnvisitedNove();
+
+                            if(!this.getFirstOrder().containsVisitedNodes()){
+                                this.events.notify("unloaded", this.getFirstOrder().stellage.getUUID());
+                                this.getFirstOrder().stellage.events.notify("unloaded", this.getFirstOrder().stellage.getUUID());
+                                this.getFirstOrder().stellage.status = true;
+                                this.removeOrder(this.getFirstOrder());
+                                this.returning = false;
+                                System.out.println("Returned to truck");
+                                return 1;
+                            }
+                        } else {
+                            if(this.getZ() > this.getFirstOrder().getLastNode().getZ()){
+                                this.setZ(this.getZ() - this.getSpeed());
+                            } else {
+                                this.setZ(this.getZ() + this.getSpeed());
+                            }
+                        }
                     } else {
-                        this.setX(this.getX() + this.getSpeed());
+                        if(this.getX() > this.getFirstOrder().getLastNode().getX()){
+                            this.setX(this.getX() - this.getSpeed());
+                        } else {
+                            this.setX(this.getX() + this.getSpeed());
+                        }
                     }
                 }
             }            
@@ -331,7 +345,6 @@ public class Robot extends Object3D implements Updatable, EventListener {
                                 this.setX(this.getX() - this.getSpeed());
                             }
                         }
-                        // System.out.printf("%s %s %s %s\n", this.getFirstOrder().getFirstNode().getName(), this.getFirstOrder().getFirstNode().getX(), this.getFirstOrder().getFirstNode().getY(), this.getFirstOrder().getFirstNode().getZ());
                     } 
 
                 } else {
