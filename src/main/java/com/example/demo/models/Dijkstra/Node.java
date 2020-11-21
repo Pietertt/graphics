@@ -12,9 +12,29 @@ public class Node implements Comparable<Node> {
     private Node predecessor;
     private double distance = Double.MAX_VALUE;
 
-    public Node(String name){
+    private double x;
+    private double y;
+    private double z;
+
+    public Node(double x, double y, double z, String name){
         this.name = name;
         this.adjacenciesList = new ArrayList<>();
+
+        this.x = x;
+        this.y = y;
+        this.z = z;
+    }
+
+    public double getX(){
+        return this.x;
+    }
+
+    public double getZ(){
+        return this.z;
+    }
+
+    public double getY(){
+        return this.y;
     }
 
     public void addDestination(Edge edge){
