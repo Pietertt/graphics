@@ -29,12 +29,13 @@ public class SimulationController extends Controller {
     @Override
     public void run() {
         while (true) {
-            this.getModel().update();
 
             try {
-                Thread.sleep(5);
+                Thread.sleep(15);
                 this.getModel().update();
             } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch(IllegalStateException e) {
                 e.printStackTrace();
             }
         }
