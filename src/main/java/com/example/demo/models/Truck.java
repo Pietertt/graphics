@@ -166,19 +166,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
     public void update(String event, String message){
         System.out.println(event);
         if(event == "loaded"){
-            this.inventory.add(new Stellage(0, 0, 0));
-
-            int wishings = 0;
-            int orders = 0;
-            for(Order order : this.orderList){
-                if(order instanceof Request){
-                    wishings++;
-                } else {
-                    orders++;
-                }
-            }
-
-            System.out.printf("%s : %s\n", this.inventory.size(), orders);
+            this.inventory.add(new Stellage(0, 0, 0, "none"));
 
             if(this.inventory.size() == this.wanted){
                 System.out.println("[TRUCK] Full! Returning");

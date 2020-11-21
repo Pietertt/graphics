@@ -8,7 +8,7 @@ import java.util.PriorityQueue;
 
 public class Dijkstra {
 
-    public void c(Node source){
+    public void computerShortestPath(Node source){
         source.setDistance(0);
 
         PriorityQueue<Node> queue = new PriorityQueue<Node>();
