@@ -111,7 +111,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
             }
         } else {
             // The truck doesn't move until the robots have unload it
-            if(!this.full){
+            if(!this.full || this.wanted == 0){
                 if(this.z - this.speed > -50){
                     this.z -= this.speed;
                 } else {
