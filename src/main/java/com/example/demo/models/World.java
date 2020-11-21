@@ -42,17 +42,34 @@ public class World implements Model, EventListener {
         this.worldObjects = new ArrayList<Object3D>();
         this.queue = new ArrayList<Object3D>();
 
+        // for(int i = 0; i < 4; i++){
+        //     for(int j = 0; j < 4; j++){
+        //         Stellage stellage = new Stellage(i * 4, 2, j * 7);
+        //         stellage.events.subscribe("loaded", this);
+        //         stellage.events.subscribe("unloaded", this);
+        //         this.worldObjects.add(stellage);
+        //     }
+        // }
+
         double[][] stellages = {
-            {26, 2, 9},
-            {22, 2, 9},
-            {10, 2, 9},
-            {5, 2, 9},
-            {26, 2, 17},
-            {21, 2, 17},
-            {10, 2, 17},
-            {5, 2, 17},
-            {21, 2, 24},
-            {10, 2, 24}
+            {26, 2, 9},     // A
+            {22, 2, 9},     // B
+            {10, 2, 9},     // C
+            {5, 2, 9},      // D
+
+            {26, 2, 17},    // E
+
+            {21, 2, 24},    // F
+            {10, 2, 24},    // G
+
+            {21, 2, 31},    // H
+            {10, 2, 31},    // I
+
+            {26, 2, 38},    // J
+            {21, 2, 38},    // K
+            {10, 2, 38},    // L
+            {5, 2, 38}      // M
+
         };
 
         for(int i = 0; i < stellages.length; i++){
@@ -62,11 +79,10 @@ public class World implements Model, EventListener {
             this.worldObjects.add(stellage);
         }
 
-        Object3D robot1 = new Robot(5, 0);
-        Object3D robot2 = new Robot(10, 0);
-
-        this.worldObjects.add(robot1);
-        this.worldObjects.add(robot2);
+        for(int i = 0; i < 10; i++){
+            Object3D robot = new Robot(5, 0);
+            this.worldObjects.add(robot);
+        }
         //this.queue.add(new Truck(15, -20));
     }
 
