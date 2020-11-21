@@ -253,7 +253,6 @@ public class Robot extends Object3D implements Updatable, EventListener {
                 if(this.getFirstOrder().containsNodes()){
                     if(((this.getFirstOrder().getFirstNode().getX() - 0.01 <= this.getX()) && (this.getX() <= this.getFirstOrder().getFirstNode().getX() + 0.01))){
                         if(((this.getFirstOrder().getFirstNode().getZ() - 0.01 <= this.getZ()) && (this.getZ() <= this.getFirstOrder().getFirstNode().getZ() + 0.01))){
-                            System.out.printf("Arrived at node %s\n", this.getFirstOrder().getFirstNode().getName());
                             this.getFirstOrder().removeVisitedNode();
 
                             if(!this.getFirstOrder().containsNodes()){
@@ -287,11 +286,10 @@ public class Robot extends Object3D implements Updatable, EventListener {
                 if(this.getFirstOrder().containsVisitedNodes()){
                     if(((this.getFirstOrder().getLastNode().getX() - 0.01 <= this.getX()) && (this.getX() <= this.getFirstOrder().getLastNode().getX() + 0.01))){
                         if(((this.getFirstOrder().getLastNode().getZ() - 0.01 <= this.getZ()) && (this.getZ() <= this.getFirstOrder().getLastNode().getZ() + 0.01))){
-                            System.out.printf("Arrived at node %s\n", this.getFirstOrder().getLastNode().getName());
                             this.getFirstOrder().removeUnvisitedNove();
 
                             if(!this.getFirstOrder().containsVisitedNodes()){
-                                this.events.notify("unloaded", this.getFirstOrder().stellage.getUUID());
+                                this.events.notify("unloaded", "unloaded");
                                 this.getFirstOrder().stellage.events.notify("unloaded", this.getFirstOrder().stellage.getUUID());
                                 this.getFirstOrder().stellage.status = true;
                                 this.removeOrder(this.getFirstOrder());
@@ -353,7 +351,7 @@ public class Robot extends Object3D implements Updatable, EventListener {
                                 this.getFirstOrder().removeUnvisitedNove();
 
                                 if(!this.getFirstOrder().containsVisitedNodes()){
-                                    this.events.notify("loaded", this.getFirstOrder().stellage.getUUID());
+                                    this.events.notify("loaded", "loaded");
                                     this.getFirstOrder().stellage.events.notify("loaded", this.getFirstOrder().stellage.getUUID());
                                     this.getFirstOrder().stellage.status = false;
                                     this.removeOrder(this.getFirstOrder());

@@ -99,11 +99,10 @@ public class World implements Model, EventListener {
             this.worldObjects.add(stellage);
         }
 
-        for(int i = 0; i < 1; i++){
+        for(int i = 0; i < 5; i++){
             Object3D robot = new Robot(5, 0);
             this.worldObjects.add(robot);
         }
-        //this.queue.add(new Truck(15, -20));
     }
 
     /*
@@ -156,7 +155,6 @@ public class World implements Model, EventListener {
                         pcs.firePropertyChange(Model.UPDATE_COMMAND, null, object); 
                     } else {
                         pcs.firePropertyChange(Model.DELETE_COMMAND, null, object); // TODO: gets called multiple times
-                        //System.out.printf("Removing object %s\n", object.getType());
                     }
                 }
             }
@@ -226,13 +224,6 @@ public class World implements Model, EventListener {
                     object.status = true;
                 }
             }
-            // for(int i = 0; i < this.availableStellages.size(); i++){
-            //     Object3D stellage = this.availableStellages.get(i);
-            //     if(stellage.getUUID().equals(message)){
-            //         //this.worldObjects.add(stellage);
-            //         System.out.println("Added stellage to the world");
-            //     }
-            // }
         }
     }
 }
