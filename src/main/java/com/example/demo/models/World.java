@@ -154,7 +154,10 @@ public class World implements Model, EventListener {
                     if(object.status){
                         pcs.firePropertyChange(Model.UPDATE_COMMAND, null, object); 
                     } else {
-                        pcs.firePropertyChange(Model.DELETE_COMMAND, null, object); // TODO: gets called multiple times
+                        if(!object.deleted){
+                            pcs.firePropertyChange(Model.DELETE_COMMAND, null, object); // TODO: gets called multiple times
+                            object.deleted = true;
+                        }
                     }
                 }
             }

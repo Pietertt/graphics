@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 public abstract class Object3D {
     public Boolean status = true;
+    public Boolean deleted = false;
     public double speed;
     
     public abstract String getUUID();

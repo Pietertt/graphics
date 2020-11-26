@@ -73,9 +73,6 @@ public class Truck extends Object3D implements Updatable, EventListener {
                 }
 
                 int currentRobot = 0;
-
-                currentRobot = 0;
-
                 for(int i = 0; i < this.orderList.size(); i++){
                     if(currentRobot == (this.availableRobots.size())){
                         currentRobot = 0;
