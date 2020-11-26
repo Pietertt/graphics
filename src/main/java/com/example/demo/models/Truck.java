@@ -5,6 +5,8 @@ import java.util.Random;
 import java.util.UUID;
 import java.lang.Math;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.HashMap;
 
 import com.example.demo.models.Observer.EventManager;
 import com.example.demo.models.Observer.EventListener;
@@ -26,14 +28,11 @@ public class Truck extends Object3D implements Updatable, EventListener {
     private double rotationY = 0;
     private double rotationZ = 0;
 
-    private ArrayList<Stellage> inventory;
+    private Map<String, Integer> inventory = new HashMap<>();
     private ArrayList<Order> orderList;
     private ArrayList<Robot> availableRobots;
     private ArrayList<Stellage> availableStellages;
     private ArrayList<Stellage> unavailableStellages;
-
-    private int wanted = 0;
-    private int having = 0;
 
     private EventManager events;
 
@@ -45,11 +44,13 @@ public class Truck extends Object3D implements Updatable, EventListener {
         this.availableStellages = new ArrayList<Stellage>();
         this.unavailableStellages = new ArrayList<Stellage>();
         this.availableRobots = new ArrayList<Robot>();
+        this.inventory.put("delivering", 0);
+        this.inventory.put("request", 0);
+        this.inventory.put("loaded", 0);
+        this.inventory.put("unloaded", 0);
 
         this.orderList = new ArrayList<Order>();
 
-
-        this.inventory = new ArrayList<Stellage>();
         this.events = new EventManager("full");
 
         System.out.println("[TRUCK] Moving to warehouse");
@@ -71,29 +72,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
                     this.events.subscribe("full", robot);
                 }
 
-
-
-
-
-
-
-                int wishings = 0;
-                int orders = 0;
-                for(Order order : this.orderList){
-                    if(order instanceof Request){
-                        wishings++;
-                    } else {
-                        orders++;
-                    }
-                }
-
-                System.out.printf("[TRUCK] I got %s packages\n", wishings);
-                System.out.printf("[TRUCK] I want %s packages\n", orders);
-
                 int currentRobot = 0;
-
-                currentRobot = 0;
-
                 for(int i = 0; i < this.orderList.size(); i++){
                     if(currentRobot == (this.availableRobots.size())){
                         currentRobot = 0;
@@ -103,15 +82,10 @@ public class Truck extends Object3D implements Updatable, EventListener {
                 }
 
                 this.forward = false;
-
-
-
-
-
             }
         } else {
             // The truck doesn't move until the robots have unload it
-            if(!this.full || this.wanted == 0){
+            if(this.canLeave()){
                 if(this.z - this.speed > -50){
                     this.z -= this.speed;
                 } else {
@@ -119,7 +93,6 @@ public class Truck extends Object3D implements Updatable, EventListener {
                 }
             }
         }  
-        
         return true;
     }
 
@@ -164,22 +137,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
     }
 
     public void update(String event, String message){
-        System.out.println(event);
-        if(event == "loaded"){
-            this.inventory.add(new Stellage(0, 0, 0, "none"));
-
-            if(this.inventory.size() == this.wanted){
-                System.out.println("[TRUCK] Full! Returning");
-                this.full = false;
-
-                for(int i = 0; i < this.availableRobots.size(); i++){
-                    this.events.notify("full", "");
-                    this.events.unsubscribe("full", this.availableRobots.get(i));
-                    this.availableRobots.get(i).events.unsubscribe("loaded", this);
-                    this.availableRobots.get(i).events.unsubscribe("unloaded", this);
-                }
-            }
-        } 
+        this.inventory.put(message, this.inventory.get(message) + 1);
     }
 
     public void addRobot(Robot robot){
@@ -205,22 +163,78 @@ public class Truck extends Object3D implements Updatable, EventListener {
     public void generateOrders(){
         Random random = new Random();
 
+        ArrayList<Integer> orderedUnavailable = new ArrayList<Integer>();
+        ArrayList<Integer> orderedAvailable = new ArrayList<Integer>();
+
         if(this.unavailableStellages.size() > 0){
-            this.having++;
             for(int i = 0; i < random.nextInt(this.unavailableStellages.size()); i++){
-                Stellage stellage = this.unavailableStellages.get(random.nextInt(this.unavailableStellages.size()));
-                Deliver order = new Deliver(stellage.initX, stellage.initY, stellage.initZ, stellage);
-                this.addOrder(order);
+                while(true){
+                    boolean appearance = false;
+                    int r = random.nextInt(this.unavailableStellages.size());
+                    for(int ordered : orderedUnavailable){
+                        if(ordered == r){
+                            appearance = true;
+                        }
+                    }
+
+                    if(!appearance){
+                        orderedUnavailable.add(r);
+                        Stellage stellage = this.unavailableStellages.get(r);
+                        Deliver order = new Deliver(stellage.initX, stellage.initY, stellage.initZ, stellage);
+                        this.inventory.put("delivering", this.inventory.get("delivering") + 1);
+                        this.addOrder(order);
+                        break;
+                    }
+                }
             }
         }
 
         if(this.availableStellages.size() > 0){
             for(int i = 0; i < random.nextInt(this.availableStellages.size()); i++){
-                this.wanted++;
-                Stellage stellage = this.availableStellages.get(random.nextInt(this.availableStellages.size()));
-                Request order = new Request(stellage.initX, stellage.initY, stellage.initZ, stellage);
-                this.addOrder(order);
+                while(true){
+                    boolean appearance = false;
+                    int r = random.nextInt(this.availableStellages.size());
+                    for(int ordered : orderedAvailable){
+                        if(ordered == r){
+                            appearance = true;
+                        }
+                    }
+
+                    if(!appearance){
+                        orderedAvailable.add(r);
+                        Stellage stellage = this.availableStellages.get(r);
+                        Request order = new Request(stellage.initX, stellage.initY, stellage.initZ, stellage);
+                        this.addOrder(order);
+                        this.inventory.put("request", this.inventory.get("request") + 1);
+                        break;
+                    }
+                }
             }
         }
+    }
+
+    private int getLoaded(){
+        return this.inventory.get("loaded");
+    }
+
+    private int getRequest(){
+        return this.inventory.get("request");
+    }
+
+    private int getUnloaded(){
+        return this.inventory.get("unloaded");
+    }
+
+    private int getDelivered(){
+        return this.inventory.get("delivering");
+    }
+
+    private boolean canLeave(){
+        if(this.getRequest() == this.getLoaded()){
+            if(this.getDelivered() - this.getUnloaded() == 0){
+                return true;
+            }
+        }
+        return false;
     }
 }
