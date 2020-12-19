@@ -227,25 +227,25 @@
                                 // });
     
     
-                                var mtlLoader = new MTLLoader();
-                                mtlLoader.setPath( "models/" );
-                                mtlLoader.load( 'car.mtl', function( materials ) {
-                                    materials.preload();
-                                    var objLoader = new OBJLoader();
-                                    objLoader.setMaterials(materials);
-                                    objLoader.setPath("models/");
-                                    objLoader.load('car.obj', function(object){
-                                        var truck = object;
-                                        truck.scale.set(0.8, 0.8, 0.8);
-                                        truck.rotation.y = 36.15;
-                                        var group = new THREE.Group();
-                                        group.add(truck);
-                                        group.name = command.parameters.uuid;
+                                // var mtlLoader = new MTLLoader();
+                                // mtlLoader.setPath( "models/" );
+                                // mtlLoader.load( 'car.mtl', function( materials ) {
+                                //     materials.preload();
+                                //     var objLoader = new OBJLoader();
+                                //     objLoader.setMaterials(materials);
+                                //     objLoader.setPath("models/");
+                                //     objLoader.load('car.obj', function(object){
+                                //         var truck = object;
+                                //         truck.scale.set(0.8, 0.8, 0.8);
+                                //         truck.rotation.y = 36.15;
+                                //         var group = new THREE.Group();
+                                //         group.add(truck);
+                                //         group.name = command.parameters.uuid;
     
-                                        scene.add(group);
-                                        worldObjects[command.parameters.uuid] = group;
-                                    });
-                                });
+                                //         scene.add(group);
+                                //         worldObjects[command.parameters.uuid] = group;
+                                //     });
+                                // });
                             }
                         } 
     
