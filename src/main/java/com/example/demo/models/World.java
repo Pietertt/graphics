@@ -100,7 +100,7 @@ public class World implements Model, EventListener {
         }
 
         for(int i = 0; i < 5; i++){
-            Object3D robot = new Robot(5, 0);
+            Object3D robot = new Robot(5, 0, 0);
             this.worldObjects.add(robot);
         }
     }
@@ -121,7 +121,7 @@ public class World implements Model, EventListener {
         if(random.nextInt(3) == 1){
             if(!this.worldObjectsContainsTruck()){
 
-                Truck truck = new Truck(15, -50);
+                Truck truck = new Truck(15, -50, 0);
 
                 for(Object3D object : this.worldObjects){
                     if(object instanceof Robot){

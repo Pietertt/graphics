@@ -24,16 +24,8 @@ import jdk.internal.event.Event;
  * een robot geupdate kan worden binnen de 3D wereld om zich zo voort te bewegen.
  */
 public class Robot extends Object3D implements Updatable, EventListener {
-    private UUID uuid;
 
-    private double x;
-    private double y = 0;
-    private double z;
     private boolean filling = false;
-
-    private double rotationX = 0;
-    private double rotationY = 0;
-    private double rotationZ = 0;
 
     private double orderedX = 0;
     private double orderedY = 0;
@@ -47,85 +39,21 @@ public class Robot extends Object3D implements Updatable, EventListener {
 
 
     public ArrayList<Order> orders;
-    //public ArrayList<Stellage> wishing;
 
     public EventManager events;
 
-    public Robot(double x, double z) {
-
-        
-
+    public Robot(double x, double y, double z) {
+        super(x, y, z);
         this.orders = new ArrayList<Order>();
-        //this.wishing = new ArrayList<Stellage>();
 
-        this.x = x;
-        this.z = z;
-        this.speed = 0.1;
-        this.uuid = UUID.randomUUID();
+        this.setSpeed(0.1);
+        this.setUUID(UUID.randomUUID());
         this.events = new EventManager("loaded", "unloaded");
 
         this.graph = new Node(5, 2, 5, "S");
-        this.nodes = new ArrayList<Node>();
-
-        Node A = new Node(26, 2, 9, "A");
-        Node B = new Node(22, 2, 9, "B");
-        Node C = new Node(10, 2, 9, "C");
-        Node D = new Node(5, 2, 9, "D");
-        Node E = new Node(26, 2, 17, "E");
-        Node F = new Node(21, 2, 24, "F");
-        Node G = new Node(10, 2, 24, "G");
-        Node H = new Node(21, 2, 31, "H");
-        Node I = new Node(10, 2, 31, "I");
-        Node J = new Node(26, 2, 38, "J");
-        Node K = new Node(21, 2, 38, "K");
-        Node L = new Node(10, 2, 38, "L");
-        Node M = new Node(5, 2, 38, "M");
-
-        this.nodes.add(A);
-        this.nodes.add(B);
-        this.nodes.add(C);
-        this.nodes.add(D);
-        this.nodes.add(E);
-        this.nodes.add(F);
-        this.nodes.add(G);
-        this.nodes.add(H);
-        this.nodes.add(I);
-        this.nodes.add(J);
-        this.nodes.add(K);
-        this.nodes.add(L);
-        this.nodes.add(M);
-
-        this.graph.addDestination(new Edge(3, this.graph, D));
-
-        A.addDestination(new Edge(3, A, E));
-
-        B.addDestination(new Edge(3, B, A));
-
-        C.addDestination(new Edge(6, C, B));
-        C.addDestination(new Edge(6, C, G));
-
-        D.addDestination(new Edge(3, D, C));
-        D.addDestination(new Edge(21, D, M));
-
-        E.addDestination(new Edge(9, E, J));
-
-        F.addDestination(new Edge(6, F, G));
-
-        G.addDestination(new Edge(3, G, I));
-
-        H.addDestination(new Edge(3, H, F));
-
-        I.addDestination(new Edge(3, I, L));
-
-        J.addDestination(new Edge(3, J, K));
-
-        K.addDestination(new Edge(6, K, L));
-        K.addDestination(new Edge(3, K, H));
-
-        L.addDestination(new Edge(3, L, M));
-
-
         this.dijkstra = new Dijkstra();
+        this.nodes = this.dijkstra.spawnNodes();
+        this.graph.addDestination(new Edge(3, this.graph, this.nodes.get((3))));
     }
 
     /*
@@ -147,12 +75,6 @@ public class Robot extends Object3D implements Updatable, EventListener {
         return true;
     }
 
-
-    @Override
-    public String getUUID() {
-        return this.uuid.toString();
-    }
-
     @Override
     public String getType() {
         /*
@@ -162,52 +84,6 @@ public class Robot extends Object3D implements Updatable, EventListener {
          * javascript code wordt dit dan weer verder afgehandeld.
          */
         return Robot.class.getSimpleName().toLowerCase();
-    }
-
-    @Override
-    public double getX() {
-        return this.x;
-    }
-
-    @Override
-    public double getY() {
-        return this.y;
-    }
-
-    @Override
-    public double getZ() {
-        return this.z;
-    }
-
-    @Override
-    public double getRotationX() {
-        return this.rotationX;
-    }
-
-    @Override
-    public double getRotationY() {
-        return this.rotationY;
-    }
-
-    @Override
-    public double getRotationZ() {
-        return this.rotationZ;
-    }
-
-    public double getSpeed(){
-        return this.speed;
-    }
-
-    public void setX(double x){
-        this.x = x;
-    }
-
-    public void setY(double y){
-        this.y = y;
-    }
-
-    public void setZ(double z){
-        this.z = z;
     }
 
     public int getDeliverables(){
@@ -386,10 +262,6 @@ public class Robot extends Object3D implements Updatable, EventListener {
         
         return 0;
         
-    }
-
-    public void remove(){
-        this.status = false;
     }
 
     public void removeOrder(int index){

@@ -46,4 +46,55 @@ public class Dijkstra {
         return path;
     }
 
+    public ArrayList<Node> spawnNodes() {
+        ArrayList nodes = new ArrayList();
+
+        Node A = new Node(26, 2, 9, "A");
+        Node B = new Node(22, 2, 9, "B");
+        Node C = new Node(10, 2, 9, "C");
+        Node D = new Node(5, 2, 9, "D");
+        Node E = new Node(26, 2, 17, "E");
+        Node F = new Node(21, 2, 24, "F");
+        Node G = new Node(10, 2, 24, "G");
+        Node H = new Node(21, 2, 31, "H");
+        Node I = new Node(10, 2, 31, "I");
+        Node J = new Node(26, 2, 38, "J");
+        Node K = new Node(21, 2, 38, "K");
+        Node L = new Node(10, 2, 38, "L");
+        Node M = new Node(5, 2, 38, "M");
+
+        A.addDestination(new Edge(3, A, E));
+        B.addDestination(new Edge(3, B, A));
+        C.addDestination(new Edge(6, C, B));
+        C.addDestination(new Edge(6, C, G));
+        D.addDestination(new Edge(3, D, C));
+        D.addDestination(new Edge(21, D, M));
+        E.addDestination(new Edge(9, E, J));
+        F.addDestination(new Edge(6, F, G));
+        G.addDestination(new Edge(3, G, I));
+        H.addDestination(new Edge(3, H, F));
+        I.addDestination(new Edge(3, I, L));
+        J.addDestination(new Edge(3, J, K));
+        K.addDestination(new Edge(6, K, L));
+        K.addDestination(new Edge(3, K, H));
+        L.addDestination(new Edge(3, L, M));
+
+        nodes.add(A);
+        nodes.add(B);
+        nodes.add(C);
+        nodes.add(D);
+        nodes.add(E);
+        nodes.add(F);
+        nodes.add(G);
+        nodes.add(H);
+        nodes.add(I);
+        nodes.add(J);
+        nodes.add(K);
+        nodes.add(L);
+        nodes.add(M);
+
+        return nodes;
+
+    }
+
 }

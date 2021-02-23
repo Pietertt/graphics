@@ -15,18 +15,9 @@ import com.example.demo.models.Order.Deliver;
 import com.example.demo.models.Order.Order;
 
 public class Truck extends Object3D implements Updatable, EventListener {
-    private UUID uuid;
-
-    private double x;
-    private double y = 0;
-    private double z;
-
+    
     private boolean full = true;
     private boolean forward = true;
-
-    private double rotationX = 0;
-    private double rotationY = 0;
-    private double rotationZ = 0;
 
     private Map<String, Integer> inventory = new HashMap<>();
     private ArrayList<Order> orderList;
@@ -36,14 +27,15 @@ public class Truck extends Object3D implements Updatable, EventListener {
 
     private EventManager events;
 
-    public Truck(int x, int z) {
-        this.x = x;
-        this.z = z;
-        this.speed = 0.2;
-        this.uuid = UUID.randomUUID();
+    public Truck(double x, double y, double z) {
+        super(x, y, z);
+        this.setSpeed(0.2);
+        this.setUUID(UUID.randomUUID());
+
         this.availableStellages = new ArrayList<Stellage>();
         this.unavailableStellages = new ArrayList<Stellage>();
         this.availableRobots = new ArrayList<Robot>();
+
         this.inventory.put("delivering", 0);
         this.inventory.put("request", 0);
         this.inventory.put("loaded", 0);
@@ -54,6 +46,10 @@ public class Truck extends Object3D implements Updatable, EventListener {
         this.events = new EventManager("full");
 
         System.out.println("[TRUCK] Moving to warehouse");
+    }
+
+    public void finalize() throws Throwable {
+        System.out.println("[TRUCK] Removing");
     }
 
     @Override
@@ -97,43 +93,8 @@ public class Truck extends Object3D implements Updatable, EventListener {
     }
 
     @Override
-    public String getUUID() {
-        return this.uuid.toString();
-    }
-
-    @Override
     public String getType() {
         return Truck.class.getSimpleName().toLowerCase();
-    }
-
-    @Override
-    public double getX() {
-        return this.x;
-    }
-
-    @Override
-    public double getY() {
-        return this.y;
-    }
-
-    @Override
-    public double getZ() {
-        return this.z;
-    }
-
-    @Override
-    public double getRotationX() {
-        return this.rotationX;
-    }
-
-    @Override
-    public double getRotationY() {
-        return this.rotationY;
-    }
-
-    @Override
-    public double getRotationZ() {
-        return this.rotationZ;
     }
 
     public void update(String event, String message){
@@ -154,10 +115,6 @@ public class Truck extends Object3D implements Updatable, EventListener {
 
     public void addOrder(Order order){
         this.orderList.add(order); 
-    }
-
-    public void remove(){
-        this.status = false;
     }
 
     public void generateOrders(){
