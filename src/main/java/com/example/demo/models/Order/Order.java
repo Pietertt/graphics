@@ -8,7 +8,8 @@ import com.example.demo.models.Dijkstra.Node;
 public abstract class Order {
     protected double x;
     protected double y;
-    protected double z; // TODO remove all
+    protected double z; 
+    
     public Stellage stellage;
     private ArrayList<Node> nodes;
     private ArrayList<Node> visitedNodes;
@@ -64,7 +65,15 @@ public abstract class Order {
         this.visitedNodes.remove(this.visitedNodes.size() - 1);
     }
 
-    public abstract double getX();
-    public abstract double getY();
-    public abstract double getZ();
+    public double getX(){
+        return this.x;
+    }
+
+    public double getY(){
+        return this.y;
+    }
+
+    public double getZ(){
+        return this.z;
+    }
 }
