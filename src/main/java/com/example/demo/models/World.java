@@ -121,7 +121,7 @@ public class World implements Model, EventListener {
         if(random.nextInt(3) == 1){
             if(!this.worldObjectsContainsTruck()){
 
-                Truck truck = new Truck(15, -50, 0);
+                Truck truck = new Truck(15, 0, -50);
 
                 for(Object3D object : this.worldObjects){
                     if(object instanceof Robot){

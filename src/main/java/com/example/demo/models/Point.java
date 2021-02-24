@@ -6,6 +6,9 @@ public class Point {
     private double x;
     private double y;
     private double z;
+    private boolean returning;
+
+    public boolean test = false;
 
     public Point(double x, double y, double z) {
         this.x = x;
@@ -39,5 +42,13 @@ public class Point {
 
     public double getZ() {
         return this.z;
+    }
+
+    public void setReturning(boolean returning) {
+        this.returning = returning;
+    }
+
+    public boolean getReturning() {
+        return this.returning;
     }
 }

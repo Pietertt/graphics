@@ -16,8 +16,7 @@ import com.example.demo.models.Dijkstra.Node;
 import com.example.demo.models.Dijkstra.Edge;
 import com.example.demo.models.Dijkstra.Dijkstra;
 
-import com.example.demo.strategies.Strategy;
-import com.example.demo.strategies.DeliverStrategy;
+import com.example.demo.strategies.*;
 
 import jdk.internal.event.Event;
 
@@ -58,7 +57,7 @@ public class Robot extends Object3D implements Updatable, EventListener {
         this.dijkstra = new Dijkstra();
         this.nodes = this.dijkstra.spawnNodes();
         this.graph.addDestination(new Edge(3, this.graph, this.nodes.get((3))));
-        this.setStrategy(new DeliverStrategy());
+        this.setStrategy(new GetRequest());
     }
 
     /*
@@ -128,37 +127,63 @@ public class Robot extends Object3D implements Updatable, EventListener {
     }
 
     public int move(){
-        if(this.getDeliverables() > 0){ // heenweg
-            
-            if(this.returning == false){ // heenweg
-                this.setStrategy(new DeliverStrategy());
-                Point p = this.strategy.execute(this.getFirstOrder(), new Point(this.getX(), this.getY(), this.getZ()));
+        if(this.getDeliverables() > 0){
+            if(this.returning == false){
+                Point point = new Point(this.getX(), this.getY(), this.getZ());
+                Point p = this.strategy.execute(this.getFirstOrder(), point);
                 this.setX(p.getX());
                 this.setZ(p.getZ());
+
+                if (p.test) {
+                    this.setStrategy(new ReturnRequest());
+                    this.returning = true;
+                }
             } else {
-                this.setStrategy(new RequestStrategy());
-                Point p = this.strategy.execute(this.getFirstOrder(), new Point(this.getX(), this.getY(), this.getZ()));
+                Point point = new Point(this.getX(), this.getY(), this.getZ());
+                Point p = this.strategy.execute(this.getFirstOrder(), point);
                 this.setX(p.getX());
                 this.setZ(p.getZ());
+
+                if (p.test) {
+                    this.events.notify("loaded", "loaded");
+                    this.getFirstOrder().stellage.events.notify("loaded", this.getFirstOrder().stellage.getUUID());
+                    this.getFirstOrder().stellage.status = true;
+                    this.removeOrder(this.getFirstOrder());
+                    this.setStrategy(new GetRequest());
+                    this.returning = false;
+                }
             }            
         }
 
         if(this.getRequests() > 0){
             if(this.getDeliverables() == 0){
                 if(this.returning == false){
-                    this.setStrategy(new DeliverStrategy());
-                    Point p = this.strategy.execute(this.getFirstOrder(), new Point(this.getX(), this.getY(), this.getZ()));
+                    Point point = new Point(this.getX(), this.getY(), this.getZ());
+                    Point p = this.strategy.execute(this.getFirstOrder(), point);
                     this.setX(p.getX());
                     this.setZ(p.getZ());
+
+                    if (p.test) {
+                        this.setStrategy(new ReturnRequest());
+                        this.returning = true;
+                    }
                 } else {
-                    this.setStrategy(new RequestStrategy());
-                    Point p = this.strategy.execute(this.getFirstOrder(), new Point(this.getX(), this.getY(), this.getZ()));
+                    Point point = new Point(this.getX(), this.getY(), this.getZ());
+                    Point p = this.strategy.execute(this.getFirstOrder(), point);
                     this.setX(p.getX());
                     this.setZ(p.getZ());
+
+                    if (p.test) {
+                        this.events.notify("loaded", "loaded");
+                        this.getFirstOrder().stellage.events.notify("loaded", this.getFirstOrder().stellage.getUUID());
+                        this.getFirstOrder().stellage.status = true;
+                        this.removeOrder(this.getFirstOrder());
+                        this.setStrategy(new GetRequest());
+                        this.returning = false;
+                    }
                 }
             }
         } 
-        
         return 0;
         
     }

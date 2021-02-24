@@ -12,15 +12,18 @@ import com.example.demo.models.Order.Order;
 import com.example.demo.models.Observer.EventListener;
 import com.example.demo.models.Point;
 
-public class RequestStrategy extends Strategy {
+public class ReturnRequest extends Strategy {
 
-    public RequestStrategy() {
+    public ReturnRequest() {
 
     }
 
     @Override
     public Point execute(Order order, Point point) {
         Point newPoint = new Point();
+        newPoint.setX(point.getX());
+        newPoint.setY(point.getY());
+        newPoint.setZ(point.getZ());
 
         if(order.containsVisitedNodes()){
             if(((order.getLastNode().getX() - 0.01 <= point.getX()) && (point.getX() <= order.getLastNode().getX() + 0.01))){
@@ -28,31 +31,39 @@ public class RequestStrategy extends Strategy {
                     order.removeUnvisitedNove();
 
                     if(!order.containsVisitedNodes()){
-                    //     this.events.notify("unloaded", "unloaded");
-                    //     this.getFirstOrder().stellage.events.notify("unloaded", this.getFirstOrder().stellage.getUUID());
-                    //     this.getFirstOrder().stellage.status = true;
-                    //     this.removeOrder(this.getFirstOrder());
-                    //     this.returning = false;
-                    //     System.out.println("Returned to truck");
-                    //     return 1;
+                        newPoint.test = true;
+                        //this.events.notify("loaded", "loaded");
+                        // order.stellage.events.notify("loaded", orderstellage.getUUID());
+                        // order.stellage.status = false;
+                        // this.removeOrder(order);
+                        // this.returning = false;
                     }
                 } else {
                     if(point.getZ() > order.getLastNode().getZ()){
                         newPoint.setZ(point.getZ() - 0.1);
+                        order.stellage.setX(point.getX());
+                        order.stellage.setZ(point.getZ());
                     } else {
                         newPoint.setZ(point.getZ() + 0.1);
+                        order.stellage.setX(point.getX());
+                        order.stellage.setZ(point.getZ());
                     }
                 }
             } else {
                 if(point.getX() > order.getLastNode().getX()){
                     newPoint.setX(point.getX() - 0.1);
+                    order.stellage.setX(point.getX());
+                    order.stellage.setZ(point.getZ());
                 } else {
                     newPoint.setX(point.getX() + 0.1);
+                    order.stellage.setX(point.getX());
+                    order.stellage.setZ(point.getZ());
                 }
             }
         }
+
         return newPoint;
     }
-
-
 }
+
+
