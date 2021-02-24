@@ -57,6 +57,18 @@
                     const intensity = 1;
                     const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
                     scene.add(light);
+
+                    var geometry = new THREE.PlaneGeometry(30, 37, 37); 
+                    var material = new THREE.MeshBasicMaterial({
+                        map: new THREE.TextureLoader().load("images/floor.png"),
+                        side: THREE.DoubleSide,
+                    });
+
+                    var plane = new THREE.Mesh(geometry, material);
+                    plane.rotation.x = Math.PI / 2.0;
+                    plane.position.x = 17;
+                    plane.position.z = 23;
+                    scene.add(plane);
                 }
 
                 function onWindowResize() {
