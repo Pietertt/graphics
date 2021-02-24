@@ -8,6 +8,8 @@
     <body style="margin: 0px; padding: 0px; overflow: hidden">
         <canvas id="c" style="width: 100%; height: 100%;"></canvas>
 
+        <script src="bin/main.js"></script>
+
         <script type="module">
             import * as THREE from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/build/three.module.js';
             import {OrbitControls} from 'https://threejsfundamentals.org/threejs/resources/threejs/r122/examples/jsm/controls/OrbitControls.js';
@@ -58,6 +60,14 @@
                     const light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
                     scene.add(light);
 
+                    const directionalColor = 0xFFFFFF;
+                    const directionalIntensity = 1;
+                    const directionalLight = new THREE.DirectionalLight(directionalColor, directionalIntensity);
+                    directionalLight.position.set(0, 10, 0);
+                    directionalLight.target.position.set(-5, 0, 0);
+                    scene.add(directionalLight);
+                    scene.add(directionalLight.target);
+
                     var geometry = new THREE.PlaneGeometry(30, 37, 37); 
                     var material = new THREE.MeshBasicMaterial({
                         map: new THREE.TextureLoader().load("images/floor.png"),
@@ -94,12 +104,12 @@
                             if (command.parameters.type == "robot") {
                                 var geometry = new THREE.BoxGeometry(0.9, 0.3, 0.9);
                                 var cubeMaterials = [
-                                    new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("textures/robot_side.png"), side: THREE.DoubleSide }),
-                                    new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("textures/robot_side.png"), side: THREE.DoubleSide }), 
-                                    new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("textures/robot_top.png"), side: THREE.DoubleSide }), 
-                                    new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("textures/robot_bottom.png"), side: THREE.DoubleSide }), 
-                                    new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("textures/robot_front.png"), side: THREE.DoubleSide }), 
-                                    new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("textures/robot_front.png"), side: THREE.DoubleSide })
+                                    new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("images/robot_side.png"), side: THREE.DoubleSide }),
+                                    new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("images/robot_side.png"), side: THREE.DoubleSide }), 
+                                    new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("images/robot_top.png"), side: THREE.DoubleSide }), 
+                                    new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("images/robot_bottom.png"), side: THREE.DoubleSide }), 
+                                    new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("images/robot_front.png"), side: THREE.DoubleSide }), 
+                                    new THREE.MeshBasicMaterial({ map: new THREE.TextureLoader().load("images/robot_front.png"), side: THREE.DoubleSide })
                                 ];
 
                                 var material = new THREE.MeshFaceMaterial(cubeMaterials);
@@ -115,8 +125,10 @@
 
                             if (command.parameters.type == "stellage"){
 
+       
+
                                 var geometry = new THREE.BoxGeometry(1, 1, 5);
-                                var material = new THREE.MeshBasicMaterial({color: 0x0000ff, side: THREE.DoubleSide });
+                                var material = new THREE.MeshPhongMaterial({color: 0x0000ff, side: THREE.DoubleSide });
 
                                 var stellage = new THREE.Mesh(geometry, material);
                                 stellage.rotation.x = Math.PI / 2.0;
