@@ -8,6 +8,11 @@ import java.util.PriorityQueue;
 
 public class Dijkstra {
 
+    /**
+     * Compute the shortest path by comparing various distances
+     * 
+     * @param source
+     */
     public void computerShortestPath(Node source){
         source.setDistance(0);
 
@@ -34,6 +39,12 @@ public class Dijkstra {
         }
     }
 
+    /**
+     * Returns the shortest path
+     * 
+     * @param n
+     * @return List<Node>
+     */
     public List<Node> getShortestPathTo(Node n){
         List<Node> path = new ArrayList<>();
 
@@ -46,6 +57,11 @@ public class Dijkstra {
         return path;
     }
 
+    /**
+     * Creates the network of nodes a robot can use
+     * 
+     * @return Arraylist<Node>
+     */
     public ArrayList<Node> spawnNodes() {
         ArrayList nodes = new ArrayList();
 
@@ -94,7 +110,6 @@ public class Dijkstra {
         nodes.add(M);
 
         return nodes;
-
     }
 
 }
