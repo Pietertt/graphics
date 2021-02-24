@@ -8,7 +8,7 @@ public class Point {
     private double z;
     private boolean returning;
 
-    public boolean test = false;
+    private boolean flag = false;
 
     public Point(double x, double y, double z) {
         this.x = x;
@@ -50,5 +50,13 @@ public class Point {
 
     public boolean getReturning() {
         return this.returning;
+    }
+
+    public void setFlag(boolean flag) {
+        this.flag = flag;
+    }
+
+    public boolean getFlag() {
+        return this.flag;
     }
 }

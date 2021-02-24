@@ -31,12 +31,7 @@ public class ReturnRequest extends Strategy {
                     order.removeUnvisitedNove();
 
                     if(!order.containsVisitedNodes()){
-                        newPoint.test = true;
-                        //this.events.notify("loaded", "loaded");
-                        // order.stellage.events.notify("loaded", orderstellage.getUUID());
-                        // order.stellage.status = false;
-                        // this.removeOrder(order);
-                        // this.returning = false;
+                        newPoint.setFlag(true);
                     }
                 } else {
                     if(point.getZ() > order.getLastNode().getZ()){

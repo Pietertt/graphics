@@ -30,7 +30,7 @@ public class GetRequest extends Strategy {
                 if (((order.getFirstNode().getZ() - 0.01 <= point.getZ()) && (point.getZ() <= order.getFirstNode().getZ() + 0.01))) {
                     order.removeVisitedNode();
                     if (!order.containsNodes()) {
-                        newPoint.test = true;
+                        newPoint.setFlag(true);
                     }
                 } else {
                     if (order.getFirstNode().getZ() > point.getZ()) {

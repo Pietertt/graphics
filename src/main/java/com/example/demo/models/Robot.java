@@ -4,47 +4,36 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
+import jdk.internal.event.Event;
 
 import com.example.demo.models.Observer.EventManager;
 import com.example.demo.models.Observer.EventListener;
-
 import com.example.demo.models.Order.Request;
 import com.example.demo.models.Order.Deliver;
 import com.example.demo.models.Order.Order;
-
 import com.example.demo.models.Dijkstra.Node;
 import com.example.demo.models.Dijkstra.Edge;
 import com.example.demo.models.Dijkstra.Dijkstra;
-
 import com.example.demo.strategies.*;
 
-import jdk.internal.event.Event;
-
-/*
- * Deze class stelt een robot voor. Hij impelementeerd de class Object3D, omdat het ook een
- * 3D object is. Ook implementeerd deze class de interface Updatable. Dit is omdat
- * een robot geupdate kan worden binnen de 3D wereld om zich zo voort te bewegen.
- */
 public class Robot extends Object3D implements Updatable, EventListener {
-
-    private boolean filling = false;
-
-    private double orderedX = 0;
-    private double orderedY = 0;
-    private double orderedZ = 0;
 
     private boolean returning = false;
 
     private Node graph;
     private Dijkstra dijkstra;
     private ArrayList<Node> nodes;
-
     private Strategy strategy;
-
-    public ArrayList<Order> orders;
-
+    private ArrayList<Order> orders;
     public EventManager events;
 
+    /**
+     * Constructor
+     * 
+     * @param x
+     * @param y
+     * @param z
+     */
     public Robot(double x, double y, double z) {
         super(x, y, z);
         this.orders = new ArrayList<Order>();
@@ -60,18 +49,10 @@ public class Robot extends Object3D implements Updatable, EventListener {
         this.setStrategy(new GetRequest());
     }
 
-    /*
-     * Deze update methode wordt door de World aangeroepen wanneer de
-     * World zelf geupdate wordt. Dit betekent dat elk object, ook deze
-     * robot, in de 3D wereld steeds een beetje tijd krijgt om een update
-     * uit te voeren. In de updatemethode hieronder schrijf je dus de code
-     * die de robot steeds uitvoert (bijvoorbeeld positieveranderingen). Wanneer
-     * de methode true teruggeeft (zoals in het voorbeeld), betekent dit dat
-     * er inderdaad iets veranderd is en dat deze nieuwe informatie naar de views
-     * moet worden gestuurd. Wordt false teruggegeven, dan betekent dit dat er niks
-     * is veranderd, en de informatie hoeft dus niet naar de views te worden gestuurd.
-     * (Omdat de informatie niet veranderd is, is deze dus ook nog steeds hetzelfde als
-     * in de view)
+    /**
+     * Update the robot
+     * 
+     * @return boolean
      */
     @Override
     public boolean update() {
@@ -79,17 +60,21 @@ public class Robot extends Object3D implements Updatable, EventListener {
         return true;
     }
 
+    /**
+     * Gets the type
+     * 
+     * @return string
+     */
     @Override
     public String getType() {
-        /*
-         * Dit onderdeel wordt gebruikt om het type van dit object als stringwaarde terug
-         * te kunnen geven. Het moet een stringwaarde zijn omdat deze informatie nodig
-         * is op de client, en die verstuurd moet kunnen worden naar de browser. In de
-         * javascript code wordt dit dan weer verder afgehandeld.
-         */
         return Robot.class.getSimpleName().toLowerCase();
     }
 
+    /**
+     * Het the number of deliverables
+     * 
+     * @return int
+     */
     public int getDeliverables(){
         int amount = 0;
         for(Order order : this.orders){
@@ -100,6 +85,11 @@ public class Robot extends Object3D implements Updatable, EventListener {
         return amount;
     }
 
+    /**
+     * Get the number of requests
+     * 
+     * @return int
+     */
     public int getRequests(){
         int amount = 0;
         for(Order order : this.orders){
@@ -110,41 +100,37 @@ public class Robot extends Object3D implements Updatable, EventListener {
         return amount;
     }
 
-    public void fillTruck(){
-        this.filling = true;
-    }
-
-    private void takeNextStellage(){
-        this.filling = false;
-    }
-
-    public boolean isFillingTruck(){
-        return this.filling;
-    }
-
+    /**
+     * Get the first order
+     * 
+     * @return
+     */
     public Order getFirstOrder(){
         return this.orders.get(0);
     }
 
-    public int move(){
+    /**
+     * Moves the robot and any stellages it is carrying
+     */
+    public void move(){
         if(this.getDeliverables() > 0){
             if(this.returning == false){
                 Point point = new Point(this.getX(), this.getY(), this.getZ());
-                Point p = this.strategy.execute(this.getFirstOrder(), point);
-                this.setX(p.getX());
-                this.setZ(p.getZ());
+                Point newPoint = this.strategy.execute(this.getFirstOrder(), point);
+                this.setX(newPoint.getX());
+                this.setZ(newPoint.getZ());
 
-                if (p.test) {
+                if (newPoint.getFlag()) {
                     this.setStrategy(new ReturnRequest());
                     this.returning = true;
                 }
             } else {
                 Point point = new Point(this.getX(), this.getY(), this.getZ());
-                Point p = this.strategy.execute(this.getFirstOrder(), point);
-                this.setX(p.getX());
-                this.setZ(p.getZ());
+                Point newPoint = this.strategy.execute(this.getFirstOrder(), point);
+                this.setX(newPoint.getX());
+                this.setZ(newPoint.getZ());
 
-                if (p.test) {
+                if (newPoint.getFlag()) {
                     this.events.notify("loaded", "loaded");
                     this.getFirstOrder().stellage.events.notify("loaded", this.getFirstOrder().stellage.getUUID());
                     this.getFirstOrder().stellage.status = true;
@@ -159,21 +145,21 @@ public class Robot extends Object3D implements Updatable, EventListener {
             if(this.getDeliverables() == 0){
                 if(this.returning == false){
                     Point point = new Point(this.getX(), this.getY(), this.getZ());
-                    Point p = this.strategy.execute(this.getFirstOrder(), point);
-                    this.setX(p.getX());
-                    this.setZ(p.getZ());
+                    Point newPoint = this.strategy.execute(this.getFirstOrder(), point);
+                    this.setX(newPoint.getX());
+                    this.setZ(newPoint.getZ());
 
-                    if (p.test) {
+                    if (newPoint.getFlag()) {
                         this.setStrategy(new ReturnRequest());
                         this.returning = true;
                     }
                 } else {
                     Point point = new Point(this.getX(), this.getY(), this.getZ());
-                    Point p = this.strategy.execute(this.getFirstOrder(), point);
-                    this.setX(p.getX());
-                    this.setZ(p.getZ());
+                    Point newPoint = this.strategy.execute(this.getFirstOrder(), point);
+                    this.setX(newPoint.getX());
+                    this.setZ(newPoint.getZ());
 
-                    if (p.test) {
+                    if (newPoint.getFlag()) {
                         this.events.notify("loaded", "loaded");
                         this.getFirstOrder().stellage.events.notify("loaded", this.getFirstOrder().stellage.getUUID());
                         this.getFirstOrder().stellage.status = true;
@@ -184,34 +170,43 @@ public class Robot extends Object3D implements Updatable, EventListener {
                 }
             }
         } 
-        return 0;
-        
     }
 
-    public void removeOrder(int index){
+    /**
+     * Remove an order from the orderlist
+     * 
+     * @param index
+     */
+    public void removeOrder(int index) {
         this.orders.remove(index);
     }
 
-    public void removeOrder(Order order){
+    /**
+     * Remove an order from the orderlist
+     * 
+     * @param order
+     */
+    public void removeOrder(Order order) {
         this.orders.remove(order);
     }
 
-    public void addOrder(Order order){
+    /**
+     * Add an order to the orderlist and compute the shortest path
+     * 
+     * @param order
+     */
+    public void addOrder(Order order) {
         this.orders.add(order);
 
         this.dijkstra.computerShortestPath(this.graph);
 
-        /*
-            Hier declareer ik alvast een nieuwe node die later gevuld wordt. Het is nodig om deze alvast
-            te declareren omdat dit object moet bestaan als ik deze later wil printen naar de console.
-        */
         Node no = new Node();
 
-        for(Node node : this.nodes){
-            if(node.getName().equals(order.stellage.getName())){
+        for (Node node : this.nodes) {
+            if (node.getName().equals(order.stellage.getName())) {
                 no = node;
                 List<Node> nodes = this.dijkstra.getShortestPathTo(node);
-                for(Node n : nodes){
+                for (Node n : nodes) {
                     order.addNode(n);
                 }
             }
@@ -220,13 +215,19 @@ public class Robot extends Object3D implements Updatable, EventListener {
         System.out.printf("[ROBOT] Moving stellage %s via path %s\n", order.stellage.getName(), this.dijkstra.getShortestPathTo(no));
     }
 
-    public void update(String event, String message){
-        // if(event == "full"){
-        //     System.out.println("[ROBOT] Waiting for new truck");
-        //     this.setStrategy(new UnloadWithStellageStrategy());
-        // } 
+    /**
+     *  Update the robot
+     */
+    @Override
+    public void update(String event, String message) {
+   
     }
 
+    /**
+     * Set strategy
+     * 
+     * @param strategy
+     */
     private void setStrategy(Strategy strategy) {
         this.strategy = strategy;
     }
