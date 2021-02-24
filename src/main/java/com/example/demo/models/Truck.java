@@ -174,7 +174,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
                     if (!appearance) {
                         orderedUnavailable.add(r);
                         Stellage stellage = this.unavailableStellages.get(r);
-                        Deliver order = new Deliver(stellage.initX, stellage.initY, stellage.initZ, stellage);
+                        Deliver order = new Deliver(stellage.getInitX(), stellage.getInitY(), stellage.getInitZ(), stellage);
                         this.inventory.put("delivering", this.inventory.get("delivering") + 1);
                         this.addOrder(order);
                         break;
@@ -197,7 +197,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
                     if (!appearance) {
                         orderedAvailable.add(r);
                         Stellage stellage = this.availableStellages.get(r);
-                        Request order = new Request(stellage.initX, stellage.initY, stellage.initZ, stellage);
+                        Request order = new Request(stellage.getInitX(), stellage.getInitY(), stellage.getInitZ(), stellage);
                         this.addOrder(order);
                         this.inventory.put("request", this.inventory.get("request") + 1);
                         break;
