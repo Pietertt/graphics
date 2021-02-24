@@ -16,6 +16,14 @@ public class Node implements Comparable<Node> {
     private double y;
     private double z;
 
+    /**
+     * Constructor
+     * 
+     * @param x
+     * @param y
+     * @param z
+     * @param name
+     */
     public Node(double x, double y, double z, String name){
         this.name = name;
         this.adjacenciesList = new ArrayList<>();
@@ -25,133 +33,138 @@ public class Node implements Comparable<Node> {
         this.z = z;
     }
 
+    /**
+     * Constructor
+     */
     public Node(){
         
     }
 
+    /**
+     * Get X
+     * 
+     * @return double
+     */
     public double getX(){
         return this.x;
     }
 
+    /**
+     * Get Z
+     * 
+     * @return double
+     */
     public double getZ(){
         return this.z;
     }
 
+    /**
+     * Get Y
+     * 
+     * @return double
+     */
     public double getY(){
         return this.y;
     }
 
+    /**
+     * Add a destination
+     * 
+     * @param edge
+     */
     public void addDestination(Edge edge){
         this.adjacenciesList.add(edge);
     }
 
+    /**
+     * Gets the name
+     * 
+     * @return String
+     */
     public String getName(){
         return this.name;
     }
 
+    /**
+     * Gets the adjacencies list
+     * 
+     * @return List<Edge>
+     */
     public List<Edge> getAdjacenciesList(){
         return this.adjacenciesList;
     }
 
+    /**
+     * Gets visited
+     * 
+     * @return boolean
+     */
     public boolean isVisited(){
         return this.visited;
     }
 
+    /**
+     * Sets visited
+     * 
+     * @param visited
+     */
     public void setVisited(boolean visited){
         this.visited = visited;
     }
 
+    /**
+     * Set the predecessor
+     * 
+     * @param predecessor
+     */
     public void setPredecessor(Node predecessor){
         this.predecessor = predecessor;
     }
 
+    /**
+     * Gets the predecessor
+     * 
+     * @return Node
+     */
     public Node getPredecessor(){
         return this.predecessor;
     }
 
+    /**
+     * Gets the distance
+     * 
+     * @return double
+     */
     public double getDistance(){
         return this.distance;
     }
 
+    /**
+     * Sets the distance
+     * 
+     * @param distance
+     */
     public void setDistance(double distance){
         this.distance = distance;
     }
 
+    /**
+     * Returns the name of a node
+     * 
+     * @return string
+     */
     @Override
     public String toString(){
         return this.name;
     }
 
+    /**
+     * Compares two nodes
+     * 
+     * @return int
+     */
     @Override
     public int compareTo(Node node){
         return Double.compare(this.distance, node.getDistance());
     }
-
-
-
-
-    // private String name;
-    // private List<Edge> adjacenciesList;
-    // private boolean visited;
-	// private Vertex predecessor;
-    // private double distance = Double.MAX_VALUE;
-    
-    // public Vertex(String name) {
-	// 	this.name = name;
-	// 	this.adjacenciesList = new ArrayList<>();
-	// }
- 
-	// public void addNeighbour(Edge edge) {
-	// 	this.adjacenciesList.add(edge);
-	// }
- 
-	// public String getName() {
-	// 	return name;
-	// }
- 
-	// public void setName(String name) {
-	// 	this.name = name;
-	// }
- 
-	// public List<Edge> getAdjacenciesList() {
-	// 	return adjacenciesList;
-	// }
- 
-	// public void setAdjacenciesList(List<Edge> adjacenciesList) {
-	// 	this.adjacenciesList = adjacenciesList;
-	// }
- 
-	// public boolean isVisited() {
-	// 	return visited;
-	// }
- 
-	// public void setVisited(boolean visited) {
-	// 	this.visited = visited;
-	// }
- 
-	// public Vertex getPredecessor() {
-	// 	return predecessor;
-	// }
- 
-	// public void setPredecessor(Vertex predecessor) {
-	// 	this.predecessor = predecessor;
-	// }
- 
-	// public double getDistance() {
-	// 	return distance;
-	// }
- 
-	// public void setDistance(double distance) {
-	// 	this.distance = distance;
-	// }
- 
-	// @Override
-	// public String toString() {
-	// 	return this.name;
-	// }
- 
-	// @Override
-	// public int compareTo(Vertex otherVertex) {
-	// 	return Double.compare(this.distance, otherVertex.getDistance());
-	// }
 }

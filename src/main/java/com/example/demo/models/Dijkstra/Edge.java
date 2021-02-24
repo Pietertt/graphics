@@ -9,6 +9,13 @@ public class Edge {
     public Node startNode;
     public Node endNode;
 
+    /**
+     * Constructor
+     * 
+     * @param weight
+     * @param start
+     * @param end
+     */
     public Edge(double weight, Node start, Node end){
         this.weight = weight;
         this.startNode = start;
