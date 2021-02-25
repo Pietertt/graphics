@@ -28,10 +28,10 @@ class App {
     private worldObjects: Object3D[] = [];
 
     constructor() {
-        this.fov = 70;
+        this.fov = 50;
         this.aspect = window.innerWidth / window.innerHeight;
-        this.near = 1;
-        this.far = 1000;
+        this.near = 5;
+        this.far = 3000;
     }
 
     public init() : void {
@@ -43,10 +43,10 @@ class App {
         this.renderer.setSize(window.innerWidth, window.innerHeight + 5);
 
         this.camera = new PerspectiveCamera(this.fov, this.aspect, this.near, this.far);
-        this.camera.position.set(0, 10, 20);
+        this.camera.position.set(-70, 70, 50);
 
         this.controls = new OrbitControls(this.camera, this.canvas);
-        this.controls.target.set(0, 5, 0);
+        this.controls.target.set(4, 10, -4);
         this.controls.update();
 
         this.scene = new Scene();
@@ -75,8 +75,9 @@ class App {
         });
 
         let plane: Mesh = new Mesh(geometry, material);
-        plane.rotation.x = 17;
-        plane.rotation.y = 23;
+        plane.rotation.x = Math.PI / 2.0;
+        plane.position.x = 17;
+        plane.position.z = 23;
         this.scene.add(plane);
     }
 
@@ -127,7 +128,7 @@ class App {
                 if (command.type === 'stellage') {
                     let stellage: Stellage = new Stellage();
                     stellage.setUUID(command.UUID);
-                    stellage.setRotationX(100);
+                    stellage.setRotationX(Math.PI / 2.0);
                     this.scene.add(stellage.spawn());
                     this.addObject3D(stellage);
                 }
@@ -147,9 +148,9 @@ class App {
                 object.setPositionY(command.y);
                 object.setPositionZ(command.z);
 
-                object.setRotationX(command.rotationX);
-                object.setRotationy(command.rotationY);
-                object.setRotationZ(command.rotationZ);
+                // object.setRotationX(command.rotationX);
+                // object.setRotationY(command.rotationY);
+                // object.setRotationZ(command.rotationZ);
             }
         } else if (command.command === 'object_delete') {
             this.removeObject3D(command.UUID);

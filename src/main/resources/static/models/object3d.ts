@@ -33,7 +33,7 @@ export class Object3D extends Mesh {
         this.rotation.x = rotation;
     }
 
-    public setRotationy(rotation: number): void {
+    public setRotationY(rotation: number): void {
         this.rotation.y = rotation;
     }
 
