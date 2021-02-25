@@ -68,7 +68,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
     @Override
     public boolean update() {
         if (this.forward) {
-            if (this.z + this.speed < 0.0) {
+            if (this.z + this.speed < -5.0) {
                 this.z += this.speed;
             } else {
                 this.generateOrders();
@@ -90,7 +90,7 @@ public class Truck extends Object3D implements Updatable, EventListener {
             }
         } else {
             if (this.canLeave()) {
-                if (this.z - this.speed > -50) {
+                if (this.z - this.speed > -100) {
                     this.z -= this.speed;
                 } else {
                     this.remove();

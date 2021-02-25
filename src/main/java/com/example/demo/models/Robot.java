@@ -103,7 +103,7 @@ public class Robot extends Object3D implements Updatable, EventListener {
     /**
      * Get the first order
      * 
-     * @return
+     * @return Order
      */
     public Order getFirstOrder(){
         return this.orders.get(0);
@@ -131,8 +131,8 @@ public class Robot extends Object3D implements Updatable, EventListener {
                 this.setZ(newPoint.getZ());
 
                 if (newPoint.getFlag()) {
-                    this.events.notify("loaded", "loaded");
-                    this.getFirstOrder().stellage.events.notify("loaded", this.getFirstOrder().stellage.getUUID());
+                    this.events.notify("unloaded", "unloaded");
+                    this.getFirstOrder().stellage.events.notify("unloaded", this.getFirstOrder().stellage.getUUID());
                     this.getFirstOrder().stellage.status = true;
                     this.removeOrder(this.getFirstOrder());
                     this.setStrategy(new GetRequest());
