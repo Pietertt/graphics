@@ -16,7 +16,7 @@ module.exports = {
 	},
 
 	resolve: {
-		extensions: [".webpack.js", ".web.js", ".ts", ".tsx", ".js"],
+		extensions: [".ts", ".webpack.js", ".web.js", ".tsx", ".js"],
 	},
 
 	module:{
