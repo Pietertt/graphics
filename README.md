@@ -12,7 +12,7 @@ git remote add origin https://github.com/Pietertt/graphics.git
 git pull origin master
 ```
 
-Om de javascript bestanden te genereren is het nodig om het project eerst te builden.
+Om de javascript bestanden te genereren is het nodig om het project eerst te builden. De compiled javascipt bestanden zitten voor de zekerheid al in de /bin map.
 
 ```bash
 make build
