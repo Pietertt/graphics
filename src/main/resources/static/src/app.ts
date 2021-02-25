@@ -127,7 +127,7 @@ class App {
                 if (command.type === 'stellage') {
                     let stellage: Stellage = new Stellage();
                     stellage.setUUID(command.UUID);
-                    stellage.setRotationX(Math.PI / 2.0);
+                    stellage.setRotationX(100);
                     this.scene.add(stellage.spawn());
                     this.addObject3D(stellage);
                 }
