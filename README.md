@@ -12,17 +12,29 @@ git remote add origin https://github.com/Pietertt/graphics.git
 git pull origin master
 ```
 
-Navigeer naar de hoofdmap en voer dit uit om het project te builden en om de server te starten.
+Om de javascript bestanden te genereren is het nodig om het project eerst te builden.
 
+```bash
+make build
+```
+
+Of 
+```bash
+cd src/main/resources/static
+npm install
+npm run build
+```
+
+Daarna kan het project opgestart worden met 
+```bash
+make run
+```
+
+Of
 ```bash
 ./mvnw spring-boot:run
 ```
 
-En dit voor Windows
-
-```bash
-
-```
 
 ## Git commands
 
